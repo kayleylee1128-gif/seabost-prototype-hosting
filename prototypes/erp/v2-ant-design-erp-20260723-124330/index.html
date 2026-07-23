@@ -1,0 +1,1180 @@
+﻿<!doctype html>
+<html lang="zh-CN" data-theme="default">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>其他出库 - 返修出库</title>
+  <link rel="stylesheet" href="./tokens.css" />
+  <style>
+    :root {
+      --primary: var(--color-primary-6);
+      --primary-hover: var(--color-primary-7);
+      --danger: var(--color-error);
+      --warning: var(--color-warning);
+      --purple: #722ed1;
+      --text: var(--color-text);
+      --sub: var(--color-text-secondary);
+      --border: var(--color-border);
+      --line: var(--color-border-secondary);
+      --bg: var(--color-bg-layout);
+      --header: var(--color-primary-6);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5715;
+    }
+    button, input, select { font: inherit; }
+    .topbar {
+      height: 44px;
+      background: var(--color-primary-6);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 1px 0 rgba(22, 119, 255, .18);
+    }
+    .brand {
+      width: 52px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .brand-badge {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #faad14;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.05;
+    }
+    .menu-toggle {
+      width: 48px;
+      text-align: center;
+      font-size: 20px;
+    }
+    .main-nav {
+      height: 44px;
+      display: flex;
+      align-items: stretch;
+    }
+    .main-nav a {
+      min-width: 104px;
+      padding: 0 16px;
+      color: #fff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+    }
+    .main-nav a.active {
+      background: rgba(22, 119, 255, .18);
+      font-weight: 600;
+    }
+    .top-actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-right: 20px;
+      color: rgba(255,255,255,.95);
+    }
+    .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #1f2937;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 52px minmax(1240px, 1fr);
+      min-height: calc(100vh - 44px);
+    }
+    .sidebar {
+      background: #fff;
+      border-right: 1px solid #e6ebf2;
+      padding-top: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+    }
+    .side-icon {
+      width: 28px;
+      height: 28px;
+      color: #3b4654;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      font-size: 18px;
+    }
+    .side-icon.active {
+      background: #e6f4ff;
+      color: var(--primary);
+    }
+    .content {
+      padding: 12px 16px 16px;
+      overflow-x: auto;
+    }
+    .card {
+      background: #fff;
+      border-radius: 4px;
+      box-shadow: none;
+      border: 1px solid #e5e7eb;
+    }
+    .filter-card {
+      padding: 14px 20px 16px;
+      margin-bottom: 12px;
+    }
+    .biz-tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .biz-tab {
+      height: 34px;
+      min-width: 96px;
+      padding: 0 18px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: #475467;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all .18s;
+    }
+    .biz-tab:hover {
+      color: var(--primary);
+      border-color: var(--primary-hover);
+    }
+    .biz-tab.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      font-weight: 600;
+    }
+    .state-tabs {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      min-height: 38px;
+      border-bottom: 1px solid #e5e7eb;
+      margin-bottom: 12px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .state-tab {
+      height: 38px;
+      color: #344054;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      display: flex;
+      align-items: center;
+      transition: all .18s;
+    }
+    .state-tab:hover { color: var(--primary); }
+    .state-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      font-weight: 500;
+    }
+    .filters {
+      display: grid;
+      grid-template-columns: 220px 120px 230px 170px 170px 160px 160px minmax(230px, 1fr) auto auto;
+      gap: 10px;
+      align-items: center;
+    }
+    .input, .select {
+      width: 100%;
+      height: 32px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #fff;
+      color: #344054;
+      padding: 0 11px;
+      outline: none;
+      transition: border-color .18s, box-shadow .18s;
+    }
+    textarea.input {
+      height: 72px;
+      padding: 8px 11px;
+      resize: none;
+    }
+    .input:focus, .select:focus, .date-range:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(22, 119, 255, .1);
+    }
+    .input::placeholder { color: #bfbfbf; }
+    .select { color: #667085; }
+    .date-range {
+      display: grid;
+      grid-template-columns: 1fr 24px 1fr;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      height: 32px;
+      padding: 0 10px;
+      color: #98a2b3;
+      transition: border-color .18s, box-shadow .18s;
+    }
+    .date-range input {
+      border: 0;
+      outline: 0;
+      min-width: 0;
+      color: #344054;
+    }
+    .btn {
+      height: 32px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0 16px;
+      background: #fff;
+      color: #344054;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all .18s;
+    }
+    .btn:hover {
+      color: var(--primary);
+      border-color: var(--primary-hover);
+    }
+    .btn.primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      box-shadow: 0 2px 0 rgba(5, 145, 255, .1);
+    }
+    .btn.primary:hover {
+      background: var(--primary-hover);
+      border-color: var(--primary-hover);
+      color: #fff;
+    }
+    .btn.danger-light {
+      color: var(--danger);
+      background: #fff;
+      border-color: #ffccc7;
+    }
+    .table-card { padding: 18px 20px 14px; }
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .table-wrap {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      overflow: auto;
+      max-height: calc(100vh - 300px);
+      background: #fff;
+    }
+    table {
+      width: 100%;
+      min-width: 1780px;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    th, td {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 13px 12px;
+      vertical-align: top;
+      text-align: left;
+      line-height: 1.75;
+      color: #667085;
+      word-break: break-word;
+    }
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      height: 44px;
+      padding: 10px 12px;
+      color: #1f2937;
+      font-weight: 600;
+      background: #fafafa;
+    }
+    tr:hover td { background: #fafcff; }
+    .check-col { width: 44px; text-align: center; }
+    .order-col { width: 250px; }
+    .type-col { width: 150px; }
+    .warehouse-col { width: 215px; }
+    .sku-col { width: 145px; }
+    .solution-col { width: 235px; }
+    .logistics-col { width: 225px; }
+    .receiver-col { width: 260px; }
+    .other-col { width: 210px; }
+    .time-col { width: 250px; }
+    .action-col { width: 130px; text-align: center; }
+    .link, .action-link {
+      color: var(--primary);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .link:hover, .action-link:hover { color: var(--primary-hover); }
+    .action-link {
+      display: inline-block;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      line-height: 1.9;
+    }
+    .status-tag, .solution-tag {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      background: #e6f4ff;
+      color: var(--primary);
+      border: 1px solid #91caff;
+      margin-top: 4px;
+    }
+    .solution-tag.refund {
+      color: #fa8c16;
+      background: #fff7e6;
+      border-color: #ffd591;
+    }
+    .solution-tag.exchange {
+      color: var(--purple);
+      background: #f9f0ff;
+      border-color: #d3adf7;
+    }
+    .settlement-card {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border: 1px solid #d6e4ff;
+      border-radius: 4px;
+      background: #f0f5ff;
+      color: #475467;
+      line-height: 1.8;
+    }
+    .settlement-card strong { color: #1f2937; }
+    .checkbox {
+      width: 18px;
+      height: 18px;
+      border: 1px solid #d9d9d9;
+      border-radius: 3px;
+      display: inline-block;
+      background: #fff;
+    }
+    .pagination {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      padding-top: 14px;
+      color: #667085;
+    }
+    .page-btn {
+      min-width: 32px;
+      height: 32px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: #344054;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .page-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, .45);
+      padding: 24px;
+    }
+    .modal-mask.open { display: flex; }
+    .modal {
+      width: 560px;
+      max-height: calc(100vh - 56px);
+      background: #fff;
+      border-radius: 6px;
+      box-shadow: 0 12px 32px rgba(15, 23, 42, .22);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .modal.wide { width: 980px; }
+    .modal.detail { width: 1120px; }
+    .modal-header {
+      height: 56px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #f0f0f0;
+      font-weight: 600;
+      font-size: 16px;
+    }
+    .modal-close {
+      border: 0;
+      background: transparent;
+      color: #667085;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .modal-body {
+      padding: 22px 24px;
+      overflow: auto;
+    }
+    .modal-footer {
+      padding: 12px 24px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      border-top: 1px solid #f0f0f0;
+      background: #fff;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px 24px;
+      align-items: start;
+    }
+    .form-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .form-item label {
+      display: block;
+      margin-bottom: 6px;
+      color: #344054;
+    }
+    .required::before {
+      content: "*";
+      color: var(--danger);
+      margin-right: 4px;
+    }
+    .form-section {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+    }
+    .section-title {
+      margin: 0 0 14px;
+      color: #1f2937;
+      font-weight: 600;
+    }
+    .hidden { display: none !important; }
+    .upload-row {
+      display: grid;
+      grid-template-columns: 80px 118px;
+      gap: 10px;
+      align-items: center;
+    }
+    .upload-hint {
+      color: #98a2b3;
+      font-size: 12px;
+      text-align: right;
+    }
+    .upload-box {
+      width: 118px;
+      height: 96px;
+      border: 1px dashed #d9d9d9;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      background: #fff;
+      cursor: pointer;
+    }
+    .upload-icon {
+      color: #344054;
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+    .refund-line {
+      display: grid;
+      grid-template-columns: 1fr 1fr 32px;
+      gap: 12px;
+      align-items: end;
+      margin-bottom: 10px;
+    }
+    .add-refund {
+      color: var(--primary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin: 4px 0 16px 50%;
+    }
+    .detail-summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px 28px;
+      margin-bottom: 18px;
+      color: #475467;
+    }
+    .detail-summary span {
+      color: #667085;
+      margin-right: 6px;
+    }
+    .detail-table {
+      width: 100%;
+      min-width: 0;
+      table-layout: fixed;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .detail-table th,
+    .detail-table td {
+      padding: 14px 12px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .detail-table th:first-child,
+    .detail-table td:first-child {
+      width: 80px;
+    }
+    .detail-table .select {
+      display: inline-flex;
+      width: 280px;
+      align-items: center;
+      justify-content: center;
+    }
+    .toast {
+      position: fixed;
+      top: 62px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 40;
+      display: none;
+      padding: 8px 14px;
+      border-radius: 4px;
+      background: #f6ffed;
+      color: #389e0d;
+      border: 1px solid #b7eb8f;
+      box-shadow: 0 6px 16px rgba(15, 23, 42, .12);
+    }
+    .toast.show { display: block; }
+
+    /* v2: Ant Design ERP shell and custom Select semantics */
+    .topbar { height: var(--layout-header-height); background: var(--color-sider-bg); box-shadow: none; }
+    .brand { height: var(--layout-header-height); }
+    .main-nav a { height: var(--layout-header-height); }
+    .layout { grid-template-columns: var(--layout-sider-collapsed-width) minmax(1120px, 1fr); min-height: calc(100vh - var(--layout-header-height)); }
+    .sidebar { background: var(--color-bg-container); border-right-color: var(--color-border-secondary); }
+    .content { background: var(--color-bg-layout); }
+    .card, .table-card { border-radius: var(--radius-lg); border-color: var(--color-border-secondary); box-shadow: var(--shadow-1); }
+    .filter-card { padding: var(--space-4) var(--space-5); }
+    .filters { gap: var(--space-3); }
+    .input, .select { height: var(--control-height); border-color: var(--color-border); border-radius: var(--radius); background: var(--color-bg-container); color: var(--color-text); }
+    .input:focus, .select:focus, .date-range:focus-within { border-color: var(--color-primary-6); box-shadow: 0 0 0 2px var(--color-primary-1); }
+    .btn { height: var(--control-height); border-radius: var(--radius); box-shadow: none; }
+    .btn.primary { background: var(--color-primary-6); border-color: var(--color-primary-6); }
+    .btn.primary:hover { background: var(--color-primary-7); border-color: var(--color-primary-7); }
+    .table-wrap th { background: var(--color-bg-spotlight); color: var(--color-text-secondary); border-bottom-color: var(--color-border-secondary); }
+    .table-wrap td { border-bottom-color: var(--color-border-secondary); color: var(--color-text-secondary); }
+    .table-wrap tbody tr:hover td { background: var(--color-bg-spotlight); }
+    .modal { border-radius: var(--radius-lg); box-shadow: var(--shadow-modal); }
+    .modal-header, .modal-footer { border-color: var(--color-border-secondary); }
+    .ant-select { position: relative; min-width: 150px; }
+    .ant-select .ant-select-trigger { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); text-align: left; cursor: pointer; }
+    .ant-select-menu { display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: var(--z-tooltip); padding: var(--space-1); background: var(--color-bg-elevated); border: 1px solid var(--color-border-secondary); border-radius: var(--radius); box-shadow: var(--shadow-2); }
+    .ant-select.open .ant-select-menu { display: grid; }
+    .ant-select-menu button { border: 0; background: transparent; color: var(--color-text); padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); text-align: left; cursor: pointer; }
+    .ant-select-menu button:hover { background: var(--color-bg-spotlight); color: var(--color-primary-6); }
+    .action-link.btn { height: auto; min-height: 0; padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--color-primary-6); box-shadow: none; }
+    .action-link.btn:hover { color: var(--color-primary-7); border-color: transparent; background: transparent; }
+    .pagination-size { min-width: 110px; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="brand-badge">PRMS<br>售</div></div>
+    <div class="menu-toggle">☰</div>
+    <nav class="main-nav">
+      <a href="#">首页</a>
+      <a class="active" href="#">其他出库 ×</a>
+    </nav>
+    <div class="top-actions">
+      <span>◷</span>
+      <span>⇩</span>
+      <span>⌕</span>
+      <span>⛶</span>
+      <span class="avatar">李</span>
+      <span>欢迎您, 李静</span>
+    </div>
+  </header>
+
+  <div class="layout c-shell" data-component="ErpShell">
+    <aside class="sidebar">
+      <div class="side-icon active">⌂</div>
+      <div class="side-icon">▣</div>
+      <div class="side-icon">▤</div>
+      <div class="side-icon">▥</div>
+      <div class="side-icon">◉</div>
+      <div class="side-icon">▦</div>
+      <div class="side-icon">◌</div>
+      <div class="side-icon">▣</div>
+      <div class="side-icon">◍</div>
+      <div class="side-icon">▥</div>
+    </aside>
+
+    <main class="content">
+      <section class="card filter-card">
+        <div class="biz-tabs">
+          <button class="c-tabs__item biz-tab" type="button">借物出库</button>
+          <button class="c-tabs__item biz-tab" type="button">报损出库</button>
+          <button class="c-tabs__item biz-tab active" type="button">返修出库</button>
+        </div>
+
+        <div class="state-tabs">
+          <div class="state-tab">全部 (31)</div>
+          <div class="state-tab">待审核 (0)</div>
+          <div class="state-tab">待仓库作业 (0)</div>
+          <div class="state-tab active">已出库 (8)</div>
+          <div class="state-tab">异常 (0)</div>
+          <div class="state-tab">已完成 (2)</div>
+          <div class="state-tab">审核拒绝 (0)</div>
+          <div class="state-tab">取消 (0)</div>
+        </div>
+
+        <div class="filters">
+          <div class="ant-select" data-select-label="请选择出库仓库"><button class="select c-select__trigger ant-select-trigger" type="button">请选择出库仓库 <span>⌄</span></button><div class="ant-select-menu"><button class="c-select__option" type="button" data-value="SZ01东莞仓">SZ01东莞仓</button><button class="c-select__option" type="button" data-value="海外仓中转仓">海外仓中转仓</button></div></div>
+          <div class="ant-select" data-select-label="单号"><button class="select c-select__trigger ant-select-trigger" type="button">单号 <span>⌄</span></button><div class="ant-select-menu"><button class="c-select__option" type="button" data-value="单号">单号</button><button class="c-select__option" type="button" data-value="SKU">SKU</button><button class="c-select__option" type="button" data-value="供应商">供应商</button></div></div>
+          <input class="input" placeholder="请输入" />
+          <div class="ant-select" data-select-label="请选择创建人"><button class="select c-select__trigger ant-select-trigger" type="button">请选择创建人 <span>⌄</span></button><div class="ant-select-menu"><button class="c-select__option" type="button" data-value="张晶">张晶</button><button class="c-select__option" type="button" data-value="李静">李静</button></div></div>
+          <div class="ant-select" data-select-label="请选择审核状态"><button class="select c-select__trigger ant-select-trigger" type="button">请选择审核状态 <span>⌄</span></button><div class="ant-select-menu"><button class="c-select__option" type="button" data-value="待审核">待审核</button><button class="c-select__option" type="button" data-value="审核通过">审核通过</button></div></div>
+          <div class="ant-select" data-select-label="出库状态"><button class="select c-select__trigger ant-select-trigger" type="button">出库状态 <span>⌄</span></button><div class="ant-select-menu"><button class="c-select__option" type="button" data-value="待仓库作业">待仓库作业</button><button class="c-select__option" type="button" data-value="已出库">已出库</button><button class="c-select__option" type="button" data-value="异常">异常</button><button class="c-select__option" type="button" data-value="已完成">已完成</button></div></div>
+          <div class="ant-select" data-select-label="创建时间"><button class="select c-select__trigger ant-select-trigger" type="button">创建时间 <span>⌄</span></button><div class="ant-select-menu"><button class="c-select__option" type="button" data-value="创建时间">创建时间</button><button class="c-select__option" type="button" data-value="更新时间">更新时间</button></div></div>
+          <div class="date-range"><input placeholder="开始日期" /><span>-</span><input placeholder="结束日期" /></div>
+          <button class="btn primary">搜索</button>
+          <button class="btn">重置</button>
+        </div>
+      </section>
+
+      <section class="card table-card">
+        <div class="toolbar">
+          <button class="btn danger-light">取消</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="check-col"><span class="checkbox"></span></th>
+                <th class="order-col">单号</th>
+                <th class="type-col">单据类型</th>
+                <th class="warehouse-col">出库信息</th>
+                <th class="sku-col">sku信息</th>
+                <th class="solution-col">返修方案</th>
+                <th class="logistics-col">物流信息</th>
+                <th class="receiver-col">收件人信息</th>
+                <th class="other-col">其他</th>
+                <th class="time-col">时间</th>
+                <th class="action-col">操作</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <span>共 21 条</span>
+          <div class="ant-select pagination-size" data-select-label="20条/页"><button class="select c-select__trigger ant-select-trigger" type="button">20条/页 <span>⌄</span></button><div class="ant-select-menu"><button class="c-select__option" type="button" data-value="20条/页">20条/页</button><button class="c-select__option" type="button" data-value="50条/页">50条/页</button></div></div>
+          <button class="btn btn--text btn--sm page-btn" type="button">‹</button>
+          <button class="btn btn--text btn--sm page-btn active" type="button">1</button>
+          <button class="btn btn--text btn--sm page-btn" type="button">2</button>
+          <button class="btn btn--text btn--sm page-btn" type="button">›</button>
+          <span>前往</span>
+          <input class="input" style="width:52px;min-width:52px;text-align:center" value="1" />
+          <span>页</span>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast">已保存</div>
+
+  <div class="modal-mask" id="logisticsModal">
+    <div class="modal">
+      <div class="modal-header">
+        <span>绑定物流单</span>
+        <button class="c-icon-btn modal-close" type="button" data-close="logisticsModal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-item">
+            <label>单号</label>
+            <input class="input" id="logisticsOrderNo" disabled />
+          </div>
+          <div class="form-item">
+            <label>供应商</label>
+            <input class="input" id="logisticsVendor" disabled />
+          </div>
+          <div class="form-item">
+            <label class="required">物流单号</label>
+            <input class="input" id="logisticsNo" placeholder="请输入返修回程物流单号" />
+          </div>
+          <div class="form-item">
+            <label>物流渠道</label>
+            <input type="hidden" id="logisticsChannel" value="顺丰速运" />
+            <div class="ant-select" data-select-input="logisticsChannel"><button class="select c-select__trigger ant-select-trigger" type="button">顺丰速运 <span>⌄</span></button><div class="ant-select-menu"><button class="c-select__option" type="button" data-value="顺丰速运">顺丰速运</button><button class="c-select__option" type="button" data-value="申通快递">申通快递</button><button class="c-select__option" type="button" data-value="京东物流">京东物流</button><button class="c-select__option" type="button" data-value="供应商自送">供应商自送</button></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-close="logisticsModal">取消</button>
+        <button class="btn primary" id="saveLogistics">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="detailModal">
+    <div class="modal detail">
+      <div class="modal-header">
+        <span>查看</span>
+        <button class="c-icon-btn modal-close" type="button" data-close="detailModal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-summary">
+          <div><span>单据类型：</span>返修出库</div>
+          <div><span>出库仓库：</span><strong id="detailWarehouse">-</strong></div>
+          <div><span>供应商：</span><strong id="detailVendor">-</strong></div>
+          <div><span>审核负责人：</span>朱丽洁</div>
+          <div><span>责任部门：</span>产品开发中心-工业开发部</div>
+          <div><span>库存类型：</span>次品</div>
+          <div style="grid-column:1 / -1"><span>备注：</span><strong id="detailRemark">供应商返修出库，仓库按单拣货出库。</strong></div>
+        </div>
+        <table class="detail-table">
+          <thead>
+            <tr>
+              <th>序号</th>
+              <th>SKU</th>
+              <th>采购单</th>
+              <th>申请数量</th>
+            </tr>
+          </thead>
+          <tbody id="detailSkuBody"></tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn primary" data-close="detailModal">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="schemeModal">
+    <div class="modal wide">
+      <div class="modal-header">
+        <span>编辑返修方案</span>
+        <button class="c-icon-btn modal-close" type="button" data-close="schemeModal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid three">
+          <div class="form-item">
+            <label>单号</label>
+            <input class="input" id="schemeOrderNo" disabled />
+          </div>
+          <div class="form-item">
+            <label>SKU</label>
+            <input class="input" id="schemeSku" disabled />
+          </div>
+          <div class="form-item">
+            <label class="required">返修方案</label>
+            <input type="hidden" id="schemeType" value="返修入库" />
+            <div class="ant-select" data-select-input="schemeType"><button class="select c-select__trigger ant-select-trigger" type="button">返修入库 <span>⌄</span></button><div class="ant-select-menu"><button class="c-select__option" type="button" data-value="返修入库">返修入库</button><button class="c-select__option" type="button" data-value="赔款">赔款</button><button class="c-select__option" type="button" data-value="抵扣账单">抵扣账单</button><button class="c-select__option" type="button" data-value="返修换货">返修换货</button></div></div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <p class="section-title">费用信息</p>
+          <div class="form-grid three">
+            <div class="form-item">
+              <label>返修费</label>
+              <input class="input" id="repairFee" type="number" min="0" placeholder="请输入返修费" />
+            </div>
+            <div class="form-item">
+              <label>预估运费</label>
+              <input class="input" id="freightAmount" type="number" min="0" placeholder="请输入预估运费" />
+            </div>
+            <div class="form-item">
+              <label>运费承担方</label>
+              <input type="hidden" id="freightBearer" value="公司承担" />
+              <div class="ant-select" data-select-input="freightBearer"><button class="select c-select__trigger ant-select-trigger" type="button">公司承担 <span>⌄</span></button><div class="ant-select-menu"><button class="c-select__option" type="button" data-value="公司承担">公司承担</button><button class="c-select__option" type="button" data-value="供应商承担">供应商承担</button></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section" id="repairInboundSection">
+          <p class="section-title">返修入库信息</p>
+          <div class="form-grid">
+            <div class="form-item">
+              <label>预计返修完成时间</label>
+              <input class="input" type="date" id="expectedInboundDate" />
+            </div>
+            <div class="form-item">
+              <label>备注</label>
+              <input class="input" id="repairRemark" placeholder="请输入备注" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section hidden" id="refundSection">
+          <p class="section-title" id="settlementSectionTitle">赔款信息</p>
+          <div id="compensationFields">
+            <div class="refund-line">
+              <div class="form-item">
+                <label class="required">赔款金额</label>
+                <input class="input" id="refundAmount" type="number" min="0" placeholder="请输入赔款金额" />
+              </div>
+              <div class="form-item">
+                <label>流水</label>
+                <input class="input" id="refundSerialNo" placeholder="请输入流水号" />
+              </div>
+              <button class="btn" type="button" title="删除">⌫</button>
+            </div>
+            <span class="add-refund">⊕ 添加赔款</span>
+            <div class="form-grid three">
+              <div class="form-item">
+                <label class="required">赔款方式</label>
+                <input type="hidden" id="refundMethod" value="支付宝转账" />
+                <div class="ant-select" data-select-input="refundMethod"><button class="select c-select__trigger ant-select-trigger" type="button">支付宝转账 <span>⌄</span></button><div class="ant-select-menu"><button class="c-select__option" type="button" data-value="支付宝转账">支付宝转账</button><button class="c-select__option" type="button" data-value="银行卡转账">银行卡转账</button></div></div>
+              </div>
+              <div class="form-item">
+                <label class="required">赔款状态</label>
+                <input type="hidden" id="refundStatus" value="部分" />
+                <div class="ant-select" data-select-input="refundStatus"><button class="select c-select__trigger ant-select-trigger" type="button">部分 <span>⌄</span></button><div class="ant-select-menu"><button class="c-select__option" type="button" data-value="部分">部分</button><button class="c-select__option" type="button" data-value="全部">全部</button></div></div>
+              </div>
+              <div class="form-item">
+                <label>实际退款金额</label>
+                <input class="input" id="actualRefundAmount" value="0" disabled />
+              </div>
+              <div class="form-item">
+                <label>凭证</label>
+                <div class="upload-row">
+                  <div class="upload-hint">jpg,jpeg,png</div>
+                  <div class="upload-box">
+                    <span class="upload-icon">☁</span>
+                    <span>点击上传图片</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-grid hidden" id="deductFields">
+            <div class="form-item">
+              <label class="required">抵扣金额</label>
+              <input class="input" id="deductAmount" type="number" min="0" placeholder="请输入抵扣金额" />
+            </div>
+            <div class="form-item">
+              <label>抵扣供应商</label>
+              <input class="input" id="deductSupplier" disabled />
+            </div>
+          </div>
+          <div class="settlement-card" id="settlementPreview"></div>
+        </div>
+
+        <div class="form-section hidden" id="exchangeSection">
+          <p class="section-title">返修换货信息</p>
+          <div class="form-grid">
+            <div class="form-item">
+              <label class="required">更换后SKU</label>
+              <input class="input" id="exchangeSku" placeholder="请输入更换后SKU" />
+            </div>
+            <div class="form-item">
+              <label class="required">更换数量</label>
+              <input class="input" id="exchangeQty" type="number" min="1" placeholder="请输入数量" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-close="schemeModal">取消</button>
+        <button class="btn primary" id="saveScheme">保存方案</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentRowIndex = 0;
+    const rows = [
+      { no:'RX26061700004', out:'CK2606170007', warehouse:'SZ01东莞仓', time:'2026-04-17 19:43:49', style:1, qty:1, sku:'SKU-ALPHA-001', vendor:'深圳启明电子', status:'已出库', solution:'返修入库', returnLogistics:'', logistics:'773416468912182', channel:'国内线下-申通快递-谢岗', receiver:'张晶', phone:'18975537514', address:'中国广东省深圳市龙岗区金鸿德电商产业园C栋5楼（前台收）', create:'2026-04-17 15:22:49', update:'2026-04-21 11:02:38' },
+      { no:'RX26041700003', out:'CK2604170005', warehouse:'海外仓中转仓', time:'2026-04-17 11:41:03', style:2, qty:2, sku:'SKU-BETA-118', vendor:'宁波辰禾能源', status:'已出库', solution:'赔款', refundAmount:'2625', logistics:'773416385726759', channel:'国内线下-申通快递-谢岗', receiver:'张晶', phone:'18975537514', address:'中国广东省深圳市龙岗区金鸿德电商产业园C栋5楼（前台收）', create:'2026-04-17 10:35:21', update:'2026-04-21 11:02:34' },
+      { no:'RX26041700002', out:'CK2604170004', warehouse:'SZ01东莞仓', time:'2026-04-17 11:41:03', style:8, qty:8, sku:'SKU-GAMMA-320', vendor:'苏州松岭科技', status:'已出库', solution:'返修换货', exchangeSku:'SKU-GAMMA-321', exchangeQty:8, logistics:'773416385726759', channel:'国内线下-申通快递-谢岗', receiver:'张晶', phone:'18975537514', address:'中国广东省深圳市龙岗区金鸿德电商产业园C栋5楼（前台收）', create:'2026-04-17 10:34:25', update:'2026-04-21 11:01:52' },
+      { no:'RX26041400001', out:'CK2604140001', warehouse:'SZ01东莞仓', time:'2026-04-14 16:14:49', style:2, qty:2, sku:'SKU-DELTA-056', vendor:'杭州图灵视觉', status:'已出库', solution:'返修入库', returnLogistics:'SF2604148891', logistics:'773415920201178', channel:'国内线下-申通快递-谢岗', receiver:'张晶', phone:'18975537514', address:'中国广东省深圳市龙岗区金鸿德电商产业园C栋5楼（前台收）', create:'2026-04-14 10:41:06', update:'2026-04-21 11:01:48' },
+      { no:'RX26041000002', out:'CK2604100002', warehouse:'SZ01东莞仓', time:'2026-04-10 18:46:37', style:2, qty:2, sku:'SKU-EPS-205', vendor:'东莞锐鑫电子', status:'已出库', solution:'返修入库', returnLogistics:'', logistics:'773415281422994', channel:'淘宝-申通（谢岗）', receiver:'张晶', phone:'18975537514', address:'中国广东省深圳市龙岗区金鸿德电商产业园C栋5楼（前台收）', create:'2026-04-10 11:07:04', update:'2026-04-17 09:48:53' }
+    ];
+
+    rows.forEach(row => {
+      const feeMap = {
+        RX26061700004: { repairFee: '480', freightAmount: '120', freightBearer: '公司承担' },
+        RX26041700003: { solution: '赔款', settlementType: '赔款', compensationMethod: '支付宝转账', settlementStatus: '全部', repairFee: '0', freightAmount: '80', freightBearer: '供应商承担', refundAmount: '2625', refundSerialNo: 'ZFB202604170003' },
+        RX26041700002: { repairFee: '680', freightAmount: '160', freightBearer: '公司承担' },
+        RX26041400001: { solution: '抵扣账单', settlementType: '抵扣账单', settlementStatus: '待核对', repairFee: '0', freightAmount: '60', freightBearer: '供应商承担', refundAmount: '520' },
+        RX26041000002: { repairFee: '300', freightAmount: '90', freightBearer: '公司承担' },
+      };
+      Object.assign(row, feeMap[row.no] || {});
+    });
+
+    const body = document.querySelector('#tableBody');
+    const solutionClass = solution => (solution === '赔款' || solution === '抵扣账单') ? 'refund' : solution === '返修换货' ? 'exchange' : '';
+
+    function renderRows() {
+      body.innerHTML = rows.map((row, index) => {
+        const logisticsAction = row.solution === '返修入库'
+          ? `<button class="btn btn--link action-link" type="button" data-action="bind-logistics" data-index="${index}">绑定物流单</button><br>`
+          : '';
+        const solutionDetail = row.solution === '赔款'
+          ? `赔款金额：${row.refundAmount || '-'}<br>赔款方式：${row.compensationMethod || '-'}<br>赔款状态：${row.settlementStatus || '-'}`
+          : row.solution === '抵扣账单'
+            ? `抵扣金额：${row.refundAmount || '-'}<br>抵扣供应商：${row.vendor}<br>对账状态：${row.settlementStatus || '待核对'}`
+            : row.solution === '返修换货'
+              ? `换后SKU：${row.exchangeSku || '-'}<br>换货数量：${row.exchangeQty || '-'}`
+              : `返修费：${row.repairFee || 0}<br>运费承担方：${row.freightBearer || '-'}<br>回程物流：${row.returnLogistics || '待绑定'}`;
+        return `
+          <tr>
+            <td class="check-col"><span class="checkbox"></span></td>
+            <td>
+              单号：<a class="link" data-action="view" data-index="${index}">${row.no}</a><br>
+              出库单号：${row.out}<br>
+              关联单号：-
+            </td>
+            <td>返修出库</td>
+            <td>出库仓库：${row.warehouse}<br>出库时间：${row.time}</td>
+            <td>
+              款数：<a class="link">${row.style}</a><br>
+              sku数量：<a class="link">${row.qty}</a><br>
+              库存类型：次品
+            </td>
+            <td><span class="solution-tag ${solutionClass(row.solution)}">${row.solution}</span><br>${solutionDetail}</td>
+            <td>物流单号：${row.logistics}<br>物流渠道：${row.channel}<br>预估运费：${row.freightAmount || '-'} CNY<br>运费承担方：${row.freightBearer || '-'}</td>
+            <td>收件人：${row.receiver}<br>收件电话：${row.phone}<br>收件人地址：${row.address}</td>
+            <td>所属部门：产品开发中心-工业开发部<br>备注：返修出库<br>附件：<a class="link">上传</a></td>
+            <td>创建人：张晶<br>创建时间：${row.create}<br>更新人：张晶<br>更新时间：${row.update}</td>
+            <td class="action-col">
+              <button class="btn btn--link action-link" type="button" data-action="view" data-index="${index}">查看</button><br>
+              ${logisticsAction}
+              <button class="btn btn--link action-link" type="button" data-action="edit-scheme" data-index="${index}">编辑</button><br>
+              <button class="btn btn--link action-link" type="button" data-action="log" data-index="${index}">日志</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add('open');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
+
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      toast.textContent = text;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1600);
+    }
+
+    function syncAntSelects() {
+      document.querySelectorAll('.ant-select[data-select-input]').forEach(select => {
+        const hidden = document.getElementById(select.dataset.selectInput);
+        const option = select.querySelector(`[data-value="${hidden?.value}"]`);
+        const trigger = select.querySelector('.ant-select-trigger');
+        if (option && trigger) trigger.childNodes[0].textContent = `${option.textContent.trim()} `;
+      });
+    }
+
+    function initAntSelects() {
+      document.querySelectorAll('.ant-select').forEach(select => {
+        const trigger = select.querySelector('.ant-select-trigger');
+        if (!trigger) return;
+        trigger.addEventListener('click', event => {
+          event.stopPropagation();
+          document.querySelectorAll('.ant-select.open').forEach(item => item !== select && item.classList.remove('open'));
+          select.classList.toggle('open');
+        });
+        select.querySelectorAll('.ant-select-menu button').forEach(option => {
+          option.addEventListener('click', event => {
+            event.stopPropagation();
+            const hidden = select.dataset.selectInput && document.getElementById(select.dataset.selectInput);
+            if (hidden) {
+              hidden.value = option.dataset.value;
+              hidden.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+            trigger.childNodes[0].textContent = `${option.textContent.trim()} `;
+            select.classList.remove('open');
+          });
+        });
+      });
+      document.addEventListener('click', () => document.querySelectorAll('.ant-select.open').forEach(select => select.classList.remove('open')));
+      syncAntSelects();
+    }
+
+    function switchSchemeSections() {
+      const type = document.getElementById('schemeType').value;
+      document.getElementById('repairInboundSection').classList.toggle('hidden', type !== '返修入库');
+      document.getElementById('refundSection').classList.toggle('hidden', type !== '赔款' && type !== '抵扣账单');
+      document.getElementById('exchangeSection').classList.toggle('hidden', type !== '返修换货');
+      document.getElementById('compensationFields').classList.toggle('hidden', type !== '赔款');
+      document.getElementById('deductFields').classList.toggle('hidden', type !== '抵扣账单');
+      document.getElementById('settlementSectionTitle').textContent = type === '抵扣账单' ? '抵扣信息' : '赔款信息';
+      if (type === '赔款') {
+        document.getElementById('actualRefundAmount').value = document.getElementById('refundAmount').value || '0';
+      }
+      if (type === '抵扣账单') {
+        document.getElementById('deductAmount').value = document.getElementById('deductAmount').value || document.getElementById('refundAmount').value || '0';
+        document.getElementById('deductSupplier').value = rows[currentRowIndex]?.vendor || '';
+      }
+      updateSettlementPreview();
+    }
+
+    function updateSettlementPreview() {
+      const preview = document.getElementById('settlementPreview');
+      if (!preview) return;
+      const type = document.getElementById('schemeType').value;
+      const amount = document.getElementById('refundAmount').value || '0';
+      if (type === '抵扣账单') {
+        const deductAmount = document.getElementById('deductAmount').value || amount;
+        const supplier = document.getElementById('deductSupplier').value || '-';
+        preview.innerHTML = `将生成供应商对账单数据，抵扣金额 <strong>${deductAmount}</strong>，抵扣供应商 <strong>${supplier}</strong>，状态 <strong>待核对</strong>。`;
+        return;
+      }
+      if (type === '赔款') {
+        document.getElementById('actualRefundAmount').value = amount;
+        preview.innerHTML = `记录赔款金额 <strong>${amount}</strong>，赔款方式 <strong>${document.getElementById('refundMethod').value}</strong>，赔款状态 <strong>${document.getElementById('refundStatus').value}</strong>。`;
+        return;
+      }
+      preview.innerHTML = '';
+    }
+
+    function openDetail(index) {
+      currentRowIndex = Number(index);
+      const row = rows[currentRowIndex];
+      const skuRows = Array.from({ length: Math.min(Number(row.style) || 1, 4) }, (_, itemIndex) => {
+        const sku = itemIndex === 0 ? row.sku : `${row.sku}-${String(itemIndex + 1).padStart(2, '0')}`;
+        const qty = itemIndex === 0 ? row.qty : 1;
+        const purchaseNo = `PO${row.out.replace(/\D/g, '').slice(0, 10)}-${String(itemIndex + 1).padStart(2, '0')}`;
+        return `
+          <tr>
+            <td>${itemIndex + 1}</td>
+            <td>${sku}</td>
+            <td><span class="select">${purchaseNo}</span></td>
+            <td>${qty}</td>
+          </tr>
+        `;
+      }).join('');
+      document.getElementById('detailWarehouse').textContent = row.warehouse;
+      document.getElementById('detailVendor').textContent = row.vendor;
+      document.getElementById('detailRemark').textContent = `供应商 ${row.vendor} 返修出库，共 ${row.style} 个 SKU，${row.qty} 件次品，处理方案为 ${row.solution}。`;
+      document.getElementById('detailSkuBody').innerHTML = skuRows;
+      openModal('detailModal');
+    }
+
+    function openLogistics(index) {
+      currentRowIndex = Number(index);
+      const row = rows[currentRowIndex];
+      document.getElementById('logisticsOrderNo').value = row.no;
+      document.getElementById('logisticsVendor').value = row.vendor;
+      document.getElementById('logisticsNo').value = row.returnLogistics || '';
+      openModal('logisticsModal');
+    }
+
+    function openScheme(index) {
+      currentRowIndex = Number(index);
+      const row = rows[currentRowIndex];
+      document.getElementById('schemeOrderNo').value = row.no;
+      document.getElementById('schemeSku').value = row.sku;
+      document.getElementById('schemeType').value = row.solution;
+      document.getElementById('repairFee').value = row.repairFee || 0;
+      document.getElementById('freightAmount').value = row.freightAmount || 0;
+      document.getElementById('freightBearer').value = row.freightBearer || '公司承担';
+      document.getElementById('refundAmount').value = row.refundAmount || '';
+      document.getElementById('refundSerialNo').value = row.refundSerialNo || '';
+      document.getElementById('refundMethod').value = row.compensationMethod || '支付宝转账';
+      document.getElementById('refundStatus').value = row.solution === '赔款' ? (row.settlementStatus || '部分') : '部分';
+      document.getElementById('actualRefundAmount').value = row.refundAmount || '0';
+      document.getElementById('deductAmount').value = row.refundAmount || '';
+      document.getElementById('deductSupplier').value = row.vendor;
+      document.getElementById('exchangeSku').value = row.exchangeSku || '';
+      document.getElementById('exchangeQty').value = row.exchangeQty || row.qty;
+      syncAntSelects();
+      switchSchemeSections();
+      openModal('schemeModal');
+    }
+
+    initAntSelects();
+    renderRows();
+
+    document.querySelectorAll('.biz-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.biz-tab').forEach(item => item.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+    document.querySelectorAll('.state-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.state-tab').forEach(item => item.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+    document.addEventListener('click', event => {
+      const target = event.target;
+      const closeId = target.dataset && target.dataset.close;
+      if (closeId) closeModal(closeId);
+      if (!target.dataset || !target.dataset.action) return;
+      const { action, index } = target.dataset;
+      if (action === 'bind-logistics') openLogistics(index);
+      if (action === 'edit-scheme') openScheme(index);
+      if (action === 'view') openDetail(index);
+      if (action === 'log') showToast('打开操作日志');
+    });
+    document.getElementById('schemeType').addEventListener('change', switchSchemeSections);
+    document.getElementById('refundAmount').addEventListener('input', updateSettlementPreview);
+    document.getElementById('deductAmount').addEventListener('input', updateSettlementPreview);
+    document.getElementById('refundStatus').addEventListener('change', updateSettlementPreview);
+    document.getElementById('refundMethod').addEventListener('change', () => {
+      updateSettlementPreview();
+    });
+    document.getElementById('saveLogistics').addEventListener('click', () => {
+      rows[currentRowIndex].returnLogistics = document.getElementById('logisticsNo').value || '待绑定';
+      closeModal('logisticsModal');
+      renderRows();
+      showToast('物流单号已绑定');
+    });
+    document.getElementById('saveScheme').addEventListener('click', () => {
+      const row = rows[currentRowIndex];
+      row.solution = document.getElementById('schemeType').value;
+      row.repairFee = document.getElementById('repairFee').value || '0';
+      row.freightAmount = document.getElementById('freightAmount').value || '0';
+      row.freightBearer = document.getElementById('freightBearer').value;
+      row.refundAmount = row.solution === '抵扣账单' ? document.getElementById('deductAmount').value : document.getElementById('refundAmount').value;
+      row.settlementType = row.solution;
+      row.compensationMethod = document.getElementById('refundMethod').value;
+      row.settlementStatus = row.solution === '抵扣账单' ? '待核对' : document.getElementById('refundStatus').value;
+      row.refundSerialNo = document.getElementById('refundSerialNo').value;
+      row.exchangeSku = document.getElementById('exchangeSku').value;
+      row.exchangeQty = document.getElementById('exchangeQty').value;
+      closeModal('schemeModal');
+      renderRows();
+      showToast(row.solution === '抵扣账单' ? '方案已保存，供应商对账单数据待核对' : row.solution === '赔款' ? '方案已保存，供应商赔款金额已记录' : '返修方案已保存');
+    });
+  </script>
+</body>
+</html>
+
