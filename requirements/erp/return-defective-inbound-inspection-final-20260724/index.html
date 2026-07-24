@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ERP退件次品处理与入库质检调整合并需求文档 V3.1</title>
+  <style>
+    :root{--bg:#f5f7fa;--panel:#fff;--text:#1f2329;--muted:#667085;--subtle:#98a2b3;--line:#e5e7eb;--blue:#1677ff;--blue-bg:#e6f4ff;--green:#389e0d;--green-bg:#f6ffed;--orange:#d46b08;--orange-bg:#fff7e6;--purple:#722ed1;--purple-bg:#f9f0ff;--red:#cf1322;--red-bg:#fff1f0;--shadow:0 8px 24px rgba(15,23,42,.05)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif}.layout{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh}aside{position:sticky;top:0;height:100vh;overflow:auto;padding:24px 18px;background:#101828;color:#d0d5dd}aside h1{margin:0 0 6px;color:#fff;font-size:18px;line-height:1.4}aside .version{margin:0 0 18px;color:#91caff;font-size:12px}aside a{display:block;padding:7px 10px;border-radius:6px;color:#d0d5dd;text-decoration:none}aside a:hover{color:#fff;background:rgba(255,255,255,.08)}main{max-width:1480px;padding:28px 36px 64px}.hero,section{background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow)}.hero{padding:30px 34px;margin-bottom:18px}.hero h2{margin:0 0 10px;font-size:28px;line-height:1.3}.meta{display:flex;flex-wrap:wrap;gap:8px;color:var(--muted)}.tag{display:inline-flex;align-items:center;min-height:24px;padding:1px 8px;border:1px solid #d9d9d9;border-radius:4px;background:#fff;color:var(--muted);font-size:12px;white-space:nowrap}.tag-blue{color:var(--blue);background:var(--blue-bg);border-color:#91caff}.tag-green{color:var(--green);background:var(--green-bg);border-color:#b7eb8f}.tag-orange{color:var(--orange);background:var(--orange-bg);border-color:#ffd591}.tag-purple{color:var(--purple);background:var(--purple-bg);border-color:#d3adf7}.tag-red{color:var(--red);background:var(--red-bg);border-color:#ffa39e}section{padding:24px 28px;margin:16px 0}h2{margin:0 0 16px;font-size:22px;line-height:1.4}h3{margin:24px 0 12px;font-size:17px;line-height:1.45}h3:first-child{margin-top:0}h4{margin:18px 0 8px;font-size:15px}p{margin:0 0 12px;color:var(--muted)}ul,ol{margin:8px 0 16px;padding-left:22px;color:var(--muted)}li{margin:4px 0}table{width:100%;margin:12px 0 18px;border:1px solid var(--line);border-collapse:collapse;background:#fff}th,td{padding:10px 12px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);text-align:left;vertical-align:top;word-break:break-word}th{color:#344054;background:#fafafa;font-weight:600}tr:last-child td{border-bottom:0}th:last-child,td:last-child{border-right:0}.note{padding:12px 14px;margin:12px 0;border:1px solid #d9d9d9;border-left:4px solid var(--blue);border-radius:6px;background:#f8fafc;color:var(--muted)}.warning{border-left-color:var(--orange);background:var(--orange-bg)}.danger{border-left-color:var(--red);background:var(--red-bg)}.success{border-left-color:var(--green);background:var(--green-bg)}.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.metric{padding:16px;border:1px solid var(--line);border-radius:8px;background:#fff}.metric strong{display:block;font-size:21px}.metric span{color:var(--muted);font-size:12px}.flow-wrap{overflow:auto;padding:10px;border:1px solid var(--line);border-radius:8px;background:#fbfdff}.flow-wrap svg{display:block;min-width:1100px;width:100%;height:auto}.flow-wrap text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:14px;fill:#1f2329}.flow-wrap .small{font-size:12px;fill:#667085}.flow-wrap .box{fill:#fff;stroke:#91caff;stroke-width:1.5}.flow-wrap .blue{fill:#e6f4ff}.flow-wrap .green{fill:#f6ffed;stroke:#b7eb8f}.flow-wrap .orange{fill:#fff7e6;stroke:#ffd591}.flow-wrap .purple{fill:#f9f0ff;stroke:#d3adf7}.flow-wrap .red{fill:#fff1f0;stroke:#ffa39e}.flow-wrap .arrow{fill:none;stroke:#7f96b3;stroke-width:1.7;marker-end:url(#arrow)}.caption{margin:8px 0 0;color:var(--subtle);font-size:12px}.req{font-family:Consolas,Monaco,monospace;color:#0958d9;font-size:12px}.mono{font-family:Consolas,Monaco,monospace;font-size:12px}.link{color:#1677ff;word-break:break-all}.small{font-size:12px;color:var(--subtle)}.check{color:var(--green);font-weight:600}.todo{color:var(--orange);font-weight:600}.strike{color:var(--subtle);text-decoration:line-through}@media(max-width:980px){.layout{grid-template-columns:1fr}aside{position:static;height:auto}.side-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px}main{padding:18px}.grid-2,.grid-3{grid-template-columns:1fr}}@media print{aside{display:none}.layout{display:block}main{max-width:none;padding:0}section,.hero{box-shadow:none;break-inside:avoid}.flow-wrap{overflow:visible}.flow-wrap svg{min-width:0}}
+  </style>
+  <style>
+    .reference-shot{margin:16px 0;padding:14px;border:1px solid var(--line);border-radius:8px;background:#fafafa}
+    .reference-shot img{display:block;max-width:100%;height:auto;margin:auto;border:1px solid #e5e7eb;border-radius:6px}
+    .reference-shot figcaption{margin-top:8px;text-align:center;color:var(--muted);font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside>
+      <h1>退件次品处理<br>与入库质检调整</h1>
+      <div class="version">V3.1 流程修订版 · 2026-07-23</div>
+      <nav class="side-links">
+        <a href="#summary">0. 文档说明</a>
+        <a href="#scope">1. 范围与目标</a>
+        <a href="#flow">2. 业务流程图</a>
+        <a href="#inspection">3. 入库质检调整</a>
+        <a href="#config">4. 次品处理配置</a>
+        <a href="#return-defect-qc">5. 退件次品质检</a>
+        <a href="#pool">6. 次品处理池</a>
+        <a href="#plan">7. 设置处理方案</a>
+        <a href="#outbound">8. 返修出库</a>
+        <a href="#module-adjustments">9. 关联模块需求调整</a>
+        <a href="#data">10. 数据与接口</a>
+        <a href="#acceptance">11. 验收标准</a>
+        <a href="#open">12. 待确认项</a>
+      </nav>
+    </aside>
+    <main>
+      <header class="hero" id="summary">
+        <div class="meta"><span class="tag tag-blue">ERP</span><span class="tag tag-purple">需求评审稿</span></div>
+        <h2>ERP 采购入库质检与退件次品处理需求文档</h2>
+        <p>本需求覆盖正常采购来货的 PDA 收货与入库质检、退件次品质检与回传、次品处理池、返修出库及后续库存与财务闭环。</p>
+        <div class="meta"><span>版本：V3.1</span><span>日期：2026-07-23</span><span>状态：评审稿</span><span>UI：Ant Design B 端 ERP 风格</span></div>
+      </header>
+
+      <section id="scope">
+        <h2>1. 范围与目标</h2>
+        <div class="grid-3">
+          <div class="metric"><strong>采购来货可追溯</strong><span>PDA 收货、PO 绑定、送货单拍摄和质检结果全链路留痕</span></div>
+          <div class="metric"><strong>退件次品可归集</strong><span>次品按存放类型、供应商、SKU 和仓库进入处理池</span></div>
+          <div class="metric"><strong>处理闭环</strong><span>返修、换货、报损、抵扣账单、赔款均有单据和结果追踪</span></div>
+        </div>
+        <h3>1.1 业务痛点</h3>
+        <ul>
+          <li>退件收货发现次品后缺少统一的上架/暂存判断和可追溯单据。</li>
+          <li>采购无法按供应商 + SKU + 仓库聚合处理数量，返修、报损与结算容易脱节。</li>
+          <li>仓库上传的次品图片分散在退件单中，处理池和详情页缺少快速查看入口。</li>
+          <li>入库质检结果、次品库存、返修出库和返修入库之间需要统一状态和数据口径。</li>
+        </ul>
+        <h3>1.2 本次不做</h3>
+        <ul>
+          <li>不重做现有退件收货、仓库出库和供应商对账底层流程，只补充业务字段、状态串联和入口。</li>
+          <li>不在次品处理池自动替采购决定返修或报损；系统提供规则建议和校验。</li>
+          <li>不在本版本扩展完整财务结算规则；赔款、抵扣账单的财务字段以本需求定义的最小闭环为准。</li>
+        </ul>
+      </section>
+
+      <section id="flow">
+        <h2>2. 业务流程图</h2>
+        <p>本需求必须拆成两条独立链路：第一条是正常采购来货的 PDA 收货、PO 自动绑定、送货单高拍与识别；第二条是仓库退件次品的存放、处理池、返修/报损及库存流水闭环。</p>
+
+        <h3>2.1 流程图一：正常采购来货收货与入库质检</h3>
+        <div class="flow-wrap">
+          <svg viewBox="0 0 1540 620" role="img" aria-label="正常采购来货收货与入库质检流程图">
+            <defs><marker id="procArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#7f96b3"/></marker></defs>
+            <rect x="12" y="12" width="1516" height="178" rx="10" fill="#f8fbff" stroke="#dbeafe"/><text x="30" y="38" font-weight="600">第一阶段：仓库 PDA 收货与 PO 绑定</text>
+            <rect class="box blue" x="30" y="68" width="190" height="62" rx="8"/><text x="125" y="94" text-anchor="middle">正常采购来货</text><text x="125" y="114" text-anchor="middle" class="small">采购单/物流包裹到仓</text>
+            <rect class="box blue" x="260" y="68" width="190" height="62" rx="8"/><text x="355" y="94" text-anchor="middle">仓库 PDA 收货</text><text x="355" y="114" text-anchor="middle" class="small">扫描物流单号或 PO 单号</text>
+            <rect class="box orange" x="490" y="68" width="200" height="62" rx="8"/><text x="590" y="94" text-anchor="middle">是否已绑定入库单？</text><text x="590" y="114" text-anchor="middle" class="small">判断当前收货关联关系</text>
+            <path class="arrow" marker-end="url(#procArrow)" d="M220 99 H260"/><path class="arrow" marker-end="url(#procArrow)" d="M450 99 H490"/>
+            <rect class="box green" x="760" y="38" width="210" height="62" rx="8"/><text x="865" y="64" text-anchor="middle">是：已绑定入库单</text><text x="865" y="84" text-anchor="middle" class="small">直接继续收货，不识别 PO</text>
+            <rect class="box orange" x="760" y="122" width="210" height="62" rx="8"/><text x="865" y="148" text-anchor="middle">否：按 PO 查找入库单</text><text x="865" y="168" text-anchor="middle" class="small">系统使用 PO 查询入库单</text>
+            <path class="arrow" marker-end="url(#procArrow)" d="M690 99 C720 99 720 69 760 69"/><path class="arrow" marker-end="url(#procArrow)" d="M690 99 C720 99 720 153 760 153"/>
+            <rect class="box green" x="1030" y="38" width="210" height="62" rx="8"/><text x="1135" y="64" text-anchor="middle">找到入库单</text><text x="1135" y="84" text-anchor="middle" class="small">系统自动绑定入库单</text>
+            <rect class="box purple" x="1030" y="122" width="210" height="62" rx="8"/><text x="1135" y="148" text-anchor="middle">未找到入库单</text><text x="1135" y="168" text-anchor="middle" class="small">正常完成收货记录</text>
+            <path class="arrow" marker-end="url(#procArrow)" d="M970 69 C1100 69 1180 111 1300 111"/><path class="arrow" marker-end="url(#procArrow)" d="M970 153 C995 153 1000 69 1030 69"/><path class="arrow" marker-end="url(#procArrow)" d="M970 153 H1030"/>
+            <rect class="box" x="1300" y="80" width="190" height="62" rx="8"/><text x="1395" y="106" text-anchor="middle">正常完成收货记录</text><text x="1395" y="126" text-anchor="middle" class="small">未绑定关系不阻断收货</text>
+            <path class="arrow" marker-end="url(#procArrow)" d="M1240 69 C1270 69 1270 111 1300 111"/><path class="arrow" marker-end="url(#procArrow)" d="M1240 153 C1270 153 1270 111 1300 111"/>
+
+            <rect x="12" y="220" width="1516" height="240" rx="10" fill="#fffdf7" stroke="#ffe7ba"/><text x="30" y="246" font-weight="600">第二阶段：高拍仪拍摄送货单与 PO 识别</text>
+            <rect class="box blue" x="30" y="276" width="210" height="62" rx="8"/><text x="135" y="302" text-anchor="middle">进入质检环节</text><text x="135" y="322" text-anchor="middle" class="small">每个采购来货都必须拍照</text>
+            <rect class="box blue" x="280" y="276" width="210" height="62" rx="8"/><text x="385" y="302" text-anchor="middle">高拍仪拍摄送货单</text><text x="385" y="322" text-anchor="middle" class="small">图片与采购来货绑定</text>
+            <rect class="box orange" x="530" y="276" width="220" height="62" rx="8"/><text x="640" y="302" text-anchor="middle">扫描物流号是否已绑定？</text><text x="640" y="322" text-anchor="middle" class="small">检查入库单关联状态</text>
+            <path class="arrow" marker-end="url(#procArrow)" d="M240 307 H280"/><path class="arrow" marker-end="url(#procArrow)" d="M490 307 H530"/>
+            <rect class="box green" x="820" y="244" width="210" height="62" rx="8"/><text x="925" y="270" text-anchor="middle">已绑定入库单</text><text x="925" y="290" text-anchor="middle" class="small">保存送货单图片，不识别 PO</text>
+            <rect class="box orange" x="820" y="328" width="210" height="62" rx="8"/><text x="925" y="354" text-anchor="middle">未绑定入库单</text><text x="925" y="374" text-anchor="middle" class="small">识别送货单上的 PO 单号</text>
+            <path class="arrow" marker-end="url(#procArrow)" d="M750 307 C780 307 780 275 820 275"/><path class="arrow" marker-end="url(#procArrow)" d="M750 307 C780 307 780 359 820 359"/>
+            <rect class="box green" x="1080" y="244" width="200" height="62" rx="8"/><text x="1180" y="270" text-anchor="middle">直接进入质检</text><text x="1180" y="290" text-anchor="middle" class="small">已有绑定，不再识别 PO</text>
+            <rect class="box green" x="1080" y="328" width="200" height="62" rx="8"/><text x="1180" y="354" text-anchor="middle">提取到 PO 单号</text><text x="1180" y="374" text-anchor="middle" class="small">自动绑定入库单</text>
+            <rect class="box red" x="1080" y="400" width="200" height="62" rx="8"/><text x="1180" y="426" text-anchor="middle">无法提取 PO 单号</text><text x="1180" y="446" text-anchor="middle" class="small">回传送货单给采购员</text>
+            <path class="arrow" marker-end="url(#procArrow)" d="M1030 275 H1080"/><path class="arrow" marker-end="url(#procArrow)" d="M1030 359 H1080"/><path class="arrow" marker-end="url(#procArrow)" d="M1030 359 C1050 359 1050 431 1080 431"/>
+            <rect class="box green" x="1330" y="244" width="160" height="62" rx="8"/><text x="1410" y="270" text-anchor="middle">正常完成质检</text><text x="1410" y="290" text-anchor="middle" class="small">已绑定入库单</text>
+            <rect class="box green" x="1330" y="328" width="160" height="62" rx="8"/><text x="1410" y="354" text-anchor="middle">正常完成质检</text><text x="1410" y="374" text-anchor="middle" class="small">已自动绑定入库单</text>
+            <rect class="box purple" x="1330" y="400" width="160" height="62" rx="8"/><text x="1410" y="426" text-anchor="middle">采购员绑定 PO</text><text x="1410" y="446" text-anchor="middle" class="small">绑定后继续处理</text>
+            <path class="arrow" marker-end="url(#procArrow)" d="M1280 275 H1330"/><path class="arrow" marker-end="url(#procArrow)" d="M1280 359 H1330"/><path class="arrow" marker-end="url(#procArrow)" d="M1280 431 H1330"/>
+            <text x="30" y="490" class="small">最终结果：已绑定入库单的采购来货直接质检，不再识别 PO；未绑定入库单的来货才识别送货单 PO，无法提取时回传采购员绑定。</text>
+          </svg>
+        </div>
+        <p class="caption">关键原则：PDA 收货与 PO 绑定解耦；不能绑定 PO 时仍可完成收货记录；高拍仪送货单为每个采购来货的必拍凭证。</p>
+
+        <h3>2.2 流程图二：仓库返修次品处理流程</h3>
+        <div class="flow-wrap">
+          <svg viewBox="0 0 1700 930" role="img" aria-label="仓库返修次品处理流程图">
+            <defs><marker id="defectArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#7f96b3"/></marker></defs>
+            <rect x="12" y="12" width="1676" height="180" rx="10" fill="#f8fbff" stroke="#dbeafe"/><text x="30" y="38" font-weight="600">第一阶段：退件收货、次品拍照与存放方案识别</text>
+            <rect class="box blue" x="30" y="70" width="180" height="60" rx="8"/><text x="120" y="96" text-anchor="middle">仓库收到退件</text><text x="120" y="116" text-anchor="middle" class="small">按退件任务收货</text>
+            <rect class="box orange" x="250" y="70" width="180" height="60" rx="8"/><text x="340" y="96" text-anchor="middle">质检是否为次品？</text><text x="340" y="116" text-anchor="middle" class="small">合格品走正常退件</text>
+            <rect class="box blue" x="470" y="70" width="190" height="60" rx="8"/><text x="565" y="96" text-anchor="middle">高拍仪拍摄次品</text><text x="565" y="116" text-anchor="middle" class="small">图片关联退件单/SKU</text>
+            <rect class="box orange" x="700" y="70" width="220" height="60" rx="8"/><text x="810" y="96" text-anchor="middle">系统读取次品配置</text><text x="810" y="116" text-anchor="middle" class="small">SKU、销量、仓库、供应商是否支持返修</text>
+            <rect class="box green" x="980" y="40" width="210" height="60" rx="8"/><text x="1085" y="66" text-anchor="middle">上架次品区</text><text x="1085" y="86" text-anchor="middle" class="small">需要生成上架任务</text>
+            <rect class="box purple" x="980" y="120" width="210" height="60" rx="8"/><text x="1085" y="146" text-anchor="middle">次品暂存区</text><text x="1085" y="166" text-anchor="middle" class="small">退件任务完成后回传</text>
+            <path class="arrow" marker-end="url(#defectArrow)" d="M210 100 H250"/><path class="arrow" marker-end="url(#defectArrow)" d="M430 100 H470"/><path class="arrow" marker-end="url(#defectArrow)" d="M660 100 H700"/><path class="arrow" marker-end="url(#defectArrow)" d="M920 100 C950 100 950 70 980 70"/><path class="arrow" marker-end="url(#defectArrow)" d="M920 100 C950 100 950 150 980 150"/>
+            <text x="435" y="88" class="small">是</text><text x="360" y="45" class="small">否：正常退件收货</text>
+
+            <rect x="12" y="220" width="1676" height="235" rx="10" fill="#f6ffed" stroke="#b7eb8f"/><text x="30" y="246" font-weight="600">第二阶段：次品存放与处理池归集</text>
+            <rect class="box green" x="30" y="280" width="230" height="70" rx="8"/><text x="145" y="306" text-anchor="middle">生成次品上架任务</text><text x="145" y="326" text-anchor="middle" class="small">关联订单号 → 查询出库批次</text><text x="145" y="342" text-anchor="middle" class="small">采购批次→查询采购单供应商</text>
+            <rect class="box green" x="300" y="280" width="230" height="70" rx="8"/><text x="415" y="306" text-anchor="middle">查询供应商货位</text><text x="415" y="326" text-anchor="middle" class="small">供应商是否绑定次品货位？</text><text x="415" y="342" text-anchor="middle" class="small">有则取绑定货位，无则空货位</text>
+            <rect class="box green" x="570" y="280" width="230" height="70" rx="8"/><text x="685" y="306" text-anchor="middle">按推荐货位上架</text><text x="685" y="326" text-anchor="middle" class="small">供应商次品货位或空货位</text><text x="685" y="342" text-anchor="middle" class="small">完成实物上架</text>
+            <rect class="box green" x="850" y="280" width="260" height="70" rx="8"/><text x="980" y="306" text-anchor="middle">记录库存流水</text><text x="980" y="326" text-anchor="middle" class="small">库存：次品库存</text><text x="980" y="342" text-anchor="middle" class="small">类型：次品入库</text>
+            <rect class="box purple" x="30" y="375" width="230" height="60" rx="8"/><text x="145" y="401" text-anchor="middle">退件任务完成</text><text x="145" y="421" text-anchor="middle" class="small">暂存货位记录，不加次品库存</text>
+            <rect class="box purple" x="570" y="375" width="230" height="60" rx="8"/><text x="685" y="401" text-anchor="middle">回传次品处理池</text><text x="685" y="421" text-anchor="middle" class="small">来源：上架次品区/次品暂存区</text>
+            <path class="arrow" marker-end="url(#defectArrow)" d="M1190 70 C1300 70 1300 315 260 315"/><path class="arrow" marker-end="url(#defectArrow)" d="M1190 150 C1260 150 1260 405 260 405"/><path class="arrow" marker-end="url(#defectArrow)" d="M260 315 H300"/><path class="arrow" marker-end="url(#defectArrow)" d="M530 315 H570"/><path class="arrow" marker-end="url(#defectArrow)" d="M800 315 H850"/><path class="arrow" marker-end="url(#defectArrow)" d="M685 350 V375"/><path class="arrow" marker-end="url(#defectArrow)" d="M260 405 H570"/>
+
+            <rect x="12" y="485" width="1676" height="415" rx="10" fill="#fffdf7" stroke="#ffe7ba"/><text x="30" y="511" font-weight="600">第三阶段：采购设置方案与仓库/财务后续动作</text>
+            <rect class="box blue" x="30" y="550" width="220" height="64" rx="8"/><text x="140" y="576" text-anchor="middle">次品处理池</text><text x="140" y="596" text-anchor="middle" class="small">按供应商+SKU+仓库聚合</text>
+            <rect class="box orange" x="300" y="550" width="220" height="64" rx="8"/><text x="410" y="576" text-anchor="middle">按存放类型选择方案</text><text x="410" y="596" text-anchor="middle" class="small">上架区 vs 暂存区</text>
+            <path class="arrow" marker-end="url(#defectArrow)" d="M250 582 H300"/>
+            <rect class="box green" x="570" y="525" width="220" height="64" rx="8"/><text x="680" y="551" text-anchor="middle">上架次品区：返修</text><text x="680" y="571" text-anchor="middle" class="small">返修入库 / 返修换货</text>
+            <rect class="box red" x="570" y="615" width="220" height="64" rx="8"/><text x="680" y="641" text-anchor="middle">上架次品区：报损</text><text x="680" y="661" text-anchor="middle" class="small">报损 / 抵扣账单 / 赔款</text>
+            <rect class="box purple" x="570" y="735" width="220" height="64" rx="8"/><text x="680" y="761" text-anchor="middle">次品暂存区</text><text x="680" y="781" text-anchor="middle" class="small">报损 / 抵扣账单 / 索赔</text>
+            <path class="arrow" marker-end="url(#defectArrow)" d="M520 582 C545 582 545 557 570 557"/><path class="arrow" marker-end="url(#defectArrow)" d="M520 582 C545 582 545 647 570 647"/><path class="arrow" marker-end="url(#defectArrow)" d="M520 582 C545 582 545 767 570 767"/>
+
+            <rect class="box green" x="850" y="525" width="240" height="64" rx="8"/><text x="970" y="551" text-anchor="middle">生成返修出库单</text><text x="970" y="571" text-anchor="middle" class="small">审核通过后流转仓库</text>
+            <rect class="box green" x="1130" y="525" width="240" height="64" rx="8"/><text x="1250" y="551" text-anchor="middle">仓库到供应商次品货位拣货</text><text x="1250" y="571" text-anchor="middle" class="small">次品库存类型：返修出库</text>
+            <rect class="box green" x="1410" y="525" width="240" height="64" rx="8"/><text x="1530" y="551" text-anchor="middle">供应商返修后回寄</text><text x="1530" y="571" text-anchor="middle" class="small">采购维护物流并建入库单</text>
+            <path class="arrow" marker-end="url(#defectArrow)" d="M790 557 H850"/><path class="arrow" marker-end="url(#defectArrow)" d="M1090 557 H1130"/><path class="arrow" marker-end="url(#defectArrow)" d="M1370 557 H1410"/>
+            <rect class="box green" x="1130" y="625" width="520" height="70" rx="8"/><text x="1390" y="651" text-anchor="middle">仓库正常收货 → 质检 → 贴标 → 上架</text><text x="1390" y="675" text-anchor="middle" class="small">库存流水类型：返修入库，库存属性：良品</text>
+            <path class="arrow" marker-end="url(#defectArrow)" d="M1530 589 V625"/>
+
+            <rect class="box red" x="850" y="615" width="240" height="64" rx="8"/><text x="970" y="641" text-anchor="middle">二级方案：报损 / 抵扣账单 / 赔款</text><text x="970" y="661" text-anchor="middle" class="small">三种方案均生成报损出库单并审核</text>
+            <rect class="box red" x="1130" y="715" width="240" height="64" rx="8"/><text x="1250" y="741" text-anchor="middle">仓库从次品区拣货报损</text><text x="1250" y="761" text-anchor="middle" class="small">库存流水：次品报损出库</text>
+            <path class="arrow" marker-end="url(#defectArrow)" d="M790 647 H850"/><path class="arrow" marker-end="url(#defectArrow)" d="M970 679 C970 730 1080 747 1130 747"/>
+            <rect class="box purple" x="850" y="735" width="240" height="64" rx="8"/><text x="970" y="761" text-anchor="middle">抵扣账单</text><text x="970" y="781" text-anchor="middle" class="small">报损出库后流转供应商对账模块</text>
+            <rect class="box purple" x="850" y="825" width="240" height="54" rx="8"/><text x="970" y="848" text-anchor="middle">赔款 / 索赔</text><text x="970" y="868" text-anchor="middle" class="small">报损出库后记录赔款信息</text>
+            <path class="arrow" marker-end="url(#defectArrow)" d="M790 647 C820 647 820 767 850 767"/><path class="arrow" marker-end="url(#defectArrow)" d="M790 767 H850"/><path class="arrow" marker-end="url(#defectArrow)" d="M790 767 C820 767 820 852 850 852"/>
+            <text x="1120" y="835" class="small">暂存区分支：三种方案均不生成报损出库单；只有抵扣账单生成供应商对账明细，报损/索赔只记录结果。</text>
+          </svg>
+        </div>
+        <p class="caption">库存流水边界：上架次品区返修出库=次品库存类型；供应商返修回货后正常入库=返修入库、良品；上架次品区报损=次品报损出库；次品暂存区不形成库存，方案不生成报损出库单。</p>
+      </section>
+
+      <section id="inspection">
+        <h2>3. 入库质检功能调整</h2>
+        <p>本模块面向正常采购来货，覆盖 PDA 收货、入库单绑定、送货单拍摄、PO 识别和质检提交。</p>
+        <h3>3.1 正常采购来货：PDA 收货与 PO 绑定</h3>
+        <table>
+          <thead><tr><th>场景</th><th>系统行为</th><th>收货结果</th></tr></thead>
+          <tbody>
+            <tr><td>扫描到已有绑定关系的物流单号/PO 单号</td><td>加载已绑定入库单和采购单</td><td>按已绑定单据继续收货</td></tr>
+            <tr><td>系统没有绑定入库单</td><td>系统按 PO 查找入库单；若找到，自动绑定入库单并记录绑定来源</td><td>绑定成功后继续收货</td></tr>
+            <tr><td>系统没有绑定入库单，按 PO 未找到入库单</td><td>不阻断 PDA 收货</td><td>正常完成收货记录，后续在高拍仪送货单识别环节继续处理</td></tr>
+          </tbody>
+        </table>
+        <h3>3.2 高拍仪送货单与 PO 识别</h3>
+        <table>
+          <thead><tr><th>触发</th><th>处理</th><th>异常回传</th></tr></thead>
+          <tbody>
+            <tr><td>每个采购来货进入质检</td><td>必须通过高拍仪拍摄送货单，图片与本次采购来货/入库单关联</td><td>拍摄失败时阻止质检完成并提示重拍</td></tr>
+            <tr><td>当前已绑定入库单</td><td>保存送货单图片，直接进入质检</td><td>不再识别送货单上的 PO，不重复绑定</td></tr>
+            <tr><td>当前未绑定入库单，且提取到送货单 PO 单号</td><td>按 PO 查找入库单；找到后自动绑定入库单，再进入质检</td><td>保留 OCR 识别结果与绑定来源日志</td></tr>
+            <tr><td>当前未绑定入库单，无法提取 PO 单号</td><td>收货记录不回滚</td><td>将送货单回传采购员，由采购员绑定 PO 单号并关联入库单</td></tr>
+          </tbody>
+        </table>
+        <h3>3.3 质检提交校验</h3>
+        <ul>
+          <li>质检数量不得大于收货数量；合格数量 + 次品数量 = 质检数量。</li>
+          <li>每个采购来货必须有高拍仪送货单图片，图片与本次采购来货/入库单关联。</li>
+          <li>已绑定入库单的来货不再识别 PO；未绑定时必须完成 PO 识别或转采购员绑定。</li>
+          <li>送货单拍摄或必要的绑定信息缺失时，不允许完成本次质检提交。</li>
+        </ul>
+      </section>
+
+      <section id="config">
+        <h2>4. 次品处理配置</h2>
+        <h3>4.1 配置模型</h3>
+        <table>
+          <thead><tr><th>配置项</th><th>取值/规则</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>规则名称</td><td>必填，长度限制沿用系统配置规范</td><td>用于列表识别与审计</td></tr>
+            <tr><td>条件类型</td><td>SKU、平台、过去 X 天销量、单价区间、货值区间、供应商是否支持返修</td><td>不再提供库存类型条件；“供应商支持返修=是”才可命中上架次品区条件</td></tr>
+            <tr><td>过去 X 天销量</td><td>统计天数 X + 销量阈值；命中条件为销量大于阈值</td><td>天数和阈值必须为非负数，阈值可为 0</td></tr>
+            <tr><td>应用仓库</td><td>默认全部仓库；支持选择一个或多个具体仓库</td><td>规则只对所选仓库的质检数据生效</td></tr>
+            <tr><td>条件关系</td><td>组内 AND，组间 OR</td><td>至少配置一个有效条件</td></tr>
+            <tr><td>处理建议</td><td>上架次品区 / 次品暂存区</td><td>同一优先级命中多条时按规则排序取值并记录命中规则</td></tr>
+          </tbody>
+        </table>
+        <h3>4.2 供应商主数据调整</h3>
+        <table>
+          <thead><tr><th>模块</th><th>字段</th><th>取值/规则</th><th>用途</th></tr></thead>
+          <tbody>
+            <tr><td>供应商管理</td><td>是否支持返修</td><td>是 / 否，默认值按现有供应商主数据初始化规则处理</td><td>参与次品配置命中；只有“是”才允许命中上架次品区条件</td></tr>
+          </tbody>
+        </table>
+        <figure class="reference-shot">
+          <img src="assets/supplier-support-repair-field.png" alt="供应商编辑页面新增是否支持返修字段参考截图">
+          <figcaption>供应商编辑页面参考：在公司基本信息区域新增“是否支持返修”字段。</figcaption>
+        </figure>
+        <h3>4.3 规则命中优先级</h3>
+        <p class="mono">SKU 专属规则 ＞ 供应商规则 ＞ 全局默认规则；同级按配置排序，命中结果写入质检记录，后续配置变更不反算历史单据。</p>
+        <div class="note"><strong>示例：</strong>规则 A：华东一仓 + 过去 30 天销量 &gt; 100，建议上架；规则 B：SKU-BAT-8842，建议暂存。若数据同时命中，SKU 专属规则 B 优先，并在质检记录中保留命中规则编号。</div>
+      </section>
+
+      <section id="return-defect-qc">
+        <h2>5. 退件模块：次品质检与次品回传</h2>
+        <p>本模块面向仓库退件收货，与正常采购来货的入库质检流程独立。仓库在退件质检发现次品后，通过高拍仪留存次品图片，系统依据次品处理配置判断存放方式，并将数据回传次品处理池。</p>
+        <h3>5.1 退件次品质检</h3>
+        <table>
+          <thead><tr><th>场景</th><th>仓库操作</th><th>系统处理</th></tr></thead>
+          <tbody>
+            <tr><td>退件收货</td><td>仓库按退件任务收货并进行质检</td><td>合格品按正常退件流程处理；次品进入次品质检分支</td></tr>
+            <tr><td>发现次品</td><td>将次品放置在高拍仪上拍照</td><td>图片关联退件单、SKU、仓库、质检批次和上传人</td></tr>
+            <tr><td>识别存放方式</td><td>查看系统建议并按要求存放</td><td>系统根据 SKU、销量、仓库、供应商是否支持返修等配置识别“上架次品区”或“次品暂存区”；供应商不支持返修时不得命中上架次品区条件</td></tr>
+            <tr><td>生成次品上架任务</td><td>关联订单号查询出库批次</td><td>若出库批次为采购批次，查询采购单对应供应商；若无法关联采购批次，则按默认供应商处理</td></tr>
+            <tr><td>推荐次品货位</td><td>根据供应商查询货位绑定关系</td><td>供应商已绑定次品货位时推荐该货位；未绑定时推荐空的次品货位</td></tr>
+            <tr><td>上架次品区</td><td>按推荐货位完成次品上架</td><td>上架完成后记录“次品库存-次品入库”流水，并回传次品处理池</td></tr>
+            <tr><td>次品暂存区</td><td>将次品放入暂存货位，记录实际数量</td><td>不形成次品库存，退件任务完成后回传次品处理池</td></tr>
+          </tbody>
+        </table>
+        <h3>5.2 仓库作业推荐货位逻辑</h3>
+        <div class="note"><strong>推荐逻辑：</strong>仓库生成次品上架任务后，系统按照“订单号 → 出库批次 → 采购单 → 供应商 → 供应商次品货位绑定”的链路推荐货位。</div>
+        <table>
+          <thead><tr><th>步骤</th><th>系统判断/查询</th><th>处理结果</th></tr></thead>
+          <tbody>
+            <tr><td>1. 查询出库批次</td><td>根据关联订单号查询对应出库批次</td><td>判断当前出库批次是否为采购批次</td></tr>
+            <tr><td>2. 查询供应商</td><td>若出库批次为采购批次，查询采购单对应供应商</td><td>获取本次次品上架任务的供应商</td></tr>
+            <tr><td>3. 查询货位绑定</td><td>查询该供应商在当前仓库是否绑定次品货位</td><td>返回供应商次品货位绑定结果</td></tr>
+            <tr><td>4. 推荐货位</td><td>已绑定供应商次品货位</td><td>推荐该供应商绑定的次品货位</td></tr>
+            <tr><td>5. 推荐货位</td><td>未绑定供应商次品货位</td><td>推荐当前仓库可用的空次品货位</td></tr>
+            <tr><td>6. 仓库上架</td><td>仓库确认推荐货位并执行上架</td><td>完成上架后记录“次品库存-次品入库”流水，并回传次品处理池</td></tr>
+          </tbody>
+        </table>
+        <h3>5.3 仓库退件入库操作页面调整</h3>
+        <p>退件入库操作页面按仓库现有作业页面调整：仓库作业区展示推荐货位和上架动作，SKU 收货信息中提供次品数量旁的拍照入口，并支持查看当前次品移动货位的明细数据。</p>
+        <table>
+          <thead><tr><th>页面位置</th><th>调整内容</th><th>交互与校验</th></tr></thead>
+          <tbody>
+            <tr><td>仓库作业信息区</td><td>新增“推荐次品货位”</td><td>系统按照供应商次品货位绑定规则生成推荐值；已绑定时展示供应商次品货位，未绑定时展示空的次品货位，并允许仓库扫描或手工确认实际次品货位</td></tr>
+            <tr><td>仓库作业信息区</td><td>新增“生成次品上架任务”按钮及“查看明细”按钮</td><td>点击生成次品上架任务后创建当前退件次品的移动货位任务；点击查看明细，打开当前次品移动货位任务的全部明细数据</td></tr>
+            <tr><td>SKU 行·收货信息</td><td>在次品数量旁新增“拍照”按钮</td><td>点击后调用高拍仪拍照接口；接口返回图片后自动绑定退件单、平台单号、SKU、仓库和当前质检批次</td></tr>
+            <tr><td>SKU 行·图片入口</td><td>展示已拍图片缩略图或图片数量</td><td>点击图片或图片数量打开图片查看器，支持多张图片左右切换、关闭和重新拍照</td></tr>
+            <tr><td>处理完成校验</td><td>校验次品货位、上架任务和次品图片</td><td>次品数量大于 0 时必须完成拍照；存放方式为上架次品区时，必须确认次品货位并生成上架任务后才能完成退件处理</td></tr>
+          </tbody>
+        </table>
+        <h4>生成次品上架任务与查看明细</h4>
+        <table>
+          <thead><tr><th>操作</th><th>触发条件</th><th>系统处理</th></tr></thead>
+          <tbody>
+            <tr><td>生成次品上架任务</td><td>次品数量大于 0，且存放方式为上架次品区；次品货位已确认</td><td>按退件单、平台单号、SKU、次品数量和确认货位生成次品移动货位任务；生成成功后按钮状态更新，并保留任务编号</td></tr>
+            <tr><td>查看明细</td><td>当前次品移动货位任务已生成，或已有任务明细</td><td>打开明细弹窗/抽屉，展示当前次品移动货位上的全部明细：任务编号、仓库、供应商、平台单号、退件单号、SKU、次品数量、来源货位、目标次品货位、任务状态、操作人和操作时间</td></tr>
+          </tbody>
+        </table>
+        <h4>高拍仪拍照接口约定</h4>
+        <table>
+          <thead><tr><th>阶段</th><th>请求/返回内容</th><th>处理要求</th></tr></thead>
+          <tbody>
+            <tr><td>调用拍照</td><td>传入退件单号、SKU、仓库、质检批次号、操作人</td><td>打开高拍仪设备并执行拍照；失败时提示重试，不影响已保存图片</td></tr>
+            <tr><td>拍照返回</td><td>图片 ID、图片地址、缩略图地址、拍摄时间、操作人</td><td>保存图片关联关系，并立即刷新当前页面缩略图</td></tr>
+            <tr><td>图片查看</td><td>点击缩略图或图片数量</td><td>打开图片查看器，支持左右切换和关闭</td></tr>
+          </tbody>
+        </table>
+        <figure class="reference-shot">
+          <img src="assets/return-receipt-operation-page-reference.png" alt="退件入库操作页面调整参考截图">
+          <figcaption>退件入库操作页面参考：增加推荐次品货位、生成次品上架任务、查看明细，以及次品数量旁的拍照入口。</figcaption>
+        </figure>
+        <h3>5.4 次品回传与库存流水</h3>
+        <table>
+          <thead><tr><th>结果</th><th>系统动作</th><th>数据去向</th></tr></thead>
+          <tbody>
+            <tr><td>合格品</td><td>按正常退件流程继续处理</td><td>正常退件库存/入库流水</td></tr>
+            <tr><td>次品：上架次品区</td><td>完成次品上架后，同时执行库存流水记录和处理池回传</td><td>库存：次品库存；流水类型：次品入库；随后回传次品处理池</td></tr>
+            <tr><td>次品：次品暂存区</td><td>退件任务完成后回传处理池</td><td>不形成次品库存，不生成次品入库流水，仅记录暂存货位和数量</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="pool">
+        <h2>6. 次品处理池</h2>
+        <h3>6.1 页面结构与字段</h3>
+        <table>
+          <thead><tr><th>区域</th><th>字段/操作</th><th>规则</th></tr></thead>
+          <tbody>
+            <tr><td>Tab</td><td>待处理、已处理</td><td>已处理查看已经发起处置的记录，不展示无关平台字段</td></tr>
+            <tr><td>筛选</td><td>仓库、供应商、SKU、次品存放类型、更新时间、状态</td><td>支持重置、空结果和加载反馈</td></tr>
+            <tr><td>主列表</td><td>供应商、SKU、仓库、次品存放类型、待处理数量、采购成本金额、历史处理次数、更新时间</td><td>数量统一展示待处理数量，不拆分上架/暂存数量</td></tr>
+            <tr><td>图片列</td><td>次品图片缩略图/数量</td><td>打开当前 SKU 对应退件单的仓库上传图片</td></tr>
+            <tr><td>操作</td><td>查看详情、设置处理方案、查看历史处理</td><td>详情使用抽屉，方案使用弹窗，高风险操作二次确认</td></tr>
+          </tbody>
+        </table>
+        <h3>6.2 图片查看器</h3>
+        <ul>
+          <li>图片来源：当前 SKU 对应退件单的仓库上传次品图片；同一 SKU 允许聚合多张图片。</li>
+          <li>查看器展示图片、退件单号、上传时间、图片说明和当前序号。</li>
+          <li>支持上一张、下一张、鼠标左右按钮、键盘 ←/→ 切换，Esc 关闭。</li>
+          <li>详情抽屉“库存来源”区域复用同一图片查看器，点击任一图片可直接打开。</li>
+        </ul>
+        <h3>6.3 详情抽屉</h3>
+        <table>
+          <thead><tr><th>区块</th><th>展示内容</th></tr></thead>
+          <tbody>
+            <tr><td>汇总</td><td>供应商、SKU、仓库、次品存放类型、待处理数量、采购成本摘要、历史处理次数</td></tr>
+            <tr><td>库存来源</td><td>来源单号、收货时间、收货数量、次品数量、当前货位/暂存货位、仓库上传图片</td></tr>
+            <tr><td>历史处理</td><td>处理时间、来源类型、数量、方案、金额、发起人、关联单据、审核状态、处理结果</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="plan">
+        <h2>7. 设置处理方案</h2>
+        <h3>7.1 公共信息</h3>
+        <table>
+          <thead><tr><th>字段</th><th>默认值</th><th>交互</th></tr></thead>
+          <tbody>
+            <tr><td>供应商</td><td>默认加载当前记录供应商</td><td>可下拉选择当前 SKU 对应的全部供应商；切换后刷新地址信息</td></tr>
+            <tr><td>SKU / 次品数量 / 总成本</td><td>当前处理池记录</td><td>只读；数量不可超过待处理数量</td></tr>
+            <tr><td>次品存放类型</td><td>当前记录</td><td>只读；决定报损二级方案的可用范围</td></tr>
+            <tr><td>处理方式</td><td>未选择</td><td>已上架次品区：一级选择返修/报损；次品暂存区：直接选择报损/抵扣账单/索赔</td></tr>
+          </tbody>
+        </table>
+        <h3>7.2 返修</h3>
+        <ul>
+          <li>返修方案仅保留“返修入库、返修换货”。返修换货必须录入换货 SKU 和数量，并展示换货 SKU 单价、金额。</li>
+          <li>供应商地址信息默认带出：收件人、收件电话、收件人地址；字段支持编辑，编辑值仅作用于当前返修单快照。</li>
+          <li>维护返修数量、预估运费、运费承担方、返修费；最终运费/返修费在返修出库页确认。</li>
+          <li>成本比较值 = 返修费 + 公司承担的预估运费。采购总成本 &gt; 1000 时比例达到 80%，采购总成本 ≤ 1000 时比例达到 60%，触发二次确认。</li>
+        </ul>
+        <h3>7.3 报损与二级方案</h3>
+        <table>
+          <thead><tr><th>适用来源</th><th>二级方案</th><th>业务结果</th></tr></thead>
+          <tbody>
+            <tr><td>已上架次品区 + 一级报损</td><td><strong>报损</strong></td><td>无任何挽损，直接生成报损出库单，不维护返修/赔款/抵扣字段</td></tr>
+            <tr><td>已上架次品区 + 一级报损</td><td>抵扣账单</td><td>生成报损出库单并流转仓库；同时记录抵扣金额，生成供应商对账待核对数据</td></tr>
+            <tr><td>已上架次品区 + 一级报损</td><td>赔款</td><td>生成报损出库单并流转仓库；同时记录赔款金额、流水、方式、状态、实际退款金额和凭证</td></tr>
+            <tr><td>次品暂存区</td><td>报损</td><td>只记录报损结果，不生成报损出库单，不产生库存流水</td></tr>
+            <tr><td>次品暂存区</td><td>抵扣账单</td><td>生成供应商对账单明细；不生成报损出库单</td></tr>
+            <tr><td>次品暂存区</td><td>索赔</td><td>只记录索赔/赔款记录；不生成报损出库单</td></tr>
+          </tbody>
+        </table>
+        <div class="note danger"><strong>提交校验：</strong>已上架次品区选择一级“报损”后，必须继续选择“报损 / 抵扣账单 / 赔款”其中一个二级方案；三个二级方案均生成报损出库单，抵扣账单和赔款分别追加对应财务记录。次品暂存区直接选择“报损 / 抵扣账单 / 索赔”，且不生成报损出库单。</div>
+        <h3>7.4 单据与库存流水</h3>
+        <table>
+          <thead><tr><th>存放类型/方案</th><th>生成单据</th><th>库存流水/财务流</th></tr></thead>
+          <tbody>
+            <tr><td>次品上架</td><td>次品上架任务</td><td>按供应商上架完成后生成“次品库存-次品入库”流水</td></tr>
+            <tr><td>上架次品区 + 返修</td><td>返修出库单；供应商回货后由采购创建入库单</td><td>出库：次品库存类型的返修出库；回货：返修入库，良品</td></tr>
+            <tr><td>上架次品区 + 报损 + 报损</td><td>生成报损出库单，审核后流转仓库</td><td>仓库从次品区拣货报损，生成次品类型的报损出库流水</td></tr>
+            <tr><td>上架次品区 + 报损 + 抵扣账单</td><td>生成报损出库单，审核后流转仓库</td><td>仓库从次品区拣货报损，生成次品报损出库流水；同时流转供应商对账模块</td></tr>
+            <tr><td>上架次品区 + 报损 + 赔款</td><td>生成报损出库单，审核后流转仓库</td><td>仓库从次品区拣货报损，生成次品报损出库流水；同时记录赔款金额、流水、方式、状态和凭证</td></tr>
+            <tr><td>次品暂存区 + 报损</td><td>不生成报损出库单</td><td>只记录处理结果，不加/减库存</td></tr>
+            <tr><td>次品暂存区 + 抵扣账单</td><td>不生成报损出库单</td><td>生成供应商对账单明细，不产生库存流水</td></tr>
+            <tr><td>次品暂存区 + 索赔</td><td>不生成报损出库单</td><td>只记录索赔结果，不产生库存流水</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="outbound">
+        <h2>8. 其他出库-返修出库</h2>
+        <p>该页面承接次品处理池生成的返修出库单，保持独立原型的页面边界，不覆盖原有出库原型。</p>
+        <table>
+          <thead><tr><th>模块</th><th>需求</th><th>状态</th></tr></thead>
+          <tbody>
+            <tr><td>返修出库列表</td><td>按仓库、单号、创建人、审核状态、出库状态、创建时间筛选</td><td>待审核、待仓库作业、已出库、异常、已完成、审核拒绝、取消</td></tr>
+            <tr><td>详情抽屉</td><td>查看供应商、SKU、出库信息、返修方案、物流、收件人信息和关联单据</td><td>只读信息与可操作字段分层</td></tr>
+            <tr><td>物流绑定</td><td>录入/绑定物流单号，展示承运商和回程物流</td><td>返修出库完成后可进入返修入库</td></tr>
+            <tr><td>换货信息</td><td>维护换货 SKU、数量、单价和金额快照</td><td>金额按数量实时计算</td></tr>
+            <tr><td>财务信息</td><td>返修费、运费承担方、抵扣账单/赔款信息</td><td>最终费用在返修出库页确认</td></tr>
+            <tr><td>返修出库流水</td><td>审核通过后仓库到对应供应商次品货位拣货并发给供应商</td><td>库存流水类型为“次品库存-返修出库”</td></tr>
+            <tr><td>返修回货入库</td><td>采购维护供应商回寄物流单号并创建仓库入库单；仓库正常收货、质检、贴标、上架</td><td>库存流水类型为“返修入库”，库存属性为良品</td></tr>
+          </tbody>
+        </table>
+        <div class="note success"><strong>原型链接：</strong><a class="link" href="https://kayleylee1128-gif.github.io/seabost-prototype-hosting/prototypes/erp/v2-ant-design-erp-20260723-124330/">其他出库-返修出库 v2</a>；<a class="link" href="https://kayleylee1128-gif.github.io/seabost-prototype-hosting/prototypes/erp/v4-20260723-161251/">次品处理池 v4</a>。</div>
+      </section>
+
+      <section id="module-adjustments">
+        <h2>9. 关联模块需求调整</h2>
+        <h3>9.1 订单系统-库存查询模块调整</h3>
+        <p>本项为订单系统库存查询模块的配套字段调整，用于补充次品库存查询和导出能力，不改变现有正常库存、在途库存和缺货库存的统计口径。</p>
+        <table>
+          <thead><tr><th>调整位置</th><th>调整内容</th><th>业务规则</th></tr></thead>
+          <tbody>
+            <tr><td>库存查询列表</td><td>新增“次品库存”字段/列</td><td>按仓库 + SKU 展示当前次品库存数量，与正常库存、在途库存、缺货库存分开统计；无次品库存时展示 0</td></tr>
+            <tr><td>库存查询导出</td><td>导出字段新增“次品库存”</td><td>导出文件增加与列表同口径的“次品库存”列，字段名称、仓库、SKU 和数量口径保持一致</td></tr>
+            <tr><td>查询与权限</td><td>沿用库存查询原有筛选、分页和权限</td><td>筛选结果与导出结果一致；用户只能导出其有权限查看的仓库数据</td></tr>
+          </tbody>
+        </table>
+        <figure class="reference-shot">
+          <img src="assets/oms-inventory-defect-stock-reference.png" alt="订单系统库存查询新增次品库存字段参考截图">
+          <figcaption>订单系统库存查询页面参考：新增“次品库存”字段，并在导出数据中同步增加该字段。</figcaption>
+        </figure>
+
+        <h3>9.2 采购系统-无单号包裹模块调整</h3>
+        <p>本项为采购系统无单号包裹模块的配套信息展示调整，用于让采购员在绑定处理时直接查看仓库拍摄的送货单图片。</p>
+        <table>
+          <thead><tr><th>调整位置</th><th>调整内容</th><th>业务规则与交互</th></tr></thead>
+          <tbody>
+            <tr><td>无单号包裹列表</td><td>新增“图片”列</td><td>列表展示仓库上传的送货单图片缩略图或图片数量；暂无图片时展示“暂无图片”</td></tr>
+            <tr><td>图片回传</td><td>回传展示仓库拍摄的送货单图片</td><td>仓库通过高拍仪完成拍照后，图片绑定无单号包裹、仓库、物流单号/包裹记录和拍摄时间，并回传采购系统</td></tr>
+            <tr><td>图片查看</td><td>点击图片列查看原图</td><td>打开图片查看器展示送货单原图、包裹单号、拍摄时间和上传仓库；同一包裹多张图片支持左右切换</td></tr>
+            <tr><td>绑定处理</td><td>采购员查看图片后绑定 PO</td><td>图片仅作为识别和绑定辅助信息，不替代 PO 绑定结果；图片加载失败时提示重试并保留包裹处理入口</td></tr>
+          </tbody>
+        </table>
+        <figure class="reference-shot">
+          <img src="assets/pms-unnumbered-package-delivery-note-reference.png" alt="采购系统无单号包裹新增图片列参考截图">
+          <figcaption>采购系统无单号包裹页面参考：新增“图片”列，展示仓库拍摄并回传的送货单图片。</figcaption>
+        </figure>
+
+        <h3>9.3 入库质检模块送货单拍照调整</h3>
+        <p>小包入库质检和中转仓入库质检页面新增送货单拍照能力，统一留存仓库收货时的送货单凭证。</p>
+        <table>
+          <thead><tr><th>适用模块</th><th>调整内容</th><th>交互与数据规则</th></tr></thead>
+          <tbody>
+            <tr><td>小包入库质检</td><td>新增“送货单拍照”按钮</td><td>点击调用高拍仪设备拍照接口；接口返回照片后绑定当前入库单、物流单号、仓库、质检批次和操作人</td></tr>
+            <tr><td>中转仓入库质检</td><td>新增“送货单拍照”按钮</td><td>复用同一高拍仪接口和图片绑定规则，照片与当前中转仓入库质检记录关联</td></tr>
+            <tr><td>图片查看</td><td>新增送货单图片查看入口</td><td>拍照成功后页面展示缩略图/图片数量；点击可查看送货单内容，支持多张照片左右切换</td></tr>
+            <tr><td>质检提交</td><td>保留拍照结果并参与提交校验</td><td>每次入库质检需留存送货单照片；拍照接口失败时提示重试，不影响已保存照片</td></tr>
+          </tbody>
+        </table>
+        <figure class="reference-shot">
+          <img src="assets/wms-small-parcel-inbound-inspection-reference.png" alt="小包入库质检送货单拍照按钮参考截图">
+          <figcaption>小包入库质检页面参考：新增“送货单拍照”入口，并支持查看回传的送货单照片。</figcaption>
+        </figure>
+
+        <h3>9.4 仓库系统出库单与拣货任务调整</h3>
+        <p>仓库系统新增返修出库类型，并在出库单、拣货任务中展示库存类型，支持次品库存返修出库生成拣货任务。</p>
+        <table>
+          <thead><tr><th>模块</th><th>调整内容</th><th>规则</th></tr></thead>
+          <tbody>
+            <tr><td>出库单模块</td><td>新增“返修出库”出库类型</td><td>支持返修出库单创建、审核及生成拣货任务；从次品处理池发起的返修出库单按业务单据关联处理</td></tr>
+            <tr><td>出库单模块</td><td>新增“库存类型”字段</td><td>展示“良品/次品”，普通出库单默认良品；返修出库单按来源业务带出对应库存类型</td></tr>
+            <tr><td>拣货任务模块</td><td>新增“库存类型”字段</td><td>展示“良品/次品”，普通拣货任务默认良品；返修出库生成的拣货任务继承出库单库存类型</td></tr>
+            <tr><td>拣货任务模块</td><td>新增“返修出库”出库类型</td><td>支持按返修出库单生成、领取、拣货及完成任务，并可追溯关联出库单</td></tr>
+          </tbody>
+        </table>
+        <figure class="reference-shot">
+          <img src="assets/wms-repair-outbound-picking-reference.png" alt="仓库系统返修出库拣货任务参考截图">
+          <figcaption>仓库拣货任务页面参考：增加“返修出库”类型，并展示库存类型字段。</figcaption>
+        </figure>
+
+        <h3>9.5 拣货任务次品货位选择与缺货校验</h3>
+        <table>
+          <thead><tr><th>场景</th><th>系统逻辑</th><th>处理结果</th></tr></thead>
+          <tbody>
+            <tr><td>次品库存拣货</td><td>拣货任务库存类型 = 次品</td><td>只能推荐货位属性为“次品”的货位；禁止推荐良品货位</td></tr>
+            <tr><td>良品库存拣货</td><td>拣货任务库存类型 = 良品</td><td>沿用现有良品货位推荐逻辑，默认库存类型保持良品</td></tr>
+            <tr><td>PDA 操作缺货</td><td>次品拣货任务提交缺货时，按 SKU + 仓库 + 次品库存类型查询其他货位</td><td>仅校验其他次品货位是否存在可拣库存；不得将良品货位库存作为可拣库存提示</td></tr>
+            <tr><td>缺货提示</td><td>存在其他次品货位库存</td><td>提示仓库前往其他次品货位拣货；不存在时才允许按缺货流程提交</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section id="data">
+        <h2>10. 数据、状态与权限</h2>
+        <h3>10.1 核心数据对象</h3>
+        <table>
+          <thead><tr><th>对象</th><th>关键字段</th><th>生命周期</th></tr></thead>
+          <tbody>
+            <tr><td>质检批次 <span class="req">inspection_batch</span></td><td>单据、仓库、供应商、SKU、收货时间、质检数量、合格数量、次品数量、状态</td><td>待质检 → 质检完成/异常</td></tr>
+            <tr><td>供应商主数据 <span class="req">supplier_master</span></td><td>供应商 ID、是否支持返修、仓库维度次品货位绑定</td><td>供应商信息维护 → 生效/停用</td></tr>
+            <tr><td>次品来源 <span class="req">defect_source</span></td><td>来源类型、货位、待处理数量、库存属性、图片关联</td><td>待放置 → 暂存/已上架 → 已处理</td></tr>
+            <tr><td>配置规则 <span class="req">defect_rule</span></td><td>条件组、关系、应用仓库、建议去向、优先级、启停状态</td><td>草稿 → 生效 → 停用</td></tr>
+            <tr><td>处理记录 <span class="req">defect_disposition</span></td><td>处理方式、二级方案、供应商、地址快照、数量、金额、关联单据、结果</td><td>待确认 → 审核中 → 作业中 → 已完成/异常</td></tr>
+            <tr><td>图片附件 <span class="req">defect_image</span></td><td>SKU、退件单号、对象 ID、URL、说明、上传人、上传时间、排序</td><td>上传 → 可见 → 归档</td></tr>
+          </tbody>
+        </table>
+        <h3>10.2 权限建议</h3>
+        <table>
+          <thead><tr><th>角色</th><th>查看</th><th>编辑/提交</th><th>审核/作业</th></tr></thead>
+          <tbody>
+            <tr><td>仓库收货员</td><td>本人/所属仓库质检与图片</td><td>质检结果、次品去向、图片</td><td>次品上架、暂存</td></tr>
+            <tr><td>采购</td><td>所属业务范围处理池与历史</td><td>处理方案、供应商、返修地址、结算字段</td><td>发起返修/报损</td></tr>
+            <tr><td>采购主管/审核人</td><td>待审核单据</td><td>审核意见</td><td>返修/报损审核</td></tr>
+            <tr><td>仓库出库员</td><td>审核通过的出库单</td><td>拣货、出库、物流绑定</td><td>返修/报损出库</td></tr>
+            <tr><td>系统管理员</td><td>全量数据</td><td>配置规则、权限</td><td>不替代业务审核</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="acceptance">
+        <h2>11. 验收标准</h2>
+        <table>
+          <thead><tr><th>编号</th><th>验收场景</th><th>通过标准</th></tr></thead>
+          <tbody>
+            <tr><td>INSP-001</td><td>PDA 收货与入库单绑定</td><td>已绑定入库单直接使用；未绑定时按 PO 查找入库单，找到则自动绑定，未找到则正常完成收货记录</td></tr>
+            <tr><td>INSP-002</td><td>高拍仪送货单</td><td>每个采购来货必须拍摄送货单；已绑定入库单不识别 PO；未绑定时识别送货单 PO，无法提取则回传采购员绑定</td></tr>
+            <tr><td>INSP-003</td><td>提交入库/退件质检</td><td>合格数 + 次品数 = 质检数；数量不合法或采购来货缺少送货单图片时阻止完成</td></tr>
+            <tr><td>INSP-004</td><td>命中次品规则</td><td>支持 SKU、平台、过去 X 天销量、单价、货值、应用仓库和供应商是否支持返修；组内 AND、组间 OR；供应商支持返修=是才可命中上架次品区条件</td></tr>
+            <tr><td>SUP-001</td><td>供应商返修能力</td><td>供应商模块新增“是否支持返修”字段，支持是/否维护，并参与次品配置命中判断</td></tr>
+            <tr><td>LOC-001</td><td>次品货位推荐</td><td>关联订单号查询出库批次；采购批次查询采购单供应商；有供应商次品货位推荐绑定货位，无绑定时推荐空的次品货位</td></tr>
+            <tr><td>INSP-005</td><td>次品去向与入库流水</td><td>上架完成后产生“次品库存-次品入库”流水并回传处理池；暂存记录货位且不形成库存；不允许现场直接丢弃</td></tr>
+            <tr><td>IMG-001</td><td>列表查看图片</td><td>图片列展示当前 SKU 退件单图片，左右切换、序号、退件单号、时间和说明正确</td></tr>
+            <tr><td>IMG-002</td><td>详情查看图片</td><td>详情抽屉库存来源区域可打开同一查看器，键盘左右键和 Esc 可用</td></tr>
+            <tr><td>OMS-001</td><td>库存查询次品库存</td><td>库存查询列表新增“次品库存”字段；导出文件同步包含该字段，列表与导出口径一致</td></tr>
+            <tr><td>PMS-001</td><td>无单号包裹送货单图片</td><td>无单号包裹列表新增“图片”列，展示仓库回传的送货单图片；点击可查看原图并支持多图切换</td></tr>
+            <tr><td>WMS-001</td><td>入库质检送货单拍照</td><td>小包入库质检和中转仓入库质检均可调用高拍仪拍照、回传并查看送货单图片</td></tr>
+            <tr><td>OUT-002</td><td>返修出库拣货任务</td><td>出库单和拣货任务支持“返修出库”类型及“库存类型”字段，普通任务默认良品，次品返修任务继承次品类型</td></tr>
+            <tr><td>PICK-001</td><td>次品货位推荐与缺货</td><td>次品任务只推荐次品货位；PDA 缺货只校验其他次品货位库存，不校验良品货位库存</td></tr>
+            <tr><td>POOL-001</td><td>处理池聚合</td><td>按供应商 + SKU + 仓库 + 存放类型聚合，待处理数量不拆分上架/暂存</td></tr>
+            <tr><td>PLAN-001</td><td>供应商选择</td><td>默认当前供应商；下拉仅展示当前 SKU 对应供应商；切换后地址跟随切换</td></tr>
+            <tr><td>PLAN-002</td><td>返修地址</td><td>返修时默认带出收件人、电话、地址，并可编辑且保存当前单据快照</td></tr>
+            <tr><td>PLAN-003</td><td>上架区报损方案</td><td>必须选择报损/抵扣账单/赔款；三种二级方案均生成报损出库单并产生次品报损出库流水，抵扣账单追加对账明细，赔款追加赔款记录</td></tr>
+            <tr><td>PLAN-004</td><td>暂存区方案</td><td>报损/抵扣账单/索赔均不生成报损出库单；仅抵扣账单生成供应商对账明细，其余只记录</td></tr>
+            <tr><td>HIS-001</td><td>历史处理</td><td>可查看历史次数、每次方案、数量、金额、单据、审核状态和结果，历史记录只读</td></tr>
+            <tr><td>OUT-001</td><td>返修出库闭环</td><td>处理池发起的返修单可进入审核、按供应商次品货位拣货、返修出库、采购维护回寄物流、仓库返修入库良品</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="open">
+        <h2>12. 待确认与研发拆解</h2>
+        <h3>12.1 业务待确认</h3>
+        <ol>
+          <li>送货单识别到 PO 单号但按 PO 未找到入库单时，是否继续保持收货记录并转采购员绑定。</li>
+          <li>次品图片的最大数量、大小、存储有效期及权限隔离规则。</li>
+          <li>高拍仪或 OCR 服务异常时，是否允许人工上传送货单并继续质检。</li>
+          <li>供应商地址数据的来源服务、默认地址标识、地址失效后的兜底策略。</li>
+          <li>返修入库后库存属性、成本重算和供应商对账的最终财务口径。</li>
+        </ol>
+        <h3>12.2 研发任务拆分建议</h3>
+        <table>
+          <thead><tr><th>阶段</th><th>任务</th><th>依赖</th></tr></thead>
+          <tbody>
+            <tr><td>P0 数据与质检</td><td>质检批次字段、数量校验、次品图片、质检状态</td><td>入库/退件单现有数据模型</td></tr>
+            <tr><td>P0 规则配置</td><td>销量条件、应用仓库、条件组计算、命中记录</td><td>销量、仓库、SKU 主数据</td></tr>
+            <tr><td>P0 处理池</td><td>聚合查询、图片列、详情抽屉、历史记录</td><td>次品来源与图片对象</td></tr>
+            <tr><td>P1 方案与单据</td><td>供应商选择、地址快照、返修/报损二级方案、幂等提交</td><td>供应商地址、出库单、对账服务</td></tr>
+            <tr><td>P1 返修闭环</td><td>返修出库、物流绑定、返修入库、费用确认</td><td>现有其他出库作业链路</td></tr>
+            <tr><td>P2 监控与报表</td><td>处理闭环率、超期处理量、图片上传失败、规则命中统计</td><td>埋点与数据平台</td></tr>
+          </tbody>
+        </table>
+        <div class="note warning"><strong>评审结论要求：</strong>以上待确认项需在研发排期前完成决策，并同步更新字段、状态、接口契约和验收用例。</div>
+      </section>
+
+      <section>
+        <h2>附录：在线原型</h2>
+        <table>
+          <thead><tr><th>名称</th><th>链接/路径</th></tr></thead>
+          <tbody>
+            <tr><td>次品处理池 v4（图片与方案优化版）</td><td><a class="link" href="https://kayleylee1128-gif.github.io/seabost-prototype-hosting/prototypes/erp/v4-20260723-161251/">在线原型</a></td></tr>
+            <tr><td>其他出库-返修出库 v2</td><td><a class="link" href="https://kayleylee1128-gif.github.io/seabost-prototype-hosting/prototypes/erp/v2-ant-design-erp-20260723-124330/">在线原型</a></td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
