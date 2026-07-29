@@ -114,6 +114,10 @@
         <div class="c-table-panel__toolbar">
           <div class="c-table-panel__summary" data-role="table-summary">待处理聚合 <strong>4</strong> 组，待处理数量 <strong>105</strong> 件，采购成本合计 <strong>¥13,564.00</strong></div>
           <div class="c-table-panel__tools">
+            <span class="table-sort-hint" data-role="supplier-sort-status">按供应商升序</span>
+            <span class="selection-summary" data-role="selection-summary">已选 0 条</span>
+            <button class="btn btn--sm btn--primary" data-action="bulk-plan" type="button" disabled>批量设置方案</button>
+            <button class="btn btn--sm" data-action="clear-pending-selection" type="button" disabled>清空选择</button>
             <button class="btn btn--sm" type="button">导出当前结果</button>
           </div>
         </div>
@@ -121,6 +125,7 @@
         <table class="c-table c-table--wide">
           <thead>
             <tr>
+              <th class="c-table__cell--check"><input class="table-check" data-action="toggle-all-pending" type="checkbox" aria-label="全选当前可见次品记录"></th>
               <th>供应商</th>
               <th>SKU</th>
               <th>次品图片</th>

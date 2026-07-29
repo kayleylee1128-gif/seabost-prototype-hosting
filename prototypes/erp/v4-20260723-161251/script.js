@@ -12,6 +12,7 @@ const drawerOriginalMeta = drawer.querySelector(".c-drawer__meta").innerHTML;
 
 let modalMode = "default";
 let currentPlan = null;
+let currentBulkPlans = [];
 
 const supplierProfilesBySku = {
   "SKU-BAT-8842": [
@@ -171,9 +172,9 @@ function openPendingDetailDrawer(event) {
       </section>
       <h3 class="c-section-title">退件单与库存来源</h3>
       <table class="c-table">
-        <thead><tr><th>退货收货单</th><th>收货时间</th><th class="c-table__cell--num">数量</th></tr></thead>
+        <thead><tr><th>退货收货单</th><th>收货时间</th><th class="c-table__cell--num">数量</th><th>图片</th></tr></thead>
         <tbody>
-          ${images.map((image, index) => `<tr><td><a class="link" data-action="open-defect-images" data-sku="${sku}" data-image-index="${index}">${image.returnNo}</a></td><td>${image.uploadedAt}</td><td class="c-table__cell--num">${Math.max(1, Math.round(Number(row?.dataset.defectiveQty || 1) / images.length))}</td></tr>`).join("")}
+          ${images.map((image, index) => `<tr><td><a class="link" data-action="open-defect-images" data-sku="${sku}" data-image-index="${index}">${image.returnNo}</a></td><td>${image.uploadedAt}</td><td class="c-table__cell--num">${Math.max(1, Math.round(Number(row?.dataset.defectiveQty || 1) / images.length))}</td><td><button class="detail-source-image" data-action="open-defect-images" data-sku="${sku}" data-image-index="${index}" type="button" title="查看 ${image.returnNo} 上传的次品图片"><img src="${image.src}" alt="${image.caption}" /><span>查看图片</span></button></td></tr>`).join("")}
         </tbody>
       </table>
       <section class="detail-image-section">
@@ -205,6 +206,78 @@ function setSelectValue(select, value, label) {
   });
 }
 
+function sortPendingRows() {
+  const body = document.querySelector("[data-role='pending-body']");
+  if (!body) return;
+  const rows = [...body.querySelectorAll("tr[data-row='pending']")];
+  rows.sort((a, b) => {
+    const supplierCompare = a.dataset.supplier.localeCompare(b.dataset.supplier, "zh-CN");
+    if (supplierCompare !== 0) return supplierCompare;
+    const skuCompare = a.dataset.sku.localeCompare(b.dataset.sku, "zh-CN");
+    if (skuCompare !== 0) return skuCompare;
+    return Number(b.dataset.defectiveQty) - Number(a.dataset.defectiveQty);
+  });
+  const emptyRow = body.querySelector("[data-role='empty-row']");
+  rows.forEach((row) => body.insertBefore(row, emptyRow));
+}
+
+function ensurePendingSelectionCells() {
+  document.querySelectorAll("tr[data-row='pending']").forEach((row) => {
+    if (row.querySelector("[data-action='toggle-pending-row']")) return;
+    const cell = document.createElement("td");
+    cell.className = "c-table__cell--check";
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.className = "table-check";
+    checkbox.dataset.action = "toggle-pending-row";
+    checkbox.setAttribute("aria-label", `选择${row.dataset.supplier} ${row.dataset.sku}`);
+    cell.appendChild(checkbox);
+    row.prepend(cell);
+    checkbox.addEventListener("change", updatePendingSelectionState);
+  });
+  const emptyCell = document.querySelector("[data-role='empty-row'] td");
+  if (emptyCell) emptyCell.colSpan = 11;
+}
+
+function getSelectedPendingRows() {
+  return [...document.querySelectorAll("tr[data-row='pending']")].filter((row) => row.querySelector("[data-action='toggle-pending-row']")?.checked);
+}
+
+function updatePendingSelectionState() {
+  const rows = [...document.querySelectorAll("tr[data-row='pending']")];
+  const visibleRows = rows.filter((row) => !row.hidden);
+  const selectedRows = getSelectedPendingRows();
+  const visibleSelected = visibleRows.filter((row) => row.querySelector("[data-action='toggle-pending-row']")?.checked);
+  const selectAll = document.querySelector("[data-action='toggle-all-pending']");
+  const bulkButton = document.querySelector("[data-action='bulk-plan']");
+  const clearButton = document.querySelector("[data-action='clear-pending-selection']");
+  const summary = document.querySelector("[data-role='selection-summary']");
+  if (selectAll) {
+    selectAll.checked = visibleRows.length > 0 && visibleSelected.length === visibleRows.length;
+    selectAll.indeterminate = visibleSelected.length > 0 && visibleSelected.length < visibleRows.length;
+  }
+  if (bulkButton) bulkButton.disabled = selectedRows.length === 0;
+  if (clearButton) clearButton.disabled = selectedRows.length === 0;
+  if (summary) summary.textContent = `已选 ${selectedRows.length} 条`;
+}
+
+function toggleAllPendingRows(checked) {
+  document.querySelectorAll("tr[data-row='pending']").forEach((row) => {
+    if (!row.hidden) {
+      const checkbox = row.querySelector("[data-action='toggle-pending-row']");
+      if (checkbox) checkbox.checked = checked;
+    }
+  });
+  updatePendingSelectionState();
+}
+
+function clearPendingSelection() {
+  document.querySelectorAll("[data-action='toggle-pending-row']").forEach((checkbox) => { checkbox.checked = false; });
+  const selectAll = document.querySelector("[data-action='toggle-all-pending']");
+  if (selectAll) selectAll.checked = false;
+  updatePendingSelectionState();
+}
+
 function applyFilters() {
   const supplier = getSelectValue("supplier");
   const warehouse = getSelectValue("warehouse");
@@ -224,6 +297,10 @@ function applyFilters() {
       && (!sku || row.dataset.sku.toUpperCase().includes(sku))
       && (!keyword || rowText.includes(keyword));
     row.hidden = !matched;
+    if (!matched) {
+      const checkbox = row.querySelector("[data-action='toggle-pending-row']");
+      if (checkbox) checkbox.checked = false;
+    }
     if (matched) {
       visibleCount += 1;
       visibleCost += Number(row.dataset.totalCost);
@@ -233,6 +310,7 @@ function applyFilters() {
 
   document.querySelector("[data-role='empty-row']").hidden = visibleCount > 0;
   document.querySelector("[data-role='table-summary']").innerHTML = `待处理聚合 <strong>${visibleCount}</strong> 组，待处理数量 <strong>${pendingQty}</strong> 件，采购成本合计 <strong>${money(visibleCost)}</strong>`;
+  updatePendingSelectionState();
 }
 
 function resetFilters() {
@@ -292,7 +370,7 @@ function configListTemplate() {
 }
 
 function conditionTypeSelect(activeValue) {
-  const options = ["SKU", "平台", "过去X天销量", "单价区间", "货值区间"];
+  const options = ["SKU", "平台", "过去X天销量", "单价区间"];
   return `
     <div class="c-select" data-select="condition-type" data-value="${activeValue}">
       <button class="c-select__trigger" type="button" data-action="toggle-select">${activeValue}</button>
@@ -416,7 +494,6 @@ function configFormTemplate(titleText) {
               ${conditionRowTemplate("平台")}
               ${conditionRowTemplate("过去X天销量")}
               ${conditionRowTemplate("单价区间")}
-              ${conditionRowTemplate("货值区间")}
               <button class="btn" data-action="add-condition" type="button">+ 添加条件 (AND)</button>
             </div>
           </div>
@@ -752,6 +829,277 @@ function warningTemplate(percent, threshold) {
   `;
 }
 
+function bulkPlanTemplate(items) {
+  const source = items[0].source;
+  const isTemporary = source === "temporary";
+  const totalQty = items.reduce((sum, item) => sum + item.qty, 0);
+  const totalCost = items.reduce((sum, item) => sum + item.totalCost, 0);
+  const suppliers = [...new Set(items.map((item) => item.supplier))];
+  const deductionGroups = [...items.reduce((map, item) => {
+    const existing = map.get(item.supplier) || { supplier: item.supplier, totalCost: 0, skus: [] };
+    existing.totalCost += item.totalCost;
+    existing.skus.push(`${item.sku}（${item.qty} 件）`);
+    map.set(item.supplier, existing);
+    return map;
+  }, new Map()).values()];
+  const primaryOptions = isTemporary
+    ? `
+      <button class="c-segmented__item c-segmented__item--active" data-bulk-plan-choice="scrap" type="button">报损</button>
+      <button class="c-segmented__item" data-bulk-plan-choice="deduct" type="button">抵扣账单</button>
+      <button class="c-segmented__item" data-bulk-plan-choice="compensation" type="button">赔款</button>
+    `
+    : `
+      <button class="c-segmented__item c-segmented__item--active" data-bulk-plan-choice="repair" type="button">返修</button>
+      <button class="c-segmented__item" data-bulk-plan-choice="scrap" type="button">报损</button>
+    `;
+  const secondaryOptions = isTemporary ? "" : `
+    <div class="form-field bulk-secondary-field" data-role="bulk-secondary-options" hidden>
+      <span class="form-field__label">报损方案</span>
+      <div class="segmented">
+        <button class="c-segmented__item c-segmented__item--active" data-bulk-secondary-choice="scrap" type="button">报损</button>
+        <button class="c-segmented__item" data-bulk-secondary-choice="deduct" type="button">抵扣账单</button>
+        <button class="c-segmented__item" data-bulk-secondary-choice="compensation" type="button">赔款</button>
+      </div>
+    </div>
+  `;
+  const repairRows = items.map((item) => {
+    const profile = getSupplierProfile({ sku: item.sku, supplier: item.supplier });
+    return `<tr>
+      <td>${item.supplier}</td><td>${item.sku}</td>
+      <td><input class="input" data-field="bulk-repair-qty" type="number" min="1" max="${item.qty}" value="${item.qty}" /></td>
+      <td><input class="input" data-field="bulk-estimated-freight" type="number" min="0" value="0" /></td>
+      <td><div class="segmented segmented--small"><button class="c-segmented__item c-segmented__item--active" data-bulk-freight-bearer="company" type="button">公司</button><button class="c-segmented__item" data-bulk-freight-bearer="supplier" type="button">供应商</button></div></td>
+      <td><input class="input" data-field="bulk-repair-fee" type="number" min="0" value="0" /></td>
+    </tr>`;
+  }).join("");
+  const repairAddressRows = items.map((item) => {
+    const profile = getSupplierProfile({ sku: item.sku, supplier: item.supplier });
+    return `<tr>
+      <td>${item.supplier}<br><span class="text-secondary">${item.sku}</span></td>
+      <td><input class="input" data-field="bulk-repair-receiver" value="${profile.receiver}" /></td>
+      <td><input class="input" data-field="bulk-repair-phone" value="${profile.phone}" /></td>
+      <td><input class="input" data-field="bulk-repair-address" value="${profile.address}" /></td>
+    </tr>`;
+  }).join("");
+  const exchangeRows = items.map((item) => `<tr>
+    <td>${item.supplier}</td><td>${item.sku}</td>
+    <td><input class="input" data-field="bulk-exchange-sku" value="${item.sku}-R" /></td>
+    <td><input class="input" data-field="bulk-exchange-qty" type="number" min="1" value="${item.qty}" /></td>
+    <td class="c-table__cell--num">¥72.00</td><td class="c-table__cell--num">¥${(item.qty * 72).toLocaleString("zh-CN", { minimumFractionDigits: 2 })}</td>
+  </tr>`).join("");
+  const compensationCards = deductionGroups.map((group, index) => `
+    <article class="bulk-compensation-card">
+      <div class="bulk-compensation-card__head">
+        <div><strong>${group.supplier}</strong><span>${group.skus.join("、")}</span></div>
+        <span class="tag">采购成本 ${money(group.totalCost)}</span>
+      </div>
+      <div class="bulk-compensation-card__grid">
+        <label class="form-field"><span><em>*</em>赔款金额</span><input class="input" data-field="bulk-compensation-amount" data-compensation-supplier="${group.supplier}" type="number" min="0" value="${group.totalCost}" /></label>
+        <label class="form-field"><span><em>*</em>赔款流水</span><input class="input" data-field="bulk-compensation-flow" data-compensation-supplier="${group.supplier}" placeholder="输入该供应商赔款流水号" value="" /></label>
+        <label class="form-field"><span>赔款方式</span><div class="c-select" data-select="bulk-compensation-method-${index}" data-value="alipay" data-compensation-supplier="${group.supplier}"><button class="c-select__trigger" type="button" data-action="toggle-select">支付宝转账</button><div class="c-select__menu"><button class="c-select__option c-select__option--active" type="button" data-value="alipay">支付宝转账</button><button class="c-select__option" type="button" data-value="bank">银行卡转账</button></div></div></label>
+        <label class="form-field"><span>赔款状态</span><div class="c-select" data-select="bulk-compensation-status-${index}" data-value="full" data-compensation-supplier="${group.supplier}"><button class="c-select__trigger" type="button" data-action="toggle-select">全部</button><div class="c-select__menu"><button class="c-select__option c-select__option--active" type="button" data-value="full">全部</button><button class="c-select__option" type="button" data-value="partial">部分</button></div></div></label>
+      </div>
+      <div class="bulk-compensation-card__voucher"><div><strong>赔款凭证</strong><span class="text-secondary" data-role="bulk-voucher-name">未上传</span></div><button class="btn btn--sm" data-action="bulk-choose-voucher" data-bulk-voucher-uploaded="false" data-compensation-supplier="${group.supplier}" type="button">上传凭证</button></div>
+    </article>
+  `).join("");
+  const repairFields = `
+    <section class="bulk-detail-section" data-role="bulk-repair-fields" ${isTemporary ? "hidden" : ""}>
+      <div class="bulk-detail-section__head"><strong>返修方案及返修信息</strong><span class="text-secondary">按选中记录分别带出默认供应商地址，可编辑</span></div>
+      <div class="form-field">
+        <span class="form-field__label">返修方案</span>
+        <div class="segmented"><button class="c-segmented__item c-segmented__item--active" data-bulk-repair-scheme="inbound" type="button">返修入库</button><button class="c-segmented__item" data-bulk-repair-scheme="exchange" type="button">返修换货</button></div>
+      </div>
+      <div data-role="bulk-repair-standard-fields">
+        <div class="bulk-detail-section__subhead">返修数量与费用</div>
+        <div class="c-table-scroll"><table class="c-table c-table--compact bulk-detail-table"><thead><tr><th>供应商</th><th>SKU</th><th>返修数量</th><th>预估运费</th><th>运费承担方</th><th>返修费</th></tr></thead><tbody>${repairRows}</tbody></table></div>
+        <div class="bulk-detail-section__subhead">供应商收件信息</div>
+        <div class="c-table-scroll"><table class="c-table c-table--compact bulk-detail-table"><thead><tr><th>供应商 / SKU</th><th>收件人</th><th>收件电话</th><th>收件人地址</th></tr></thead><tbody>${repairAddressRows}</tbody></table></div>
+      </div>
+      <div data-role="bulk-exchange-fields" hidden>
+        <div class="text-secondary">返修换货需维护新换货 SKU 和数量，系统展示换货 SKU 单价、换货 SKU 金额。</div>
+        <div class="c-table-scroll"><table class="c-table c-table--compact bulk-detail-table"><thead><tr><th>原供应商</th><th>原 SKU</th><th>换货 SKU</th><th>换货数量</th><th>换货 SKU 单价</th><th>换货 SKU 金额</th></tr></thead><tbody>${exchangeRows}</tbody></table></div>
+      </div>
+      <div class="threshold-note">返修成本比较 = 返修费 + 公司承担的预估运费；确认后按记录生成返修出库及后续返修入库链路。</div>
+    </section>
+  `;
+  const scrapFields = `
+    <section class="bulk-detail-section" data-role="bulk-scrap-fields" ${isTemporary ? "" : "hidden"}>
+      <div class="bulk-detail-section__head"><strong>报损方案及对应信息</strong><span class="text-secondary">根据报损二级方案生成对应业务记录</span></div>
+      <div class="scrap-note" data-role="bulk-direct-scrap-fields">无挽损处理：确认后直接生成报损出库单并进入审核流。</div>
+      <div class="settlement-fields" data-role="bulk-deduct-fields" hidden>
+        <div class="bulk-deduction-total"><span>抵扣金额合计</span><strong data-role="bulk-deduct-total">${money(totalCost)}</strong></div>
+        <div class="bulk-detail-section__subhead">按供应商维护抵扣金额</div>
+        <div class="c-table-scroll"><table class="c-table c-table--compact bulk-detail-table bulk-deduction-table"><thead><tr><th>供应商</th><th>关联次品记录</th><th class="c-table__cell--num">采购成本</th><th class="c-table__cell--num">抵扣金额</th></tr></thead><tbody>${deductionGroups.map((group) => `<tr><td><strong>${group.supplier}</strong></td><td>${group.skus.join("、")}</td><td class="c-table__cell--num">${money(group.totalCost)}</td><td class="c-table__cell--num"><input class="input" data-field="bulk-deduct-amount" data-deduct-supplier="${group.supplier}" type="number" min="0" value="${group.totalCost}" /></td></tr>`).join("")}</tbody></table></div>
+        <div class="threshold-note">抵扣金额按供应商分别生成供应商对账单明细；已上架次品区抵扣账单不生成报损出库单。</div>
+      </div>
+      <div class="compensation-fields" data-role="bulk-compensation-fields" hidden>
+        <div class="compensation-panel">
+          <div class="bulk-deduction-total"><span>实际退款金额合计</span><strong data-role="bulk-compensation-total">${money(totalCost)}</strong></div>
+          <div class="bulk-detail-section__subhead">按供应商维护赔款信息</div>
+          <div class="bulk-compensation-cards">${compensationCards}</div>
+        </div>
+        <div class="threshold-note">赔款方案仅记录赔款金额、流水、方式、状态、实际退款金额和凭证，不生成报损出库单。</div>
+      </div>
+    </section>
+  `;
+  return `
+    <div class="bulk-plan-intro">
+      <div><strong>批量设置处理方案</strong><div class="text-secondary">已选择 ${items.length} 条记录，共 ${totalQty} 件；批量操作仅统一方案，原记录的供应商、SKU 与数量保持不变。</div></div>
+      <span class="tag tag--processing">${suppliers.length} 个供应商</span>
+    </div>
+    <div class="bulk-plan-summary">
+      <div><span>次品存放类型</span><strong>${isTemporary ? "次品暂存区" : "已上架次品区"}</strong></div>
+      <div><span>采购成本合计</span><strong>${money(totalCost)}</strong></div>
+      <div><span>方案影响</span><strong>${isTemporary ? "不生成报损出库单" : "按方案生成后续单据"}</strong></div>
+    </div>
+    <div class="form-field">
+      <span class="form-field__label">处理方式</span>
+      <div class="segmented">${primaryOptions}</div>
+    </div>
+    ${secondaryOptions}
+    ${repairFields}
+    ${scrapFields}
+    <div class="bulk-plan-list">
+      <div class="bulk-plan-list__title">已选记录</div>
+      <table class="c-table c-table--compact">
+        <thead><tr><th>供应商</th><th>SKU</th><th>存放类型</th><th class="c-table__cell--num">数量</th></tr></thead>
+        <tbody>${items.map((item) => `<tr><td>${item.supplier}</td><td>${item.sku}</td><td>${item.source === "temporary" ? "次品暂存区" : "已上架次品区"}</td><td class="c-table__cell--num">${item.qty}</td></tr>`).join("")}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+function openBulkPlanModal(rows) {
+  const items = rows.map((row) => ({
+    qty: Number(row.dataset.defectiveQty),
+    totalCost: Number(row.dataset.totalCost),
+    supplier: row.dataset.supplier,
+    sku: row.dataset.sku,
+    source: row.dataset.source,
+  }));
+  if (!items.length) {
+    showToast("请先勾选需要设置方案的次品记录");
+    return;
+  }
+  const sourceSet = new Set(items.map((item) => item.source));
+  if (sourceSet.size > 1) {
+    showToast("批量设置方案需选择相同次品存放类型的数据");
+    return;
+  }
+  currentBulkPlans = items;
+  openModal("批量设置处理方案", bulkPlanTemplate(items), "确认批量方案", "bulk-plan");
+  bindSelects(modalBody);
+  bindSegmented(modalBody);
+  updateBulkPlanFields();
+  modalBody.querySelectorAll("[data-field='bulk-deduct-amount']").forEach((input) => {
+    input.addEventListener("input", updateBulkDeductionTotal);
+  });
+  updateBulkDeductionTotal();
+  modalBody.querySelectorAll("[data-field='bulk-compensation-amount']").forEach((input) => {
+    input.addEventListener("input", updateBulkCompensationTotal);
+  });
+  updateBulkCompensationTotal();
+}
+
+function updateBulkDeductionTotal() {
+  const total = [...modalBody.querySelectorAll("[data-field='bulk-deduct-amount']")].reduce((sum, input) => sum + (Number(input.value) || 0), 0);
+  const totalNode = modalBody.querySelector("[data-role='bulk-deduct-total']");
+  if (totalNode) totalNode.textContent = money(total);
+}
+
+function updateBulkCompensationTotal() {
+  const total = [...modalBody.querySelectorAll("[data-field='bulk-compensation-amount']")].reduce((sum, input) => sum + (Number(input.value) || 0), 0);
+  const totalNode = modalBody.querySelector("[data-role='bulk-compensation-total']");
+  const refundInput = modalBody.querySelector("[data-field='bulk-actual-refund-amount']");
+  if (totalNode) totalNode.textContent = money(total);
+  if (refundInput) refundInput.value = money(total);
+}
+
+function submitBulkPlan() {
+  const choice = modalBody.querySelector("[data-bulk-plan-choice].c-segmented__item--active")?.dataset.bulkPlanChoice;
+  const secondary = modalBody.querySelector("[data-bulk-secondary-choice].c-segmented__item--active")?.dataset.bulkSecondaryChoice;
+  if (!choice) {
+    showToast("请选择处理方式");
+    return;
+  }
+  if (choice === "scrap" && currentBulkPlans[0]?.source !== "temporary" && !secondary) {
+    showToast("请选择报损、抵扣账单或赔款方案");
+    return;
+  }
+  const resolved = choice === "scrap" && currentBulkPlans[0]?.source !== "temporary" ? secondary : choice;
+  if (resolved === "repair") {
+    const invalidQty = [...modalBody.querySelectorAll("[data-field='bulk-repair-qty']")].some((input, index) => {
+      const qty = Number(input.value);
+      const max = currentBulkPlans[index]?.qty || 0;
+      const invalid = Number.isNaN(qty) || qty <= 0 || qty > max;
+      input.setAttribute("aria-invalid", String(invalid));
+      return invalid;
+    });
+    const invalidContact = [...modalBody.querySelectorAll("[data-field='bulk-repair-receiver'], [data-field='bulk-repair-phone'], [data-field='bulk-repair-address']")].some((input) => {
+      const invalid = !input.value.trim();
+      input.setAttribute("aria-invalid", String(invalid));
+      return invalid;
+    });
+    if (invalidQty) {
+      showToast("返修数量需大于 0 且不能超过原次品数量");
+      return;
+    }
+    if (invalidContact) {
+      showToast("请完善返修供应商的收件人、电话和地址");
+      return;
+    }
+  }
+  if (resolved === "deduct") {
+    const amountInputs = [...modalBody.querySelectorAll("[data-field='bulk-deduct-amount']")];
+    const invalidAmount = amountInputs.some((input) => {
+      const amount = Number(input.value);
+      const invalid = Number.isNaN(amount) || amount <= 0;
+      input.setAttribute("aria-invalid", String(invalid));
+      return invalid;
+    });
+    if (invalidAmount) {
+      showToast("请分别填写每个供应商的抵扣金额，且金额需大于 0");
+      return;
+    }
+    updateBulkDeductionTotal();
+  }
+  if (resolved === "compensation") {
+    const amountInputs = [...modalBody.querySelectorAll("[data-field='bulk-compensation-amount']")];
+    const flowInputs = [...modalBody.querySelectorAll("[data-field='bulk-compensation-flow']")];
+    const voucherButtons = [...modalBody.querySelectorAll("[data-action='bulk-choose-voucher']")];
+    const invalidAmount = amountInputs.some((input) => {
+      const amount = Number(input.value);
+      const invalid = Number.isNaN(amount) || amount <= 0;
+      input.setAttribute("aria-invalid", String(invalid));
+      return invalid;
+    });
+    const invalidFlow = flowInputs.some((input) => {
+      const invalid = !input.value.trim();
+      input.setAttribute("aria-invalid", String(invalid));
+      return invalid;
+    });
+    if (invalidAmount) {
+      showToast("请分别填写每个供应商的赔款金额，且金额需大于 0");
+      return;
+    }
+    if (invalidFlow) {
+      showToast("请分别填写每个供应商的赔款流水");
+      return;
+    }
+    if (voucherButtons.some((button) => button.dataset.bulkVoucherUploaded !== "true")) {
+      showToast("请分别上传每个供应商的赔款凭证");
+      return;
+    }
+    updateBulkCompensationTotal();
+  }
+  const labels = { repair: "返修", scrap: "报损", deduct: "抵扣账单", compensation: "赔款" };
+  const label = labels[resolved];
+  const count = currentBulkPlans.length;
+  closeModal();
+  clearPendingSelection();
+  showToast(`已为 ${count} 条记录批量设置${label}方案`);
+}
+
 function openPlanModal(row) {
   currentPlan = {
     qty: Number(row.dataset.defectiveQty),
@@ -925,6 +1273,29 @@ function getSelectedPlanChoice() {
     : primaryChoice;
 }
 
+function updateBulkPlanFields() {
+  const primary = modalBody.querySelector("[data-bulk-plan-choice].c-segmented__item--active")?.dataset.bulkPlanChoice;
+  const secondary = modalBody.querySelector("[data-bulk-secondary-choice].c-segmented__item--active")?.dataset.bulkSecondaryChoice;
+  const resolved = primary === "scrap" && currentBulkPlans[0]?.source !== "temporary" ? (secondary || "scrap") : primary;
+  const repairFields = modalBody.querySelector("[data-role='bulk-repair-fields']");
+  const scrapFields = modalBody.querySelector("[data-role='bulk-scrap-fields']");
+  const directScrapFields = modalBody.querySelector("[data-role='bulk-direct-scrap-fields']");
+  const deductFields = modalBody.querySelector("[data-role='bulk-deduct-fields']");
+  const compensationFields = modalBody.querySelector("[data-role='bulk-compensation-fields']");
+  if (repairFields) repairFields.hidden = resolved !== "repair";
+  if (scrapFields) scrapFields.hidden = !["scrap", "deduct", "compensation"].includes(resolved);
+  if (directScrapFields) directScrapFields.hidden = resolved !== "scrap";
+  if (deductFields) deductFields.hidden = resolved !== "deduct";
+  if (compensationFields) compensationFields.hidden = resolved !== "compensation";
+}
+
+function updateBulkRepairScheme(scheme) {
+  const standardFields = modalBody.querySelector("[data-role='bulk-repair-standard-fields']");
+  const exchangeFields = modalBody.querySelector("[data-role='bulk-exchange-fields']");
+  if (standardFields) standardFields.hidden = scheme === "exchange";
+  if (exchangeFields) exchangeFields.hidden = scheme !== "exchange";
+}
+
 function bindSegmented(scope = document) {
   scope.querySelectorAll(".c-segmented__item").forEach((item) => {
     if (item.dataset.bound === "true") return;
@@ -949,6 +1320,17 @@ function bindSegmented(scope = document) {
       if (item.dataset.secondaryPlanChoice) {
         setPlanChoiceVisibility(item.dataset.secondaryPlanChoice);
         updatePlanPreview();
+      }
+      if (item.dataset.bulkPlanChoice) {
+        const secondary = modalBody.querySelector("[data-role='bulk-secondary-options']");
+        if (secondary) secondary.hidden = item.dataset.bulkPlanChoice !== "scrap";
+        updateBulkPlanFields();
+      }
+      if (item.dataset.bulkSecondaryChoice) {
+        updateBulkPlanFields();
+      }
+      if (item.dataset.bulkRepairScheme) {
+        updateBulkRepairScheme(item.dataset.bulkRepairScheme);
       }
       if (item.dataset.repairScheme) {
         const scheme = item.dataset.repairScheme;
@@ -1056,6 +1438,16 @@ modalBody.addEventListener("click", (event) => {
     const voucherName = event.target.closest(".upload-control")?.querySelector("[data-role='voucher-name']");
     if (voucherName) voucherName.textContent = "已上传：compensation-voucher.jpg";
   }
+  if (action === "bulk-choose-voucher") {
+    const button = event.target.closest("[data-action='bulk-choose-voucher']");
+    const supplier = button?.dataset.compensationSupplier || "供应商";
+    const voucherName = button?.closest(".bulk-voucher-cell")?.querySelector("[data-role='bulk-voucher-name']");
+    if (button) {
+      button.dataset.bulkVoucherUploaded = "true";
+      button.textContent = "重新上传";
+    }
+    if (voucherName) voucherName.textContent = `已上传：${supplier}-赔款凭证.jpg`;
+  }
   if (action === "warning-cancel") closeModal();
   if (action === "warning-repair") {
     closeModal();
@@ -1112,6 +1504,13 @@ document.querySelector("[data-field='sku-filter']").addEventListener("keydown", 
   if (event.key === "Enter") applyFilters();
 });
 
+sortPendingRows();
+ensurePendingSelectionCells();
+document.querySelector("[data-action='toggle-all-pending']")?.addEventListener("change", (event) => toggleAllPendingRows(event.target.checked));
+document.querySelector("[data-action='bulk-plan']")?.addEventListener("click", () => openBulkPlanModal(getSelectedPendingRows()));
+document.querySelector("[data-action='clear-pending-selection']")?.addEventListener("click", clearPendingSelection);
+updatePendingSelectionState();
+
 document.querySelectorAll("[data-action='open-pending-detail']").forEach((item) => {
   item.addEventListener("click", openPendingDetailDrawer);
 });
@@ -1139,6 +1538,10 @@ confirmButton.addEventListener("click", () => {
   }
   if (modalMode === "plan") {
     submitPlan();
+    return;
+  }
+  if (modalMode === "bulk-plan") {
+    submitBulkPlan();
     return;
   }
   if (modalMode === "config-save") {
