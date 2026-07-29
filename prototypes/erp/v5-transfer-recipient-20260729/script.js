@@ -38,7 +38,7 @@ select.addEventListener("change", () => {
   phone.value = data?.phone || "";
   address.value = data?.address || "";
   setEditing(false);
-  tip.textContent = data ? "已自动带入该收件人的默认联系方式与地址，可点击右上角编辑。" : "请选择收件人，系统将自动填充联系方式和收件地址。";
+  tip.textContent = data ? "已自动带入该收件人的默认联系方式与地址，可点击右上角编辑。" : "收件信息为选填；选择收件人后，系统将自动填充联系方式和收件地址。";
   tip.className = data ? "recipient-tip success" : "recipient-tip";
 });
 editButton.addEventListener("click", () => {
@@ -52,7 +52,8 @@ editButton.addEventListener("click", () => {
   } else setEditing(true);
 });
 document.querySelector("#submit-button").addEventListener("click", () => {
-  if (!select.value || !phone.value.trim() || !address.value.trim()) return showToast("请先完善收件信息", true);
+  const hasAnyRecipientInfo = select.value || phone.value.trim() || address.value.trim();
+  if (hasAnyRecipientInfo && (!select.value || !phone.value.trim() || !address.value.trim())) return showToast("如填写收件信息，请将三项填写完整", true);
   showToast("调拨单已提交审核");
 });
 document.querySelectorAll(".danger").forEach(button => button.addEventListener("click", () => button.closest("tr").remove()));
