@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>编辑调拨单｜收件信息优化原型</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="dialog" aria-labelledby="page-title">
+    <header class="dialog__header">
+      <h1 id="page-title">编辑调拨单</h1>
+      <button class="icon-button" type="button" aria-label="关闭">×</button>
+    </header>
+
+    <section class="form-area" aria-label="调拨单基础信息">
+      <div class="form-grid">
+        <label class="field required"><span>调拨类型</span><select><option>仓间调拨</option></select></label>
+        <label class="field required"><span>调出仓库</span><select><option>SZ01东莞仓</option></select></label>
+        <label class="field required"><span>调入仓库</span><select><option>美客多01优选仓</option></select></label>
+        <label class="switch-field"><span>是否继承库龄</span><input type="checkbox" role="switch"><i></i></label>
+
+        <label class="field"><span>调出账号/单据</span><select><option>请选择</option></select></label>
+        <label class="field"><span>预计到仓日期</span><input type="date"></label>
+        <label class="field"><span>调入账号</span><select><option>请选择</option></select></label>
+        <span></span>
+
+        <label class="field"><span>物流渠道</span><select><option>请选择</option><option>顺丰速运</option><option>跨越速运</option></select></label>
+        <label class="field"><span>物流单号</span><input placeholder="请输入"></label>
+        <label class="field combo"><span>运费</span><input type="number" placeholder="请输入"><select aria-label="运费币种"><option>CNY</option><option>USD</option></select></label>
+        <label class="field combo"><span>其他费用</span><input type="number" placeholder="请输入"><select aria-label="其他费用币种"><option>CNY</option><option>USD</option></select></label>
+      </div>
+
+      <div class="recipient-block">
+        <div class="recipient-title">
+          <div><strong>收件信息</strong><span class="hint">选择常用收件地址后自动带入，也可直接编辑</span></div>
+          <button id="edit-button" class="link-button" type="button">编辑收件信息</button>
+        </div>
+        <div class="recipient-grid">
+          <label class="field required"><span>收件人</span>
+            <select id="recipient-select">
+              <option value="">请选择收件人</option>
+              <option value="zhang">张敏｜美客多优选仓</option>
+              <option value="li">李伟｜东莞中转仓</option>
+              <option value="wang">王芳｜深圳售后仓</option>
+              <option value="new">＋ 新增收件信息</option>
+            </select>
+          </label>
+          <label class="field required"><span>收件人联系方式</span><input id="phone" placeholder="选择收件人后自动带入" readonly></label>
+          <label class="field required address-field"><span>收件地址</span><input id="address" placeholder="选择收件人后自动带入" readonly></label>
+        </div>
+        <p id="recipient-tip" class="recipient-tip">请选择收件人，系统将自动填充联系方式和收件地址。</p>
+      </div>
+
+      <label class="remark"><span>调拨单备注</span><textarea placeholder="请输入"></textarea></label>
+    </section>
+
+    <section class="detail">
+      <header><h2><span>☷</span> 调拨明细</h2><button class="primary small" type="button">＋&nbsp; 添加SKU</button></header>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>SKU</th><th>产品名称</th><th>调出仓SKU</th><th>调入仓SKU<br>itemID</th><th>调出仓可用</th><th>调出仓加权价</th><th>调拨数量</th><th>备注</th><th>操作</th></tr></thead>
+          <tbody>
+            <tr><td><a>GXJA0758-001</a></td><td class="product"><span class="thumb">⚙</span>1套[1件]DC 12-75V 600W DC-DC降压恒压恒流可调电源模块</td><td>GXJA0758-001</td><td>GXJA0758-001</td><td>115</td><td>20.2597</td><td><input value="3" type="number"></td><td><textarea>#73017367</textarea></td><td><button class="danger">删除</button></td></tr>
+            <tr><td><a>GBAA0209-001</a></td><td class="product"><span class="thumb">▣</span>1套[1件]36V 48V 52V 60V 40A 黑金正弦波三模无刷电机控制器</td><td>GBAA0209-001</td><td>GBAA0209-001</td><td>215</td><td>43.9999</td><td><input value="3" type="number"></td><td><textarea>#73017367</textarea></td><td><button class="danger">删除</button></td></tr>
+            <tr><td><a>FBBA0135-001</a></td><td class="product"><span class="thumb">▤</span>【ESP32-S3-RS485-CAN 板载天线】多功能开发板</td><td>FBBA0135-001</td><td>FBBA0135-001</td><td>127</td><td>80.8279</td><td><input value="3" type="number"></td><td><textarea>#73017367</textarea></td><td><button class="danger">删除</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="dialog__footer">
+      <button class="secondary" type="button">取消</button>
+      <button id="submit-button" class="primary" type="button">提交审核</button>
+    </footer>
+  </main>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script src="./script.js"></script>
+</body>
+</html>
