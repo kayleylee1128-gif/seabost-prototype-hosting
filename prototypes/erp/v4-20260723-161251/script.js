@@ -172,7 +172,7 @@ function openPendingDetailDrawer(event) {
       </section>
       <h3 class="c-section-title">退件单与库存来源</h3>
       <table class="c-table">
-        <thead><tr><th>退货收货单</th><th>收货时间</th><th class="c-table__cell--num">数量</th><th>图片</th></tr></thead>
+        <thead><tr><th>退件单号</th><th>收货时间</th><th class="c-table__cell--num">数量</th><th>图片</th></tr></thead>
         <tbody>
           ${images.map((image, index) => `<tr><td><a class="link" data-action="open-defect-images" data-sku="${sku}" data-image-index="${index}">${image.returnNo}</a></td><td>${image.uploadedAt}</td><td class="c-table__cell--num">${Math.max(1, Math.round(Number(row?.dataset.defectiveQty || 1) / images.length))}</td><td><button class="detail-source-image" data-action="open-defect-images" data-sku="${sku}" data-image-index="${index}" type="button" title="查看 ${image.returnNo} 上传的次品图片"><img src="${image.src}" alt="${image.caption}" /><span>查看图片</span></button></td></tr>`).join("")}
         </tbody>
@@ -283,19 +283,16 @@ function applyFilters() {
   const warehouse = getSelectValue("warehouse");
   const source = getSelectValue("source");
   const sku = document.querySelector("[data-field='sku-filter']").value.trim().toUpperCase();
-  const keyword = document.querySelector("[data-field='global-search']").value.trim().toUpperCase();
   const rows = [...document.querySelectorAll("[data-row='pending']")];
   let visibleCount = 0;
   let visibleCost = 0;
   let pendingQty = 0;
 
   rows.forEach((row) => {
-    const rowText = `${row.dataset.supplier} ${row.dataset.sku} ${row.dataset.warehouse}`.toUpperCase();
     const matched = (!supplier || row.dataset.supplier === supplier)
       && (!warehouse || row.dataset.warehouse === warehouse)
       && (!source || row.dataset.source === source)
-      && (!sku || row.dataset.sku.toUpperCase().includes(sku))
-      && (!keyword || rowText.includes(keyword));
+      && (!sku || row.dataset.sku.toUpperCase().includes(sku));
     row.hidden = !matched;
     if (!matched) {
       const checkbox = row.querySelector("[data-action='toggle-pending-row']");
@@ -309,13 +306,12 @@ function applyFilters() {
   });
 
   document.querySelector("[data-role='empty-row']").hidden = visibleCount > 0;
-  document.querySelector("[data-role='table-summary']").innerHTML = `待处理聚合 <strong>${visibleCount}</strong> 组，待处理数量 <strong>${pendingQty}</strong> 件，采购成本合计 <strong>${money(visibleCost)}</strong>`;
+  document.querySelector("[data-role='table-summary']").innerHTML = `待处理数量 <strong>${pendingQty}</strong> 件，采购成本合计 <strong>${money(visibleCost)}</strong>`;
   updatePendingSelectionState();
 }
 
 function resetFilters() {
   document.querySelector("[data-field='sku-filter']").value = "";
-  document.querySelector("[data-field='global-search']").value = "";
   document.querySelectorAll(".c-select[data-select='supplier'], .c-select[data-select='warehouse'], .c-select[data-select='source']").forEach((select) => {
     const option = select.querySelector(".c-select__option[data-value='']");
     setSelectValue(select, "", option.textContent);
@@ -344,15 +340,15 @@ function configListTemplate() {
       </thead>
       <tbody>
         <tr>
-          <td>高货值次品处理</td>
-          <td><div class="condition-summary"><span class="tag tag--processing">条件组 1</span><span>SKU 固定清单，且单价和货值满足区间</span></div></td>
+          <td>高单价次品处理</td>
+          <td><div class="condition-summary"><span class="tag tag--processing">条件组 1</span><span>SKU 固定清单，且单价满足配置区间</span></div></td>
           <td><span class="tag tag--processing">上架次品区</span></td>
           <td><span class="tag tag--success">启用</span></td>
           <td class="c-table__cell--actions"><a class="link" data-action="config-edit">编辑</a><a class="link" data-action="config-disable">禁用</a><a class="link" data-action="config-log">日志</a></td>
         </tr>
         <tr>
-          <td>低货值次品框归集</td>
-          <td><div class="condition-summary"><span class="tag tag--processing">条件组 1</span><span>货值满足低货值配置条件</span></div></td>
+          <td>低单价次品框归集</td>
+          <td><div class="condition-summary"><span class="tag tag--processing">条件组 1</span><span>单价满足低单价配置条件</span></div></td>
           <td><span class="tag tag--warning">次品框归集</span></td>
           <td><span class="tag tag--success">启用</span></td>
           <td class="c-table__cell--actions"><a class="link" data-action="config-edit">编辑</a><a class="link" data-action="config-disable">禁用</a><a class="link" data-action="config-log">日志</a></td>
@@ -456,7 +452,7 @@ function configFormTemplate(titleText) {
         <div class="config-base-form">
           <label class="form-field">
             <span>配置名称</span>
-            <input class="input" data-field="config-name" value="${titleText === "编辑配置" ? "高货值次品处理" : ""}" placeholder="请输入配置名称" />
+            <input class="input" data-field="config-name" value="${titleText === "编辑配置" ? "高单价次品处理" : ""}" placeholder="请输入配置名称" />
           </label>
           <label class="form-field">
             <span>处理方案</span>
@@ -511,7 +507,7 @@ function configLogTemplate() {
   return `
     <ul class="c-timeline">
       <li class="c-timeline__item"><div class="c-timeline__time">2026-05-22 14:11:08</div><div class="c-timeline__title">编辑配置</div><div class="c-timeline__detail">采购用户调整配置条件摘要和处理方案。</div></li>
-      <li class="c-timeline__item"><div class="c-timeline__time">2026-05-21 18:03:42</div><div class="c-timeline__title">新增配置</div><div class="c-timeline__detail">新增高货值次品上架配置。</div></li>
+      <li class="c-timeline__item"><div class="c-timeline__time">2026-05-21 18:03:42</div><div class="c-timeline__title">新增配置</div><div class="c-timeline__detail">新增高单价次品上架配置。</div></li>
       <li class="c-timeline__item"><div class="c-timeline__time">2026-05-20 09:27:16</div><div class="c-timeline__title">禁用配置</div><div class="c-timeline__detail">工具类次品上架配置被禁用。</div></li>
     </ul>
   `;
@@ -1491,15 +1487,12 @@ document.querySelectorAll("[data-pool-tab]").forEach((tab) => {
     });
     document.querySelector("[data-role='table-summary']").innerHTML = target === "records"
       ? `已处理记录 <strong>5</strong> 条，处置数量 <strong>116</strong> 件`
-      : `待处理聚合 <strong>4</strong> 组，待处理数量 <strong>105</strong> 件，采购成本合计 <strong>¥13,564.00</strong>`;
+      : `待处理数量 <strong>105</strong> 件，采购成本合计 <strong>¥13,564.00</strong>`;
   });
 });
 
 document.querySelector("[data-action='query-filter']").addEventListener("click", applyFilters);
 document.querySelector("[data-action='reset-filter']").addEventListener("click", resetFilters);
-document.querySelector("[data-field='global-search']").addEventListener("keydown", (event) => {
-  if (event.key === "Enter") applyFilters();
-});
 document.querySelector("[data-field='sku-filter']").addEventListener("keydown", (event) => {
   if (event.key === "Enter") applyFilters();
 });
@@ -1510,6 +1503,34 @@ document.querySelector("[data-action='toggle-all-pending']")?.addEventListener("
 document.querySelector("[data-action='bulk-plan']")?.addEventListener("click", () => openBulkPlanModal(getSelectedPendingRows()));
 document.querySelector("[data-action='clear-pending-selection']")?.addEventListener("click", clearPendingSelection);
 updatePendingSelectionState();
+
+function bindPendingPagination() {
+  const pagination = document.querySelector("[data-role='pending-pagination']");
+  if (!pagination) return;
+  const pageButtons = [...pagination.querySelectorAll("[data-page]")];
+  const previousButton = pagination.querySelector("[data-page-action='previous']");
+  const nextButton = pagination.querySelector("[data-page-action='next']");
+  const totalPages = 6;
+  let currentPage = 1;
+
+  const updatePagination = (page) => {
+    currentPage = Math.max(1, Math.min(totalPages, page));
+    pageButtons.forEach((button) => {
+      button.classList.toggle("table-pagination__btn--active", Number(button.dataset.page) === currentPage);
+    });
+    if (previousButton) previousButton.disabled = currentPage === 1;
+    if (nextButton) nextButton.disabled = currentPage === totalPages;
+  };
+
+  pageButtons.forEach((button) => {
+    button.addEventListener("click", () => updatePagination(Number(button.dataset.page)));
+  });
+  previousButton?.addEventListener("click", () => updatePagination(currentPage - 1));
+  nextButton?.addEventListener("click", () => updatePagination(currentPage + 1));
+  updatePagination(currentPage);
+}
+
+bindPendingPagination();
 
 document.querySelectorAll("[data-action='open-pending-detail']").forEach((item) => {
   item.addEventListener("click", openPendingDetailDrawer);

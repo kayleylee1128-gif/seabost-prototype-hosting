@@ -25,10 +25,6 @@
 
     <header class="c-shell__header">
       <button class="c-icon-btn" title="折叠菜单" data-action="collapse" type="button">≡</button>
-      <div class="c-shell__header-search">
-        <span class="c-shell__header-search-icon">⌕</span>
-        <input class="input" data-field="global-search" placeholder="搜索供应商、SKU、退货单" />
-      </div>
       <div class="c-shell__header-actions">
         <button class="c-icon-btn" title="帮助" type="button">?</button>
         <button class="c-icon-btn" title="通知" type="button">!</button>
@@ -112,9 +108,8 @@
           <button class="c-tabs__item" data-pool-tab="records" type="button" role="tab" aria-selected="false">已处理</button>
         </div>
         <div class="c-table-panel__toolbar">
-          <div class="c-table-panel__summary" data-role="table-summary">待处理聚合 <strong>4</strong> 组，待处理数量 <strong>105</strong> 件，采购成本合计 <strong>¥13,564.00</strong></div>
+          <div class="c-table-panel__summary" data-role="table-summary">待处理数量 <strong>105</strong> 件，采购成本合计 <strong>¥13,564.00</strong></div>
           <div class="c-table-panel__tools">
-            <span class="table-sort-hint" data-role="supplier-sort-status">按供应商升序</span>
             <span class="selection-summary" data-role="selection-summary">已选 0 条</span>
             <button class="btn btn--sm btn--primary" data-action="bulk-plan" type="button" disabled>批量设置方案</button>
             <button class="btn btn--sm" data-action="clear-pending-selection" type="button" disabled>清空选择</button>
@@ -188,12 +183,25 @@
               <td class="c-table__cell--actions"><a class="link" data-action="open-plan">处理方案</a></td>
             </tr>
             <tr class="empty-row" data-role="empty-row" hidden>
-              <td colspan="10">
+              <td colspan="11">
                 <div class="empty-state">暂无符合条件的次品待处理数据</div>
               </td>
             </tr>
           </tbody>
         </table>
+        </div>
+        <div class="table-pagination" data-role="pending-pagination" aria-label="次品待处理列表分页">
+          <span class="table-pagination__total">共 105 条</span>
+          <div class="table-pagination__controls">
+            <span class="table-pagination__label">20 条/页</span>
+            <button class="table-pagination__btn" data-page-action="previous" type="button" disabled aria-label="上一页">‹</button>
+            <button class="table-pagination__btn table-pagination__btn--active" data-page="1" type="button">1</button>
+            <button class="table-pagination__btn" data-page="2" type="button">2</button>
+            <button class="table-pagination__btn" data-page="3" type="button">3</button>
+            <span class="table-pagination__ellipsis">…</span>
+            <button class="table-pagination__btn" data-page="6" type="button">6</button>
+            <button class="table-pagination__btn" data-page-action="next" type="button" aria-label="下一页">›</button>
+          </div>
         </div>
         <div class="c-table-scroll" data-pool-panel="records" hidden>
           <table class="c-table c-table--wide">
@@ -303,7 +311,7 @@
       <div data-tab-pane="stock">
         <table class="c-table">
           <thead>
-            <tr><th>退货收货单</th><th>收货时间</th><th class="c-table__cell--num">数量</th></tr>
+            <tr><th>退件单号</th><th>收货时间</th><th class="c-table__cell--num">数量</th></tr>
           </thead>
           <tbody>
             <tr><td>RT-IN-20260520-0089</td><td>2026-05-20 15:12</td><td class="c-table__cell--num">12</td></tr>
