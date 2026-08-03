@@ -1460,6 +1460,37 @@ input {
   display: block;
 }
 
+.toast--error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: min(620px, calc(100vw - 48px));
+  padding: 13px 18px 13px 16px;
+  border-color: #ffa39e;
+  border-radius: 8px;
+  background: #fff1f0;
+  color: #a8071a;
+  font-size: 15px;
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.5;
+  box-shadow: 0 10px 28px rgba(245, 34, 45, .22);
+}
+
+.toast--error::before {
+  content: "!";
+  display: inline-flex;
+  flex: 0 0 22px;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #f5222d;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+}
+
 @media (max-width: 960px) {
   .c-shell {
     grid-template-columns: var(--layout-sider-collapsed-width) 1fr;

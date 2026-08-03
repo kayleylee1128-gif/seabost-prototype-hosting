@@ -89,11 +89,15 @@ function money(value) {
   return `¥${Number(value).toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
-function showToast(message) {
+function showToast(message, type = "default") {
   toast.textContent = message;
+  toast.classList.toggle("toast--error", type === "error");
+  toast.dataset.type = type;
   toast.dataset.visible = "true";
   window.setTimeout(() => {
     toast.dataset.visible = "false";
+    toast.classList.remove("toast--error");
+    toast.dataset.type = "default";
   }, 1800);
 }
 
@@ -748,6 +752,7 @@ function updatePlanPreview() {
   const preview = modalBody.querySelector("[data-role='plan-preview']");
   if (!preview || !currentPlan) return;
   const selected = getSelectedPlanChoice();
+  preview.hidden = false;
   if (selected === "scrap") {
     preview.innerHTML = `<h3>方案预览</h3><div class="preview-lines"><div>无挽损处理：确认后直接生成报损出库单并推送报损审核流。</div><div>不维护返修、抵扣或赔款信息。</div></div>`;
     return;
@@ -781,35 +786,9 @@ function updatePlanPreview() {
     `;
     return;
   }
-  const repairScheme = modalBody.querySelector("[data-repair-scheme].c-segmented__item--active")?.dataset.repairScheme || "inbound";
-  const repairFee = Number(modalBody.querySelector("[data-field='repair-fee']")?.value || 0);
-  const estimatedFreight = Number(modalBody.querySelector("[data-field='estimated-freight']")?.value || 0);
-  const freightBearer = modalBody.querySelector("[data-freight-bearer].c-segmented__item--active")?.dataset.freightBearer || "company";
-  const companyFreight = freightBearer === "company" ? estimatedFreight : 0;
-  const repairCost = repairFee + companyFreight;
-  const ratio = currentPlan.totalCost > 0 ? (repairCost / currentPlan.totalCost) * 100 : 0;
-  const threshold = currentPlan.totalCost > 1000 ? 80 : 60;
-  const riskClass = ratio >= threshold ? "metric--danger" : ratio >= threshold * 0.75 ? "metric--warning" : "";
-  const advice = ratio >= threshold ? "不建议返修，确认时需二次确认" : "可提交返修申请";
-  const schemeText = {
-    inbound: "返修入库",
-    exchange: "返修换货",
-  }[repairScheme];
-  const schemeResult = repairScheme === "exchange"
-    ? "将记录新换货 SKU、数量、单价和金额。"
-    : "供应商回货后进入返修入库流程。";
-  preview.innerHTML = `
-    <h3>成本测算</h3>
-    <div class="plan-preview__grid">
-      <div class="metric"><span>返修方案</span><strong>${schemeText}</strong></div>
-      <div class="metric"><span>总成本</span><strong>${money(currentPlan.totalCost)}</strong></div>
-      <div class="metric"><span>返修费</span><strong>${money(repairFee)}</strong></div>
-      <div class="metric"><span>公司承担运费</span><strong>${money(companyFreight)}</strong></div>
-      <div class="metric"><span>比较成本</span><strong>${money(repairCost)}</strong></div>
-      <div class="metric ${riskClass}"><span>成本占比</span><strong>${ratio.toFixed(2)}%</strong></div>
-    </div>
-    <div class="preview-lines" style="margin-top: var(--space-3);"><div>${schemeResult}</div><div>${advice}</div></div>
-  `;
+  preview.hidden = true;
+  preview.innerHTML = "";
+  return;
 }
 
 function warningTemplate(percent, threshold) {
@@ -955,13 +934,6 @@ function bulkPlanTemplate(items) {
     ${secondaryOptions}
     ${repairFields}
     ${scrapFields}
-    <div class="bulk-plan-list">
-      <div class="bulk-plan-list__title">已选记录</div>
-      <table class="c-table c-table--compact">
-        <thead><tr><th>供应商</th><th>SKU</th><th>存放类型</th><th class="c-table__cell--num">数量</th></tr></thead>
-        <tbody>${items.map((item) => `<tr><td>${item.supplier}</td><td>${item.sku}</td><td>${item.source === "temporary" ? "次品暂存区" : "已上架次品区"}</td><td class="c-table__cell--num">${item.qty}</td></tr>`).join("")}</tbody>
-      </table>
-    </div>
   `;
 }
 
@@ -979,7 +951,7 @@ function openBulkPlanModal(rows) {
   }
   const sourceSet = new Set(items.map((item) => item.source));
   if (sourceSet.size > 1) {
-    showToast("批量设置方案需选择相同次品存放类型的数据");
+    showToast("批量设置方案需选择相同次品存放类型的数据", "error");
     return;
   }
   currentBulkPlans = items;
