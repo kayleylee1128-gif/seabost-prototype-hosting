@@ -1535,6 +1535,126 @@ input {
   }
 }
 
+/* 已处理处置记录详情：按“处置记录号 + 供应商”查看汇总记录，并在弹窗中展开退件单与方案明细。 */
+.processed-detail-modal {
+  width: 1040px;
+  max-width: calc(100vw - 40px);
+}
+
+.processed-detail-hero {
+  display: grid;
+  grid-template-columns: 1.1fr 1.2fr .8fr;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 16px 18px;
+  border: 1px solid #dbeafe;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f5f9ff 0%, #ffffff 100%);
+}
+
+.processed-detail-hero > div,
+.processed-detail-grid > div,
+.processed-detail-contact > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.processed-detail-hero span:first-child,
+.processed-detail-grid span,
+.processed-detail-contact span {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.processed-detail-hero strong {
+  color: var(--color-text);
+  font-size: 16px;
+}
+
+.processed-detail-section {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid var(--color-border-secondary);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.processed-detail-section__head,
+.processed-detail-subsection__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.processed-detail-section__head {
+  margin-bottom: 12px;
+}
+
+.processed-detail-section__head h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.processed-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.processed-detail-subsection {
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid #e7edf5;
+  border-radius: 8px;
+  background: #fbfcfe;
+}
+
+.processed-detail-subsection__head {
+  justify-content: flex-start;
+  margin-bottom: 12px;
+}
+
+.processed-detail-contact {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.processed-detail-contact__wide {
+  grid-column: 1 / -1;
+}
+
+.processed-detail-info-lines {
+  display: grid;
+  gap: 8px;
+  color: var(--color-text-secondary);
+}
+
+.processed-detail-info-lines strong {
+  color: var(--color-text);
+}
+
+.processed-detail-table {
+  min-width: 780px;
+}
+
+@media (max-width: 760px) {
+  .processed-detail-hero,
+  .processed-detail-grid,
+  .processed-detail-contact {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .processed-detail-contact__wide {
+    grid-column: 1 / -1;
+  }
+}
+
 /* v4: traceable defective-image workflow */
 .image-thumb {
   display: inline-flex;

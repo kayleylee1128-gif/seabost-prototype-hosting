@@ -210,7 +210,6 @@
                 <th>处置记录号</th>
                 <th>发起时间</th>
                 <th>供应商</th>
-                <th>SKU</th>
                 <th>次品图片</th>
                 <th>仓库</th>
                 <th>次品存放类型</th>
@@ -221,11 +220,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td><a class="link">DP260528001</a></td>
+              <tr data-processed-record="DP260528001">
+                <td><a class="link" data-action="open-processed-detail" data-record-id="DP260528001">DP260528001</a></td>
                 <td>2026-05-28 16:40</td>
                 <td>深圳启明电子</td>
-                <td>SKU-BAT-8842</td>
                 <td><button class="image-thumb" data-action="open-defect-images" data-sku="SKU-BAT-8842" type="button"><span class="image-thumb__visual">▧</span><span class="image-thumb__count">3 张</span></button></td>
                 <td>华东一仓</td>
                 <td><span class="tag tag--processing">已上架次品区</span></td>
@@ -234,11 +232,10 @@
                 <td><a class="link">RX260528001</a></td>
                 <td><span class="tag tag--success">已完成</span></td>
               </tr>
-              <tr>
-                <td><a class="link">DP260526009</a></td>
+              <tr data-processed-record="DP260526009">
+                <td><a class="link" data-action="open-processed-detail" data-record-id="DP260526009">DP260526009</a></td>
                 <td>2026-05-26 10:18</td>
                 <td>深圳启明电子</td>
-                <td>SKU-BAT-8842</td>
                 <td><button class="image-thumb" data-action="open-defect-images" data-sku="SKU-BAT-8842" type="button"><span class="image-thumb__visual">▧</span><span class="image-thumb__count">3 张</span></button></td>
                 <td>华东一仓</td>
                 <td><span class="tag tag--warning">次品框归集</span></td>
@@ -247,11 +244,10 @@
                 <td><a class="link">RX260526009</a></td>
                 <td><span class="tag tag--processing">返修中</span></td>
               </tr>
-              <tr>
-                <td><a class="link">DP260518016</a></td>
+              <tr data-processed-record="DP260518016">
+                <td><a class="link" data-action="open-processed-detail" data-record-id="DP260518016">DP260518016</a></td>
                 <td>2026-05-18 09:40</td>
                 <td>杭州品越家居</td>
-                <td>SKU-PAD-7710</td>
                 <td><button class="image-thumb" data-action="open-defect-images" data-sku="SKU-PAD-7710" type="button"><span class="image-thumb__visual">▧</span><span class="image-thumb__count">2 张</span></button></td>
                 <td>华东一仓</td>
                 <td><span class="tag tag--processing">已上架次品区</span></td>
@@ -260,11 +256,10 @@
                 <td><a class="link">BS260518016</a></td>
                 <td><span class="tag tag--success">已完成</span></td>
               </tr>
-              <tr>
-                <td><a class="link">DP260517003</a></td>
+              <tr data-processed-record="DP260517003">
+                <td><a class="link" data-action="open-processed-detail" data-record-id="DP260517003">DP260517003</a></td>
                 <td>2026-05-17 11:26</td>
                 <td>宁波远拓工具</td>
-                <td>SKU-TOOL-5571</td>
                 <td><button class="image-thumb" data-action="open-defect-images" data-sku="SKU-TOOL-5571" type="button"><span class="image-thumb__visual">▧</span><span class="image-thumb__count">2 张</span></button></td>
                 <td>华北仓</td>
                 <td><span class="tag tag--processing">已上架次品区</span></td>
@@ -273,11 +268,10 @@
                 <td><a class="link">RX260517003</a></td>
                 <td><span class="tag tag--default">已取消</span></td>
               </tr>
-              <tr>
-                <td><a class="link">DP260514002</a></td>
+              <tr data-processed-record="DP260514002">
+                <td><a class="link" data-action="open-processed-detail" data-record-id="DP260514002">DP260514002</a></td>
                 <td>2026-05-14 15:06</td>
                 <td>广州蓝森户外</td>
-                <td>SKU-CAMP-1208</td>
                 <td><button class="image-thumb" data-action="open-defect-images" data-sku="SKU-CAMP-1208" type="button"><span class="image-thumb__visual">▧</span><span class="image-thumb__count">1 张</span></button></td>
                 <td>华南二仓</td>
                 <td><span class="tag tag--warning">次品框归集</span></td>
@@ -369,6 +363,18 @@
     <footer class="c-modal__foot">
       <button class="btn" data-action="close-modal" type="button">取消</button>
       <button class="btn btn--primary" data-action="confirm-modal" type="button">确认</button>
+    </footer>
+  </section>
+
+  <div class="c-modal-mask processed-detail-mask" data-action="close-processed-detail" data-open="false"></div>
+  <section class="c-modal c-modal--wide processed-detail-modal" data-component="ProcessedDetailModal" data-open="false" role="dialog" aria-modal="true" aria-labelledby="processed-detail-title">
+    <header class="c-modal__head">
+      <h2 id="processed-detail-title">处置记录明细</h2>
+      <button class="c-icon-btn" data-action="close-processed-detail" title="关闭" type="button">×</button>
+    </header>
+    <div class="c-modal__body" id="processed-detail-body"></div>
+    <footer class="c-modal__foot">
+      <button class="btn btn--primary" data-action="close-processed-detail" type="button">关闭</button>
     </footer>
   </section>
 

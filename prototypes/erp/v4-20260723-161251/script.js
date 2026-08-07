@@ -7,6 +7,9 @@ const modalBody = document.querySelector("#modal-body");
 const modalTitle = document.querySelector("#modal-title");
 const confirmButton = document.querySelector("[data-action='confirm-modal']");
 const toast = document.querySelector(".toast");
+const processedDetailModal = document.querySelector("[data-component='ProcessedDetailModal']");
+const processedDetailMask = document.querySelector(".processed-detail-mask");
+const processedDetailBody = document.querySelector("#processed-detail-body");
 const drawerOriginalBody = drawer.querySelector(".c-drawer__body").innerHTML;
 const drawerOriginalMeta = drawer.querySelector(".c-drawer__meta").innerHTML;
 
@@ -46,6 +49,37 @@ const defectiveImageSetsBySku = {
   ],
 };
 
+const processedDetailRecords = {
+  DP260528001: {
+    recordNo: "DP260528001", initiatedAt: "2026-05-28 16:40", supplier: "深圳启明电子", warehouse: "华东一仓", storageType: "已上架次品区", storageTag: "processing", totalQty: 30, status: "已完成", statusTag: "success", associatedDoc: "RX260528001",
+    returns: [
+      { returnNo: "RT-IN-20260520-0089", receivedAt: "2026-05-20 15:16", platformOrder: "AMZ-250520-0089", sku: "SKU-BAT-8842", qty: 18 },
+      { returnNo: "RT-IN-20260521-0034", receivedAt: "2026-05-21 11:34", platformOrder: "AMZ-250521-0034", sku: "SKU-BAT-8842", qty: 12 },
+    ],
+    plan: { primary: "返修", scheme: "返修入库", title: "返修入库", qty: 30, fee: "¥480.00", freight: "公司承担", receiver: "张晶", phone: "18975537514", address: "中国广东省深圳市龙岗区金鸿德电商产业园 C 栋 5 楼（前台收）", result: "已生成返修出库单，等待供应商返修后入库" },
+  },
+  DP260526009: {
+    recordNo: "DP260526009", initiatedAt: "2026-05-26 10:18", supplier: "深圳启明电子", warehouse: "华东一仓", storageType: "次品框归集", storageTag: "warning", totalQty: 14, status: "返修中", statusTag: "processing", associatedDoc: "RX260526009",
+    returns: [{ returnNo: "RT-IN-20260522-0017", receivedAt: "2026-05-22 09:18", platformOrder: "AMZ-250522-0017", sku: "SKU-BAT-8842", qty: 14 }],
+    plan: { primary: "返修", scheme: "返修换货", title: "返修换货", qty: 14, exchangeSku: "SKU-BAT-8842-NEW", exchangeQty: 14, fee: "¥0.00", freight: "供应商承担", receiver: "张晶", phone: "18975537514", address: "中国广东省深圳市龙岗区金鸿德电商产业园 C 栋 5 楼（前台收）", result: "返修出库已完成，等待供应商寄回换货品" },
+  },
+  DP260518016: {
+    recordNo: "DP260518016", initiatedAt: "2026-05-18 09:40", supplier: "杭州品越家居", warehouse: "华东一仓", storageType: "已上架次品区", storageTag: "processing", totalQty: 28, status: "已完成", statusTag: "success", associatedDoc: "BS260518016",
+    returns: [{ returnNo: "RT-IN-20260518-0062", receivedAt: "2026-05-18 09:45", platformOrder: "TM-250518-0062", sku: "SKU-PAD-7710", qty: 28 }],
+    plan: { primary: "报损", scheme: "报损", title: "报损（无挽损）", qty: 28, scrapAmount: "¥2,520.00", result: "报损出库已完成，次品库存已扣减" },
+  },
+  DP260517003: {
+    recordNo: "DP260517003", initiatedAt: "2026-05-17 11:26", supplier: "宁波远拓工具", warehouse: "华北仓", storageType: "已上架次品区", storageTag: "processing", totalQty: 26, status: "已取消", statusTag: "default", associatedDoc: "RX260517003",
+    returns: [{ returnNo: "RT-IN-20260517-0048", receivedAt: "2026-05-17 11:31", platformOrder: "EB-250517-0048", sku: "SKU-TOOL-5571", qty: 26 }],
+    plan: { primary: "返修", scheme: "返修换货", title: "返修换货", qty: 26, exchangeSku: "SKU-TOOL-5571-NEW", exchangeQty: 26, fee: "¥0.00", freight: "供应商承担", receiver: "周立", phone: "0574-86882216", address: "中国浙江省宁波市北仑区港城大道 168 号远拓工具园区", result: "处置记录已取消，未继续生成后续库存单据" },
+  },
+  DP260514002: {
+    recordNo: "DP260514002", initiatedAt: "2026-05-14 15:06", supplier: "广州蓝森户外", warehouse: "华南二仓", storageType: "次品框归集", storageTag: "warning", totalQty: 18, status: "审核中", statusTag: "processing", associatedDoc: "BS260514002",
+    returns: [{ returnNo: "RT-IN-20260514-0021", receivedAt: "2026-05-14 15:12", platformOrder: "SHEIN-250514-0021", sku: "SKU-CAMP-1208", qty: 18 }],
+    plan: { primary: "报损", scheme: "抵扣账单", title: "抵扣账单", qty: 18, deductAmount: "¥1,080.00", result: "已生成供应商对账明细，等待审核确认" },
+  },
+};
+
 function escapeSvgText(value) {
   return String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" }[char]));
 }
@@ -58,6 +92,67 @@ function defectiveImageSrc(image) {
 function getDefectiveImages(sku) {
   const images = defectiveImageSetsBySku[sku] || [{ returnNo: "RT-IN-20260522-0017", uploadedAt: "2026-05-22 09:18", caption: "次品外观", tone: "#d6e4ff" }];
   return images.map((image) => ({ ...image, src: defectiveImageSrc(image) }));
+}
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
+}
+
+function processedPlanDetailTemplate(record) {
+  const plan = record.plan;
+  const baseFields = `
+    <div class="processed-detail-grid">
+      <div><span>处理方式</span><strong>${escapeHtml(plan.primary)}</strong></div>
+      <div><span>处理方案</span><strong>${escapeHtml(plan.title)}</strong></div>
+      <div><span>处置数量</span><strong>${escapeHtml(plan.qty)} 件</strong></div>
+      <div><span>关联单据</span><strong>${escapeHtml(record.associatedDoc)}</strong></div>
+    </div>`;
+  if (plan.scheme === "返修入库" || plan.scheme === "返修换货") {
+    return `${baseFields}
+      <div class="processed-detail-subsection">
+        <div class="processed-detail-subsection__head"><strong>供应商收件信息</strong><span class="text-secondary">发起处置时默认加载，可编辑</span></div>
+        <div class="processed-detail-contact"><div><span>供应商</span><strong>${escapeHtml(record.supplier)}</strong></div><div><span>收件人</span><strong>${escapeHtml(plan.receiver)}</strong></div><div><span>收件电话</span><strong>${escapeHtml(plan.phone)}</strong></div><div class="processed-detail-contact__wide"><span>收件人地址</span><strong>${escapeHtml(plan.address)}</strong></div></div>
+      </div>
+      <div class="processed-detail-subsection">
+        <div class="processed-detail-subsection__head"><strong>返修方案信息</strong></div>
+        <div class="processed-detail-info-lines"><div>返修费用：<strong>${escapeHtml(plan.fee)}</strong></div><div>运费承担：<strong>${escapeHtml(plan.freight)}</strong></div>${plan.exchangeSku ? `<div>换货 SKU：<strong>${escapeHtml(plan.exchangeSku)}</strong>，换货数量：<strong>${escapeHtml(plan.exchangeQty)} 件</strong></div>` : ""}<div>处理结果：${escapeHtml(plan.result)}</div></div>
+      </div>`;
+  }
+  return `${baseFields}
+    <div class="processed-detail-subsection">
+      <div class="processed-detail-subsection__head"><strong>报损方案信息</strong></div>
+      <div class="processed-detail-info-lines"><div>报损方案：<strong>${escapeHtml(plan.title)}</strong></div>${plan.scrapAmount ? `<div>报损金额：<strong>${escapeHtml(plan.scrapAmount)}</strong></div>` : ""}${plan.deductAmount ? `<div>抵扣金额：<strong>${escapeHtml(plan.deductAmount)}</strong></div><div>结算方向：生成供应商对账明细</div>` : ""}<div>处理结果：${escapeHtml(plan.result)}</div></div>
+    </div>`;
+}
+
+function openProcessedDetail(recordId) {
+  const record = processedDetailRecords[recordId];
+  if (!record) return;
+  processedDetailBody.innerHTML = `
+    <div class="processed-detail-hero">
+      <div><span>处置记录号</span><strong>${escapeHtml(record.recordNo)}</strong></div>
+      <div><span>供应商</span><strong>${escapeHtml(record.supplier)}</strong></div>
+      <div><span>当前状态</span><span class="tag tag--${record.statusTag}">${escapeHtml(record.status)}</span></div>
+    </div>
+    <section class="processed-detail-section">
+      <div class="processed-detail-section__head"><h3>记录摘要</h3><span class="text-secondary">发起时间：${escapeHtml(record.initiatedAt)}</span></div>
+      <div class="detail-summary-card"><div><span>仓库</span><strong>${escapeHtml(record.warehouse)}</strong></div><div><span>次品存放类型</span><strong>${escapeHtml(record.storageType)}</strong></div><div><span>处置总数量</span><strong>${escapeHtml(record.totalQty)} 件</strong></div></div>
+    </section>
+    <section class="processed-detail-section">
+      <div class="processed-detail-section__head"><h3>关联退件单</h3><span class="tag tag--processing">${record.returns.length} 单</span></div>
+      <table class="c-table processed-detail-table"><thead><tr><th>退件单号</th><th>平台单号</th><th>SKU</th><th class="c-table__cell--num">次品数量</th><th>收货时间</th></tr></thead><tbody>${record.returns.map((item) => `<tr><td><a class="link" data-action="open-defect-images" data-sku="${escapeHtml(item.sku)}">${escapeHtml(item.returnNo)}</a></td><td>${escapeHtml(item.platformOrder)}</td><td>${escapeHtml(item.sku)}</td><td class="c-table__cell--num">${escapeHtml(item.qty)}</td><td>${escapeHtml(item.receivedAt)}</td></tr>`).join("")}</tbody></table>
+    </section>
+    <section class="processed-detail-section">
+      <div class="processed-detail-section__head"><h3>处理方案详情</h3><span class="text-secondary">按处置记录号 + 供应商归集</span></div>
+      ${processedPlanDetailTemplate(record)}
+    </section>`;
+  processedDetailModal.dataset.open = "true";
+  processedDetailMask.dataset.open = "true";
+}
+
+function closeProcessedDetail() {
+  processedDetailModal.dataset.open = "false";
+  processedDetailMask.dataset.open = "false";
 }
 
 function getSupplierProfiles(plan) {
@@ -1567,6 +1662,13 @@ document.querySelectorAll("[data-tab]").forEach((tab) => {
 document.addEventListener("click", (event) => {
   const target = event.target.closest("[data-action]");
   const action = target?.dataset.action;
+  if (action === "open-processed-detail") {
+    event.preventDefault();
+    openProcessedDetail(target.dataset.recordId);
+  }
+  if (action === "close-processed-detail") {
+    closeProcessedDetail();
+  }
   if (action === "open-defect-images") {
     openImageViewer(target.dataset.sku, target.dataset.imageIndex || 0);
   }
@@ -1587,6 +1689,7 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closeDrawer();
     closeModal();
+    closeProcessedDetail();
     closeImageViewer();
   }
   if (imageViewerMask.dataset.open === "true" && event.key === "ArrowLeft") {
