@@ -684,7 +684,6 @@
                 <th class="solution-col">返修方案</th>
                 <th class="logistics-col">物流信息</th>
                 <th class="receiver-col">收件人信息</th>
-                <th class="other-col">其他</th>
                 <th class="time-col">时间</th>
                 <th class="action-col">操作</th>
               </tr>
@@ -754,9 +753,9 @@
           <div><span>单据类型：</span>返修出库</div>
           <div><span>出库仓库：</span><strong id="detailWarehouse">-</strong></div>
           <div><span>供应商：</span><strong id="detailVendor">-</strong></div>
-          <div><span>审核负责人：</span>朱丽洁</div>
-          <div><span>责任部门：</span>产品开发中心-工业开发部</div>
+          <div><span>返修方案：</span><strong id="detailSolution">-</strong></div>
           <div><span>库存类型：</span>次品</div>
+          <div style="grid-column:1 / -1"><span>收件信息：</span><strong id="detailReceiver">-</strong></div>
           <div style="grid-column:1 / -1"><span>备注：</span><strong id="detailRemark">供应商返修出库，仓库按单拣货出库。</strong></div>
         </div>
         <table class="detail-table">
@@ -764,7 +763,6 @@
             <tr>
               <th>序号</th>
               <th>SKU</th>
-              <th>采购单</th>
               <th>申请数量</th>
             </tr>
           </thead>
@@ -962,8 +960,7 @@
             </td>
             <td><span class="solution-tag ${solutionClass(row.solution)}">${row.solution}</span><br>${solutionDetail}</td>
             <td>物流单号：${row.logistics}<br>物流渠道：${row.channel}<br>预估运费：${row.freightAmount || '-'} CNY<br>运费承担方：${row.freightBearer || '-'}</td>
-            <td>收件人：${row.receiver}<br>收件电话：${row.phone}<br>收件人地址：${row.address}</td>
-            <td>所属部门：产品开发中心-工业开发部<br>备注：返修出库<br>附件：<a class="link">上传</a></td>
+            <td>供应商：${row.vendor}<br>收件人：${row.receiver}<br>收件电话：${row.phone}<br>收件人地址：${row.address}</td>
             <td>创建人：张晶<br>创建时间：${row.create}<br>更新人：张晶<br>更新时间：${row.update}</td>
             <td class="action-col">
               <button class="btn btn--link action-link" type="button" data-action="view" data-index="${index}">查看</button><br>
@@ -1069,18 +1066,18 @@
       const skuRows = Array.from({ length: Math.min(Number(row.style) || 1, 4) }, (_, itemIndex) => {
         const sku = itemIndex === 0 ? row.sku : `${row.sku}-${String(itemIndex + 1).padStart(2, '0')}`;
         const qty = itemIndex === 0 ? row.qty : 1;
-        const purchaseNo = `PO${row.out.replace(/\D/g, '').slice(0, 10)}-${String(itemIndex + 1).padStart(2, '0')}`;
         return `
           <tr>
             <td>${itemIndex + 1}</td>
             <td>${sku}</td>
-            <td><span class="select">${purchaseNo}</span></td>
             <td>${qty}</td>
           </tr>
         `;
       }).join('');
       document.getElementById('detailWarehouse').textContent = row.warehouse;
       document.getElementById('detailVendor').textContent = row.vendor;
+      document.getElementById('detailSolution').textContent = row.solution === '返修换货' ? '返修换货' : '返修入库';
+      document.getElementById('detailReceiver').textContent = `${row.receiver} / ${row.phone} / ${row.address}`;
       document.getElementById('detailRemark').textContent = `供应商 ${row.vendor} 返修出库，共 ${row.style} 个 SKU，${row.qty} 件次品，处理方案为 ${row.solution}。`;
       document.getElementById('detailSkuBody').innerHTML = skuRows;
       openModal('detailModal');
