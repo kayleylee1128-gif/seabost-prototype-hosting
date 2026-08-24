@@ -1284,10 +1284,10 @@ function openHistoryDrawer(row) {
       <div class="metric"><span>返修入库 / 返修换货</span><strong>${count ? "1 / 1" : "0 / 0"}</strong></div>
     </section>
     <h3 class="c-section-title">历次处理明细</h3>
-    ${count ? `<table class="c-table"><thead><tr><th>发起时间</th><th>来源</th><th>数量</th><th>处理方案</th><th>金额</th><th>关联单据</th><th>结果</th></tr></thead><tbody>
-      <tr><td>2026-05-28</td><td>已上架</td><td>30</td><td>返修入库</td><td>¥680.00</td><td><a class="link">RX260528001</a></td><td><span class="tag tag--success">已完成</span></td></tr>
-      <tr><td>2026-05-26</td><td>次品框归集</td><td>14</td><td>返修换货</td><td>¥888.00</td><td><a class="link">RX260526009</a></td><td><span class="tag tag--processing">返修中</span></td></tr>
-      <tr><td>2026-05-18</td><td>已上架</td><td>28</td><td>报损</td><td>¥1,904.00</td><td><a class="link">BS260518016</a></td><td><span class="tag tag--success">已完成</span></td></tr>
+    ${count ? `<table class="c-table"><thead><tr><th>发起时间</th><th>数量</th><th>处理方案</th><th>金额</th><th>关联单据</th><th>结果</th></tr></thead><tbody>
+      <tr><td>2026-05-28</td><td>30</td><td>返修入库</td><td>¥680.00</td><td><a class="link">RX260528001</a></td><td><span class="tag tag--success">已完成</span></td></tr>
+      <tr><td>2026-05-26</td><td>14</td><td>返修换货</td><td>¥888.00</td><td><a class="link">RX260526009</a></td><td><span class="tag tag--processing">返修中</span></td></tr>
+      <tr><td>2026-05-18</td><td>28</td><td>报损</td><td>¥1,904.00</td><td><a class="link">BS260518016</a></td><td><span class="tag tag--success">已完成</span></td></tr>
     </tbody></table>` : `<div class="empty-state">该 SKU 暂无历史处理记录</div>`}
   `;
   openDrawer();
