@@ -1,20 +1,167 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>批发订单自动申购与履约优化需求文档</title>
-<style>:root{--blue:#1677ff;--blue-bg:#e6f4ff;--green:#389e0d;--orange:#d46b08;--red:#cf1322;--text:#1f2329;--sub:#646a73;--line:#d9dce0;--soft:#f5f7fa}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--soft);color:var(--text);font:14px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}.layout{display:grid;grid-template-columns:250px minmax(0,1fr);max-width:1500px;margin:auto}.toc{position:sticky;top:0;height:100vh;background:#fff;border-right:1px solid var(--line);padding:28px 20px;overflow:auto}.toc h3{font-size:15px;margin:0 0 12px}.toc a{display:block;padding:5px 8px;border-radius:5px;color:var(--sub);text-decoration:none}.toc a:hover{background:var(--blue-bg);color:var(--blue)}main{padding:36px 46px 80px}.doc{max-width:1100px;margin:auto;background:#fff;border:1px solid #edf0f3;border-radius:10px;padding:42px 50px;box-shadow:0 2px 12px rgba(0,0,0,.04)}.hero{border-bottom:1px solid var(--line);padding-bottom:24px}.hero h1{font-size:28px;line-height:1.35;margin:8px 0}.hero p{color:var(--sub);margin:0}.badge{display:inline-flex;padding:2px 9px;border-radius:4px;background:var(--blue-bg);color:#0958d9;font-size:12px}.badge.warn{background:#fff7e6;color:var(--orange)}h2{font-size:21px;margin:38px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--line)}h3{font-size:17px;margin:25px 0 10px}h4{font-size:15px;margin:20px 0 8px}p{margin:8px 0}table{width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:13px}th,td{border:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}th{background:#f2f4f7;font-weight:600;white-space:nowrap}.callout{margin:14px 0;padding:13px 16px;border:1px solid #91caff;border-radius:7px;background:var(--blue-bg)}.flow{display:flex;align-items:stretch;gap:8px;overflow:auto;padding:8px 0 14px}.step{min-width:135px;padding:12px;border:1px solid var(--line);border-radius:8px;background:#fff;text-align:center}.step b{display:block;color:var(--blue);margin-bottom:3px}.arrow{align-self:center;color:#8f959e;font-size:20px}.decision{border-color:#91caff;background:var(--blue-bg)}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card{border:1px solid var(--line);border-radius:8px;padding:16px}.card h4{margin:0 0 8px}.tag{display:inline-flex;padding:1px 7px;border-radius:4px;font-size:12px;background:var(--blue-bg);color:#0958d9}.tag.green{background:#f6ffed;color:var(--green)}.tag.warn{background:#fff7e6;color:var(--orange)}.tag.red{background:#fff1f0;color:var(--red)}.source{font-size:12px;color:var(--sub)}.source a{color:var(--blue)}.scenario{border-left:3px solid var(--blue);padding:10px 14px;background:#f7faff;margin:10px 0}.scenario b{display:block;margin-bottom:3px}.compact td:first-child{width:190px;font-weight:600}.footer{border-top:1px solid var(--line);margin-top:36px;padding-top:16px;color:var(--sub);font-size:12px}code{color:#c41d7f;background:#f5f5f5;padding:1px 4px;border-radius:3px}.process-map{margin:18px 0 24px;padding:18px;border:1px solid var(--line);border-radius:8px;background:#fafcff}.process-map h3{margin:0 0 14px}.process-lane{display:grid;grid-template-columns:90px minmax(0,1fr);gap:14px;padding:12px 0;border-top:1px dashed var(--line)}.process-lane:first-of-type{border-top:0}.lane-name{font-weight:600;color:var(--sub);padding-top:10px}.lane-flow{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.flow-node{min-width:120px;padding:9px 11px;border:1px solid #91caff;border-radius:7px;background:var(--blue-bg);text-align:center}.flow-node.green{border-color:#b7eb8f;background:#f6ffed}.flow-node.orange{border-color:#ffd591;background:#fff7e6}.flow-node.gray{border-color:var(--line);background:#fff}.flow-link{color:#8f959e;font-size:18px}.branch-label{font-size:12px;color:var(--sub);font-weight:600}.process-note{margin-top:12px;color:var(--sub);font-size:12px}@media(max-width:700px){.process-lane{grid-template-columns:1fr}.lane-flow{align-items:stretch}.flow-node{flex:1 1 145px}.flow-link{align-self:center}}@media(max-width:900px){.layout{display:block}.toc{height:auto;position:relative}.doc{padding:26px 20px}.cards{grid-template-columns:1fr}main{padding:18px}table{display:block;overflow:auto}}@media print{body{background:#fff}.layout{display:block}.toc{display:none}main,.doc{padding:0}.doc{border:0;box-shadow:none;max-width:none}}</style></head><body><div class="layout">
-<aside class="toc"><h3>目录</h3><a href="#s1">1. 为什么要做</a><a href="#s2">2. 用户与场景</a><a href="#s3">3. 优化后的流程</a><a href="#s4">4. 业务规则</a><a href="#dictionary">4.1 字典配置</a><a href="#identify">4.2 识别批发单</a><a href="#purchase">4.3 自动申购</a><a href="#rollback">4.4 采购取消回滚</a><a href="#inventory">4.5 库存满足与流转</a><a href="#pda">4.6 PDA 部分到货</a><a href="#s5">5. 页面与权限</a><a href="#s6">6. 异常与边界</a><a href="#s7">7. 验收标准</a><a href="#s8">8. 上线方案</a><a href="#s9">9. 原型与研发交接</a></aside>
-<main><article class="doc"><header class="hero"><span class="badge">业务评审版 V1.6</span> <span class="badge warn">新增真实缺口申购方案</span><h1>批发订单自动申购与履约优化</h1><p>核心目标：减少人工绑定，让订单根据规则、申购进度和真实库存自动向仓库流转。</p></header>
-<section id="s1"><h2>1. 为什么要做</h2><table><thead><tr><th>现有问题</th><th>发生原因</th><th>造成的结果</th><th>本次调整</th></tr></thead><tbody><tr><td>采购到仓后无法直接上批发货位</td><td>销售漏做订单与采购单的人工绑定</td><td>仓库要求产品逐件贴标，增加大量人工</td><td>订单改为关联申购需求，不再强依赖某一张采购单</td></tr><tr><td>采购或申购取消后订单一直卡住</td><td>订单申购数量和状态没有回退</td><td>后续即使有库存，订单也无法流转</td><td>采购取消自动回滚申购；最终取消时清零有效申购量</td></tr><tr><td>上架正常货位后订单仍不流转</td><td>系统只校验批发货位</td><td>实际库存足够但订单仍显示缺货</td><td>有申购到货时合并校验正常货位和批发货位</td></tr><tr><td>申购 100、来货 80 难处理</td><td>PDA 缺少分次到货和剩余量</td><td>到货进度和订单状态不准确</td><td>PDA 支持部分到货、累计到货和剩余待到</td></tr></tbody></table><h3>本期目标</h3><ul><li>系统自动识别批发订单，并根据配置判断是否需要申购。</li><li>采购取消后，申购和订单状态自动回到正确节点。</li><li>实际可用库存足够时，订单自动进入仓库系统。</li><li>仓库可以分多次收货和上架。</li></ul><h3>本期不做</h3><ul><li>不调整采购审批、供应商选择和付款流程。</li><li>不调整仓库拣货、复核和发货流程。</li><li>不要求一张订单只能对应一张采购单。</li></ul></section>
-<section id="s2"><h2>2. 用户与场景</h2><table><thead><tr><th>角色</th><th>主要任务</th><th>本次变化</th></tr></thead><tbody><tr><td>销售</td><td>查看缺货订单和申购进度</td><td>减少手工发起和绑定采购单</td></tr><tr><td>采购计划</td><td>审核申购、处理采购取消</td><td>收到回滚任务，可选择重采、调整或取消</td></tr><tr><td>供应链管理员</td><td>维护批发识别和申购规则</td><td>条件类型从公共配置字典选择</td></tr><tr><td>仓库收货员</td><td>收货、上架、登记差异</td><td>PDA 支持部分到货及正常/批发货位</td></tr></tbody></table></section>
-<section id="s3"><h2>3. 优化后的流程</h2><div class="flow"><div class="step decision"><b>1. 待检测</b>读取批发单定义</div><div class="arrow">→</div><div class="step"><b>2. 标记订单</b>命中则打批发标签</div><div class="arrow">→</div><div class="step decision"><b>3. 校验现货</b>仓库库存是否足够</div><div class="arrow">→</div><div class="step"><b>足够</b>直接流转 WMS</div><div class="arrow">／</div><div class="step"><b>不足</b>进入缺货状态</div><div class="arrow">→</div><div class="step decision"><b>4. 缺货扫描</b>定时读取同一配置</div><div class="arrow">→</div><div class="step"><b>5. 发起申购</b>回写申购数量</div><div class="arrow">→</div><div class="step"><b>6. 到货重算</b>满足后流转 WMS</div></div><table><thead><tr><th>节点</th><th>触发时机</th><th>系统处理</th><th>分支</th></tr></thead><tbody><tr><td>识别批发单</td><td>订单进入“待检测”节点</td><td>读取“批发单定义”；命中后打“批发”标签</td><td>未命中时按普通订单检测</td></tr><tr><td>校验仓库现货</td><td>批发标签生成后</td><td>立即校验仓库实际可用库存</td><td>库存足够：直接占用并流转 WMS；库存不足：进入缺货状态</td></tr><tr><td>判断自动申购</td><td>订单处于“缺货”状态，由定时任务扫描</td><td>读取同一条“批发单定义”的是否自动申购及缺货百分比</td><td>满足时发起申购；不满足时继续缺货等待</td></tr><tr><td>回写申购数量</td><td>申购成功生成</td><td>订单列表显示当前有效申购数量</td><td>生成失败时数量不增加</td></tr><tr><td>采购到货</td><td>全部或部分到货并上架</td><td>更新累计到货并重新校验库存</td><td>库存足够后占用并流转 WMS</td></tr></tbody></table><div class="process-map"><h3>3.1 方案 1：按订单数量申购</h3><div class="process-lane"><div class="lane-name">订单系统</div><div class="lane-flow"><div class="flow-node gray">订单进入待检测</div><span class="flow-link">→</span><div class="flow-node">读取“批发单定义”</div><span class="flow-link">→</span><div class="flow-node">命中则打批发标签</div><span class="flow-link">→</span><div class="flow-node orange">校验仓库可用库存</div><span class="branch-label">足够</span><span class="flow-link">→</span><div class="flow-node green">占用库存并流转 WMS</div><span class="branch-label">不足</span><span class="flow-link">↓</span><div class="flow-node orange">进入缺货状态</div></div></div><div class="process-lane"><div class="lane-name">定时任务</div><div class="lane-flow"><div class="flow-node gray">扫描缺货批发订单</div><span class="flow-link">→</span><div class="flow-node">读取自动申购开关与缺货百分比</div><span class="branch-label">不满足</span><span class="flow-link">→</span><div class="flow-node gray">保持缺货并等待下次扫描</div><span class="branch-label">满足</span><span class="flow-link">→</span><div class="flow-node green">按订单数量生成申购</div><span class="flow-link">→</span><div class="flow-node">订单列表回写申购数量</div></div></div><div class="process-lane"><div class="lane-name">采购计划</div><div class="lane-flow"><div class="flow-node gray">申购审核与采购执行</div><span class="branch-label">采购取消</span><span class="flow-link">→</span><div class="flow-node orange">申购回滚待审核</div><span class="flow-link">→</span><div class="flow-node">重采／调整／确认取消</div><span class="branch-label">确认取消</span><span class="flow-link">→</span><div class="flow-node gray">申购数量清零并记录日志</div></div></div><div class="process-lane"><div class="lane-name">仓库</div><div class="lane-flow"><div class="flow-node gray">采购到货</div><span class="flow-link">→</span><div class="flow-node">PDA 收货上架</div><span class="branch-label">支持部分到货</span><span class="flow-link">→</span><div class="flow-node">更新累计到货与剩余量</div><span class="flow-link">→</span><div class="flow-node orange">重算正常＋批发货位库存</div><span class="branch-label">仍不足</span><span class="flow-link">→</span><div class="flow-node gray">继续等待</div><span class="branch-label">已满足</span><span class="flow-link">→</span><div class="flow-node green">订单流转 WMS 拣货发货</div></div></div><div class="process-note">闭环触发：订单打标、库存变化、申购/采购取消、到货上架均会重新校验；同一订单只允许成功流转 WMS 一次。</div></div><div class="process-map"><h3>3.2 方案 2：计算批发订单真实缺口后申购</h3><div class="process-lane"><div class="lane-name">数据初始化</div><div class="lane-flow"><div class="flow-node gray">读取最近一个月订单</div><span class="flow-link">→</span><div class="flow-node">按当前“批发单定义”初始化批发标签</div><span class="flow-link">→</span><div class="flow-node">区分批发与非批发订单</div></div></div><div class="process-lane"><div class="lane-name">库存预留</div><div class="lane-flow"><div class="flow-node gray">剔除批发订单销量</div><span class="flow-link">→</span><div class="flow-node">重新计算非批发订单加权日销</div><span class="flow-link">→</span><div class="flow-node orange">计算非批发单预留库存</div><span class="flow-link">→</span><div class="flow-node">批发可用库存＝仓库可用库存－非批发预留库存</div></div></div><div class="process-lane"><div class="lane-name">订单预占</div><div class="lane-flow"><div class="flow-node gray">取得批发订单需求数量</div><span class="flow-link">→</span><div class="flow-node orange">计算可给该订单使用的批发可用库存</div><span class="flow-link">→</span><div class="flow-node green">立即预占可用库存</div><span class="flow-link">→</span><div class="flow-node">回写订单预占数量</div></div></div><div class="process-lane"><div class="lane-name">缺口申购</div><div class="lane-flow"><div class="flow-node gray">计算剩余缺口</div><span class="flow-link">→</span><div class="flow-node">缺口＝订单数量－预占数量－已有有效申购数量</div><span class="branch-label">缺口＝0</span><span class="flow-link">→</span><div class="flow-node green">无需发起申购</div><span class="branch-label">缺口＞0</span><span class="flow-link">→</span><div class="flow-node orange">按剩余缺口发起申购</div><span class="flow-link">→</span><div class="flow-node">订单列表回写申购数量</div></div></div><div class="process-note">计算口径：批发可用库存不得侵占非批发订单预留库存；库存预占成功后才能扣减申购缺口。重复扫描时扣除已有有效申购，避免重复申购。</div></div><table><thead><tr><th>方案 2 计算项</th><th>计算口径</th><th>示例</th></tr></thead><tbody><tr><td>非批发预留库存</td><td>使用剔除批发订单后的加权日销，按现有安全库存/备货规则计算</td><td>仓库可用 80，非批发预留 30</td></tr><tr><td>批发可用库存</td><td><code>max(仓库可用库存－非批发预留库存－其他批发订单已预占库存, 0)</code></td><td>80－30＝50</td></tr><tr><td>本次预占数量</td><td><code>min(批发订单数量, 批发可用库存)</code>，计算后立即预占，防止并发订单重复使用</td><td>订单 100，预占 50</td></tr><tr><td>需申购数量</td><td><code>max(批发订单数量－本次预占数量－已有有效申购数量, 0)</code></td><td>100－50－0＝申购 50</td></tr></tbody></table><div class="callout"><b>方案差异：</b>方案 1 命中自动申购条件后按订单数量全量申购；方案 2 先保护非批发订单库存，再为批发订单预占剩余可用库存，仅对预占后的真实缺口发起申购。</div><div class="callout"><b>关键规则：</b>批发标签只表示订单命中批发定义，不代表订单必须进入缺货。批发订单有现货时直接发仓；只有仓库现货不足时才进入缺货并等待定时申购判断。</div></section>
-<section id="s4"><h2>4. 业务规则</h2><section id="dictionary"><h3>4.1 通过公共配置字典维护条件</h3><p>批发识别条件和自动申购条件不写死在规则页面中，统一使用“公共配置”维护。业务规则页面只读取已启用的字典数据。</p><p class="source">参考：<a href="https://kayleylee1128-gif.github.io/seabost-prototype-hosting/prototypes/b2b/prototype-20260828-162111/" target="_blank">公共配置原型</a>的“配置项 → 字段定义 → 配置数据”三层模型。</p>
-<h4>配置项：批发单定义</h4><table><tbody><tr><th>配置名称</th><td>批发单定义</td><th>配置编码</th><td><code>wholesale_order_definition</code></td></tr><tr><th>所属系统</th><td>订单系统</td><th>调用模块</th><td>订单待检测、缺货订单定时任务</td></tr><tr><th>配置说明</th><td colspan="3">按平台和店铺配置批发单数量门槛，并决定缺货后是否自动申购。</td></tr></tbody></table><table><thead><tr><th>字段名称</th><th>字段编码</th><th>类型</th><th>必填</th><th>用途</th></tr></thead><tbody><tr><td>平台</td><td><code>platform</code></td><td>文本</td><td>是</td><td>订单来源平台</td></tr><tr><td>店铺</td><td><code>store</code></td><td>文本</td><td>是</td><td>规则适用店铺</td></tr><tr><td>SKU 数量</td><td><code>sku_qty</code></td><td>数字</td><td>是</td><td>单个 SKU 达到该数量时命中批发定义</td></tr><tr><td>订单总数量</td><td><code>order_total_qty</code></td><td>数字</td><td>是</td><td>订单商品总数达到该数量时命中批发定义</td></tr><tr><td>是否自动申购</td><td><code>auto_purchase</code></td><td>布尔</td><td>是</td><td>库存不足进入缺货后，是否允许定时任务发起申购</td></tr><tr><td>申购条件-缺货百分比</td><td><code>shortage_rate</code></td><td>数字</td><td>是</td><td>缺货比例达到该百分比时自动申购</td></tr></tbody></table><h4>案例配置数据</h4><table><thead><tr><th>平台</th><th>店铺</th><th>SKU 数量</th><th>订单总数量</th><th>是否自动申购</th><th>申购条件-缺货百分比</th><th>状态</th></tr></thead><tbody><tr><td>Amazon</td><td>全部店铺</td><td>50</td><td>100</td><td>是</td><td>20%</td><td><span class="tag green">启用</span></td></tr></tbody></table><h4>配置变更规则</h4><table><thead><tr><th>操作</th><th>规则</th><th>影响</th></tr></thead><tbody><tr><td>新增</td><td>启用后，待检测订单和缺货定时任务可读取</td><td>不追溯已离开待检测节点的订单</td></tr><tr><td>编辑</td><td>待检测判断和下一次缺货扫描读取最新有效数据</td><td>不删除已存在的批发标签和有效申购</td></tr><tr><td>停用</td><td>待检测和定时扫描不再使用该配置</td><td>已有批发标签保留，已有申购按原流程处理</td></tr><tr><td>删除</td><td>已被订单或申购记录引用时禁止删除</td><td>未引用数据允许删除并写日志</td></tr></tbody></table></section>
-<section id="identify"><h3>4.2 待检测节点识别批发单</h3><table><thead><tr><th>项目</th><th>业务规则</th><th>示例</th></tr></thead><tbody><tr><td>触发节点</td><td>订单进入“待检测”节点时读取当前有效的“批发单定义”</td><td>新订单同步完成后进入待检测</td></tr><tr><td>匹配范围</td><td>先匹配平台和店铺，再判断 SKU 数量或订单总数量</td><td>Amazon / 全部店铺</td></tr><tr><td>数量门槛</td><td>单 SKU 数量或订单总数量任一达到配置值即命中</td><td>SKU ≥50 或订单总量 ≥100</td></tr><tr><td>命中结果</td><td>给订单打“批发”标签，并立即校验仓库现货</td><td>订单列表展示“批发”标签</td></tr><tr><td>库存足够</td><td>不进入缺货状态，直接占用库存并流转仓库发货</td><td>需求 100、可用库存 100</td></tr><tr><td>库存不足</td><td>进入缺货状态，等待定时任务判断是否自动申购</td><td>需求 100、可用库存 60</td></tr><tr><td>订单属性</td><td>批发标签不因采购取消而自动删除</td><td>采购取消只改变申购状态和数量</td></tr></tbody></table></section>
-<section id="purchase"><h3>4.3 缺货状态定时判断是否自动申购</h3><table><thead><tr><th>项目</th><th>业务规则</th><th>示例</th></tr></thead><tbody><tr><td>扫描范围</td><td>仅扫描带“批发”标签、状态为“缺货”且尚有未满足数量的订单</td><td>库存已满足或已取消订单不扫描</td></tr><tr><td>执行方式</td><td>定时任务读取订单命中的“批发单定义”配置</td><td>读取是否自动申购和缺货百分比</td></tr><tr><td>执行频率</td><td>按系统统一调度周期定时扫描</td><td>每次执行均读取当前有效配置</td></tr><tr><td>自动申购开关</td><td>“是否自动申购=否”时保留批发标签和缺货状态，不自动申购</td><td>后续人工处理</td></tr><tr><td>触发条件</td><td>实际缺货比例达到“申购条件-缺货百分比”时发起申购</td><td>配置 20%，实际缺货 30%</td></tr><tr><td>申购数量</td><td>按照订单商品数量全量发起申购，不扣减当前可用库存</td><td>订单数量 100、可用库存 20，仍申购 100</td></tr><tr><td>生成成功</td><td>回写订单有效申购数量，并在订单列表展示</td><td>订单数量 100，列表显示申购数量 100</td></tr><tr><td>重复扫描</td><td>订单已有有效申购时不得重复生成申购单</td><td>已有有效申购 100，下次扫描不重复生成</td></tr></tbody></table><div class="callout"><b>方案 1 口径：</b>定时任务只处理已经进入缺货的批发订单。仓库现货足够的批发订单在待检测阶段直接发仓，不进入定时申购范围。</div></section>
-<section id="rollback"><h3>4.4 采购取消后回滚申购</h3><div class="flow"><div class="step"><b>采购取消</b>找到关联需求</div><div class="arrow">→</div><div class="step"><b>申购回滚</b>回到待审核</div><div class="arrow">→</div><div class="step decision"><b>计划确认</b>重采 / 调整 / 取消</div><div class="arrow">→</div><div class="step"><b>订单重算</b>更新申购量和库存</div></div><table><thead><tr><th>计划选择</th><th>系统处理</th><th>订单结果</th></tr></thead><tbody><tr><td>重新采购</td><td>申购保持待审核，审核后重新采购</td><td>继续等待到货</td></tr><tr><td>调整数量</td><td>保存新数量并记录原因</td><td>显示调整后的有效申购量</td></tr><tr><td>确认取消</td><td>取消对应申购量；全部取消则归零</td><td>立即重新校验现有库存</td></tr><tr><td>部分到货后取消剩余</td><td>保留已到货，只回滚未到部分</td><td>按已到货库存重算</td></tr></tbody></table></section>
-<section id="inventory"><h3>4.5 库存满足后流转仓库</h3><table><thead><tr><th>订单情况</th><th>校验范围</th><th>处理结果</th></tr></thead><tbody><tr><td>刚打上批发标签、尚未进入缺货</td><td>仓库实际可用库存</td><td>足够则直接占用并流转 WMS；不足才进入缺货状态</td></tr><tr><td>缺货但尚未发起申购</td><td>仓库实际可用库存</td><td>库存补足后直接流转，不必先发起申购</td></tr><tr><td>曾发起申购且采购已上架</td><td>正常货位 + 可用批发货位</td><td>库存足够后占用并流转 WMS</td></tr><tr><td>库存仍不足</td><td>不流转</td><td>保持缺货，等待库存变化或申购到货</td></tr></tbody></table><p>订单打批发标签、采购上架、库存调整/释放、采购或申购取消、订单数量变化都会触发重新校验。</p></section>
-<section id="pda"><h3>4.6 PDA 支持部分到货</h3><table><thead><tr><th>展示/填写项</th><th>说明</th></tr></thead><tbody><tr><td>申购数量</td><td>原需求量，只读</td></tr><tr><td>累计到货</td><td>不包含撤销和拒收数量</td></tr><tr><td>本次到货</td><td>本次实际验收数量</td></tr><tr><td>剩余待到</td><td>申购数量－累计有效到货</td></tr><tr><td>上架货位</td><td>正常货位或批发货位</td></tr><tr><td>差异原因</td><td>少货、破损、拒收、超量、其他</td></tr></tbody></table><div class="scenario"><b>申购 100，首次来货 80</b>仓库填写本次到货 80 并上架；系统显示“累计 80、剩余 20、部分到货”，同时重新校验订单。后续到货 20 后更新为“已完成”。</div></section></section>
-<section id="s5"><h2>5. 页面与权限</h2><div class="cards"><div class="card"><h4>订单列表</h4><p>新增“批发”标签和“申购数量”列，支持查看订单当前有效申购数量。</p><span class="tag green">本次新增</span></div><div class="card"><h4>批发单规则配置</h4><p>条件从公共字典读取，配置阈值、库存范围和申购数量口径。</p><span class="tag green">已有原型，需更新</span></div><div class="card"><h4>公共配置</h4><p>通过一个“批发单定义”维护识别门槛和自动申购条件。</p><span class="tag">原型已更新</span></div><div class="card"><h4>采购取消回滚任务</h4><p>处理重采、调整和取消。</p><span class="tag warn">待出原型</span></div><div class="card"><h4>PDA 部分到货</h4><p>记录本次到货、货位和差异。</p><span class="tag warn">待出原型</span></div></div><h3>5.1 订单列表展示规则</h3><table><thead><tr><th>展示项</th><th>展示规则</th><th>特殊情况</th></tr></thead><tbody><tr><td>批发标签</td><td>订单在待检测节点命中批发定义后显示“批发”标签</td><td>未命中时不显示</td></tr><tr><td>申购数量</td><td>显示订单当前所有有效申购数量之和</td><td>未发起或全部取消时显示 0</td></tr><tr><td>多 SKU 订单</td><td>列表显示订单级合计数量；鼠标悬停或进入详情查看各 SKU 申购数量</td><td>申购数量发生调整、取消时同步更新</td></tr><tr><td>申购失败</td><td>申购数量不增加</td><td>订单保留缺货状态，并显示申购失败原因</td></tr></tbody></table><h3>5.2 权限</h3><table><thead><tr><th>角色</th><th>查看</th><th>操作</th></tr></thead><tbody><tr><td>销售</td><td>订单批发标签、申购数量和申购进度</td><td>异常时人工发起申购</td></tr><tr><td>采购计划</td><td>申购及取消影响</td><td>审核、重采、调整、取消</td></tr><tr><td>供应链管理员</td><td>规则和公共配置</td><td>维护规则；字典需公共配置权限</td></tr><tr><td>仓库收货员</td><td>本仓到货信息</td><td>收货、上架、登记差异</td></tr></tbody></table></section>
-<section id="s6"><h2>6. 异常与边界</h2><table><thead><tr><th>场景</th><th>系统处理</th><th>用户看到</th></tr></thead><tbody><tr><td>规则引用的字典项被停用</td><td>已有规则继续展示但不可再次保存</td><td>条件显示“已停用”，提示更换</td></tr><tr><td>同一订单重复计算</td><td>更新原申购，不重复生成</td><td>数量更新并保留日志</td></tr><tr><td>采购取消但库存已足够</td><td>关闭无须再采购的缺口，直接校验库存</td><td>“库存已补足，无需重采”</td></tr><tr><td>多订单抢同一库存</td><td>仅成功占用的订单流转</td><td>其他订单继续等待</td></tr><tr><td>超量到货</td><td>默认阻断，授权确认后处理</td><td>展示超量数量和归属提示</td></tr><tr><td>上架撤销</td><td>扣减到货与库存，重算订单</td><td>提示可能重新缺货</td></tr></tbody></table></section>
-<section id="s7"><h2>7. 验收标准</h2><div class="scenario"><b>场景 1：待检测节点打批发标签</b>订单进入待检测节点，“批发单定义”为 Amazon / 全部店铺 / SKU 数量 50 / 订单总数量 100；订单单 SKU 为 60。系统给订单打“批发”标签。</div><div class="scenario"><b>场景 2：批发订单有库存直接发仓</b>订单已打“批发”标签，需求 60，仓库实际可用库存 60。系统直接占用库存并流转 WMS，订单不得进入缺货状态，也不得进入定时申购范围。</div><div class="scenario"><b>场景 3：批发订单库存不足进入缺货</b>订单已打“批发”标签，需求 60，仓库实际可用库存 20。系统将订单置为缺货状态，等待定时任务判断自动申购。</div><div class="scenario"><b>场景 4：未命中批发定义</b>订单进入待检测但不满足有效配置。系统不打批发标签，继续按普通订单流程检测。</div><div class="scenario"><b>场景 5：缺货定时扫描发起申购</b>配置为自动申购“是”、缺货百分比 20%；批发订单数量 100、可用库存 70。定时任务按订单数量生成申购 100，并在订单列表显示申购数量 100。</div><div class="scenario"><b>场景 6：重复扫描不重复申购</b>订单数量为 100，已有有效申购 100。下次扫描不得再次生成申购。</div><div class="scenario"><b>场景 7：申购取消后列表数量归零</b>订单当前申购数量为 100；计划确认取消全部申购。列表数量更新为 0，批发标签保留。</div><div class="scenario"><b>场景 8：采购取消回滚</b>采购取消且未到货时，申购回到待审核；确认取消后有效申购量归零并重算库存。</div><div class="scenario"><b>场景 9：混合货位满足</b>订单需 100，正常货位 40、批发货位 60。系统占用合计 100 并只流转 WMS 一次。</div><div class="scenario"><b>场景 10：部分到货</b>申购 100、本次到货 80 后，显示累计 80、剩余 20、部分到货，并触发订单重算。</div></section>
-<section id="s8"><h2>8. 上线方案</h2><table><thead><tr><th>阶段</th><th>主要工作</th><th>通过条件</th></tr></thead><tbody><tr><td>规则准备</td><td>建立两套字典，维护首批数据和灰度规则</td><td>字典可读取、规则可保存、停用逻辑正确</td></tr><tr><td>历史数据检查</td><td>找出采购已取消但仍有有效申购量的订单</td><td>业务确认清理清单</td></tr><tr><td>单平台灰度</td><td>选择少量店铺启用自动申购和流转</td><td>无重复申购、超占和错误流转</td></tr><tr><td>扩大范围</td><td>按平台逐步启用</td><td>仓库异常量稳定下降</td></tr></tbody></table><p>准备两个独立开关：<b>自动申购</b>和<b>库存满足后自动流转</b>。关闭开关不删除已有数据。</p></section>
-<section id="s9"><h2>9. 原型与研发交接</h2><h3>原型范围</h3><table><thead><tr><th>页面</th><th>主任务</th><th>状态</th></tr></thead><tbody><tr><td>订单列表</td><td>展示批发标签、订单级申购数量及 SKU 申购明细入口</td><td>本次新增调整</td></tr><tr><td>批发单规则配置</td><td>选择字典条件并配置阈值</td><td>需按本版更新</td></tr><tr><td>公共配置</td><td>维护配置项、字段和数据</td><td>原型已更新</td></tr><tr><td>采购取消回滚任务</td><td>处理重采、调整和取消</td><td>待产出</td></tr><tr><td>PDA 部分到货</td><td>记录到货和上架货位</td><td>待产出</td></tr></tbody></table><h3>最小必要约束</h3><table class="compact"><tbody><tr><td>配置读取节点</td><td>待检测节点读取批发定义；缺货状态由定时任务读取自动申购配置。</td></tr><tr><td>条件来源</td><td>规则页面只读取已启用字典数据；业务判断使用条件编码，不使用可编辑名称。</td></tr><tr><td>申购数量</td><td>自动申购按订单商品数量全量发起；订单列表显示当前有效申购数量合计，调整、取消后同步更新。</td></tr><tr><td>状态拆分</td><td>“是否批发单”和“是否存在有效申购”分开记录。</td></tr><tr><td>重复处理</td><td>定时任务重复扫描、取消通知和到货提交不得造成重复申购或库存。</td></tr><tr><td>库存流转</td><td>只有库存占用成功的订单才能流转仓库。</td></tr><tr><td>操作记录</td><td>字典、规则、申购、回滚和到货变更记录操作人、时间、原因和前后值。</td></tr></tbody></table><h3>页面要求</h3><ul><li>订单列表“批发”标签与“申购数量”应支持快速扫描；多 SKU 明细通过悬停提示或详情查看。</li><li>规则编辑先选字典条件，再填写阈值；单位由字典带出。</li><li>字典项停用时醒目提示，不允许静默丢失。</li><li>取消申购、停用规则、超量收货和撤销上架必须二次确认。</li><li>覆盖默认、加载、空、错误、成功、禁用和无权限状态。</li></ul></section>
-<section><h2>一致性锚点</h2><table class="compact"><tbody><tr><td>已确认</td><td>待检测节点读取“批发单定义”并打标签；批发订单仓库现货足够时直接流转 WMS，不进入缺货；现货不足才进入缺货并由定时任务判断自动申购；订单列表展示有效申购数量；采购取消回滚、混合货位校验和 PDA 部分到货。</td></tr><tr><td>关键口径</td><td>公共配置“批发单定义”包含平台、店铺、SKU 数量、订单总数量、是否自动申购和缺货百分比；自动申购按订单商品数量全量发起；批发标签与申购状态分开；发货只认实际上架库存。</td></tr><tr><td>范围边界</td><td>不修改采购审批与 WMS 发货作业。</td></tr></tbody></table></section><footer class="footer">批发订单自动申购与履约优化 · 业务评审版 V1.6 · 2026-08-28。</footer></article></main></div></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>批发订单自动申购需求文档</title>
+  <style>
+    :root{--blue:#1677ff;--blue-bg:#e6f4ff;--green:#389e0d;--green-bg:#f6ffed;--orange:#d46b08;--orange-bg:#fff7e6;--text:#1f2329;--sub:#646a73;--line:#d9dce0;--soft:#f5f7fa}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--soft);color:var(--text);font:14px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+    .layout{display:grid;grid-template-columns:230px minmax(0,1fr);max-width:1450px;margin:auto}.toc{position:sticky;top:0;height:100vh;background:#fff;border-right:1px solid var(--line);padding:28px 20px;overflow:auto}.toc h3{font-size:15px;margin:0 0 12px}.toc a{display:block;padding:6px 8px;border-radius:5px;color:var(--sub);text-decoration:none}.toc a:hover{background:var(--blue-bg);color:var(--blue)}
+    main{padding:36px 46px 80px}.doc{max-width:1100px;margin:auto;background:#fff;border:1px solid #edf0f3;border-radius:10px;padding:42px 50px;box-shadow:0 2px 12px rgba(0,0,0,.04)}.hero{border-bottom:1px solid var(--line);padding-bottom:24px}.hero h1{font-size:28px;line-height:1.35;margin:8px 0}.hero p{color:var(--sub);margin:0}.badge{display:inline-flex;padding:2px 9px;border-radius:4px;background:var(--blue-bg);color:#0958d9;font-size:12px}.badge.warn{background:var(--orange-bg);color:var(--orange)}
+    h2{font-size:21px;margin:38px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--line)}h3{font-size:17px;margin:25px 0 10px}h4{font-size:15px;margin:20px 0 8px}p{margin:8px 0}ul{padding-left:22px}table{width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:13px}th,td{border:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}th{background:#f2f4f7;font-weight:600;white-space:nowrap}
+    .flow{display:flex;align-items:center;gap:8px;overflow:auto;padding:12px 0 18px}.step{min-width:145px;padding:12px;border:1px solid #91caff;border-radius:8px;background:var(--blue-bg);text-align:center}.step.gray{border-color:var(--line);background:#fff}.step.orange{border-color:#ffd591;background:var(--orange-bg)}.step.green{border-color:#b7eb8f;background:var(--green-bg)}.step b{display:block;color:var(--blue);margin-bottom:3px}.arrow{color:#8f959e;font-size:20px}.branch{font-size:12px;color:var(--sub);white-space:nowrap}.callout{margin:14px 0;padding:13px 16px;border:1px solid #91caff;border-radius:7px;background:var(--blue-bg)}.scenario{border-left:3px solid var(--blue);padding:10px 14px;background:#f7faff;margin:10px 0}.scenario b{display:block;margin-bottom:3px}.tag{display:inline-flex;padding:1px 7px;border-radius:4px;font-size:12px;background:var(--green-bg);color:var(--green)}.source{font-size:12px;color:var(--sub)}.source a{color:var(--blue)}code{color:#c41d7f;background:#f5f5f5;padding:1px 4px;border-radius:3px}.footer{border-top:1px solid var(--line);margin-top:36px;padding-top:16px;color:var(--sub);font-size:12px}
+    @media(max-width:900px){.layout{display:block}.toc{height:auto;position:relative}.doc{padding:26px 20px}main{padding:18px}table{display:block;overflow:auto}.flow{align-items:stretch;flex-wrap:wrap}.step{flex:1 1 150px}.arrow{align-self:center}}@media print{body{background:#fff}.layout{display:block}.toc{display:none}main,.doc{padding:0}.doc{border:0;box-shadow:none;max-width:none}}
+  </style>
+</head>
+<body>
+<div class="layout">
+  <aside class="toc">
+    <h3>目录</h3>
+    <a href="#s1">1. 需求背景</a>
+    <a href="#s2">2. 本期范围</a>
+    <a href="#s3">3. 业务流程</a>
+    <a href="#s4">4. 业务规则</a>
+    <a href="#dictionary">4.1 批发单定义</a>
+    <a href="#s5">5. 页面需求</a>
+    <a href="#s6">6. 验收标准</a>
+    <a href="#s7">7. 原型</a>
+  </aside>
+  <main>
+    <article class="doc">
+      <header class="hero">
+        <span class="badge">业务评审版 V2.0</span>
+        <span class="badge warn">范围已收敛</span>
+        <h1>批发订单自动申购</h1>
+        <p>核心目标：通过统一配置识别缺货批发订单，由定时任务自动按订单数量全量发起申购。</p>
+      </header>
+
+      <section id="s1">
+        <h2>1. 需求背景</h2>
+        <p>当前批发订单依赖销售人工判断并发起申购，容易出现漏处理、处理不及时和申购数量口径不一致。本次通过公共配置维护批发单定义，由系统定时处理缺货订单。</p>
+      </section>
+
+      <section id="s2">
+        <h2>2. 本期范围</h2>
+        <h3>本期实现</h3>
+        <ul>
+          <li>在公共配置中增加“批发单定义”。</li>
+          <li>提供“字段定义”页面，维护批发单定义所需字段。</li>
+          <li>定时任务扫描缺货状态订单并匹配启用中的批发单定义。</li>
+          <li>命中配置且“是否自动申购＝是”时，按订单各 SKU 的下单数量全量发起申购。</li>
+          <li>申购成功后，在订单列表显示当前有效申购数量。</li>
+        </ul>
+        <h3>本期不包含</h3>
+        <ul>
+          <li>采购单取消后的申购回滚。</li>
+          <li>正常货位与批发货位的混合库存校验。</li>
+          <li>PDA 部分到货和分次上架。</li>
+          <li>加权日销、非批发库存预留、库存预占及缺口申购方案。</li>
+        </ul>
+      </section>
+
+      <section id="s3">
+        <h2>3. 业务流程</h2>
+        <div class="flow" aria-label="批发订单自动申购流程">
+          <div class="step gray"><b>1. 定时扫描</b>读取缺货状态订单</div><span class="arrow">→</span>
+          <div class="step"><b>2. 匹配配置</b>读取批发单定义</div><span class="arrow">→</span>
+          <div class="step orange"><b>3. 判断命中</b>平台、店铺及数量条件</div><span class="branch">未命中 → 保持缺货</span><span class="arrow">／</span>
+          <div class="step orange"><b>4. 判断开关</b>是否自动申购</div><span class="branch">否 → 保持缺货</span><span class="arrow">／</span>
+          <div class="step green"><b>5. 全量申购</b>按订单 SKU 数量生成</div><span class="arrow">→</span>
+          <div class="step"><b>6. 回写订单</b>展示有效申购数量</div>
+        </div>
+        <div class="callout"><b>全量申购口径：</b>申购数量等于订单各 SKU 的下单数量，不扣减当前库存。例如订单 SKU-A 下单 100 件，即使当前可用库存为 20 件，仍发起申购 100 件。</div>
+      </section>
+
+      <section id="s4">
+        <h2>4. 业务规则</h2>
+        <section id="dictionary">
+          <h3>4.1 批发单定义</h3>
+          <p>批发识别条件和自动申购条件统一维护在公共配置“批发单定义”中。定时任务每次执行均读取当前启用的配置数据。</p>
+          <table>
+            <tbody>
+              <tr><th>配置名称</th><td>批发单定义</td><th>配置编码</th><td><code>wholesale_order_definition</code></td></tr>
+              <tr><th>所属系统</th><td>订单系统</td><th>调用模块</th><td>缺货订单定时任务</td></tr>
+              <tr><th>配置说明</th><td colspan="3">按平台、店铺及订单数量识别批发订单，并决定是否自动申购。</td></tr>
+            </tbody>
+          </table>
+          <h4>字段定义</h4>
+          <table>
+            <thead><tr><th>字段名称</th><th>字段编码</th><th>类型</th><th>必填</th><th>用途</th></tr></thead>
+            <tbody>
+              <tr><td>平台</td><td><code>platform</code></td><td>枚举</td><td>是</td><td>匹配订单来源平台</td></tr>
+              <tr><td>店铺</td><td><code>store</code></td><td>枚举</td><td>是</td><td>匹配订单所属店铺；支持全部店铺</td></tr>
+              <tr><td>SKU 数量</td><td><code>sku_qty</code></td><td>整数</td><td>是</td><td>单个 SKU 下单数量门槛</td></tr>
+              <tr><td>订单总数量</td><td><code>order_total_qty</code></td><td>整数</td><td>是</td><td>订单全部 SKU 数量合计门槛</td></tr>
+              <tr><td>是否自动申购</td><td><code>auto_purchase</code></td><td>布尔</td><td>是</td><td>命中后是否由定时任务自动发起申购</td></tr>
+              <tr><td>申购条件-缺货百分比</td><td><code>shortage_rate</code></td><td>百分比</td><td>是</td><td>订单缺货比例达到该值时允许自动申购</td></tr>
+            </tbody>
+          </table>
+          <h4>案例配置数据</h4>
+          <table>
+            <thead><tr><th>平台</th><th>店铺</th><th>SKU 数量</th><th>订单总数量</th><th>是否自动申购</th><th>缺货百分比</th><th>状态</th></tr></thead>
+            <tbody><tr><td>Amazon</td><td>全部店铺</td><td>50</td><td>100</td><td>是</td><td>20%</td><td><span class="tag">启用</span></td></tr></tbody>
+          </table>
+          <h4>定时任务判断规则</h4>
+          <table>
+            <thead><tr><th>判断顺序</th><th>规则</th><th>未通过时</th></tr></thead>
+            <tbody>
+              <tr><td>1. 订单状态</td><td>仅处理缺货状态且未取消的订单</td><td>跳过</td></tr>
+              <tr><td>2. 配置范围</td><td>平台、店铺匹配启用中的配置</td><td>保持缺货</td></tr>
+              <tr><td>3. 数量门槛</td><td>单 SKU 数量或订单总数量任一达到配置值</td><td>保持缺货</td></tr>
+              <tr><td>4. 缺货门槛</td><td><code>缺货数量 ÷ 订单数量 × 100%</code>达到配置百分比</td><td>保持缺货</td></tr>
+              <tr><td>5. 自动申购</td><td>“是否自动申购＝是”</td><td>保持缺货，等待人工处理</td></tr>
+              <tr><td>6. 防重</td><td>订单 SKU 不存在有效申购</td><td>不重复生成</td></tr>
+              <tr><td>7. 生成数量</td><td>按订单各 SKU 下单数量全量生成申购</td><td>生成失败则记录原因，下次任务可重试</td></tr>
+            </tbody>
+          </table>
+        </section>
+      </section>
+
+      <section id="s5">
+        <h2>5. 页面需求</h2>
+        <h3>5.1 公共配置列表</h3>
+        <p>列表增加“批发单定义”，显示配置编码、所属系统、字段数量、配置数据数量、状态和最后更新时间，并提供“进入配置”入口。</p>
+        <h3>5.2 字段定义页面</h3>
+        <table>
+          <thead><tr><th>区域</th><th>页面要求</th></tr></thead>
+          <tbody>
+            <tr><td>页面信息</td><td>显示配置名称、配置编码、所属系统和启停状态。</td></tr>
+            <tr><td>字段列表</td><td>展示字段名称、编码、类型、必填、默认值、状态和操作。</td></tr>
+            <tr><td>新增字段</td><td>支持新增字段名称、字段编码、字段类型、是否必填、默认值和说明；字段编码不可重复。</td></tr>
+            <tr><td>编辑字段</td><td>已存在配置数据时不得修改字段编码和字段类型，可修改名称、说明和状态。</td></tr>
+            <tr><td>配置数据</td><td>按字段定义生成数据录入列，支持新增、编辑、启用和停用规则数据。</td></tr>
+          </tbody>
+        </table>
+        <h3>5.3 订单列表</h3>
+        <table>
+          <thead><tr><th>展示项</th><th>展示规则</th></tr></thead>
+          <tbody>
+            <tr><td>批发标签</td><td>缺货订单命中“批发单定义”后显示“批发”标签。</td></tr>
+            <tr><td>申购数量</td><td>显示订单当前有效申购数量合计；多 SKU 明细在订单详情查看。</td></tr>
+            <tr><td>申购失败</td><td>数量不增加，保留缺货状态，并显示最近一次失败原因。</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="s6">
+        <h2>6. 验收标准</h2>
+        <div class="scenario"><b>场景 1：命中配置并全量申购</b>Amazon 缺货订单中 SKU-A 下单 100 件、可用库存 20 件；配置门槛为 SKU 数量 50、自动申购“是”、缺货百分比 20%。定时任务生成 SKU-A 申购 100 件，订单列表显示申购数量 100。</div>
+        <div class="scenario"><b>场景 2：未命中数量门槛</b>缺货订单的单 SKU 数量和订单总数量均未达到配置门槛。系统不生成申购，订单保持缺货。</div>
+        <div class="scenario"><b>场景 3：自动申购关闭</b>订单命中平台、店铺和数量门槛，但“是否自动申购＝否”。系统不生成申购，订单保持缺货。</div>
+        <div class="scenario"><b>场景 4：缺货比例不足</b>订单命中批发数量门槛，但实际缺货比例低于配置值。系统不生成申购，等待下一次扫描。</div>
+        <div class="scenario"><b>场景 5：防止重复申购</b>订单 SKU-A 已有有效申购 100 件。定时任务再次扫描时不得重复生成申购。</div>
+        <div class="scenario"><b>场景 6：多 SKU 全量申购</b>订单 SKU-A 为 60 件、SKU-B 为 40 件并满足自动申购条件。系统分别按 SKU-A 60 件、SKU-B 40 件生成申购，订单列表显示合计 100 件。</div>
+      </section>
+
+      <section id="s7">
+        <h2>7. 原型</h2>
+        <p class="source">公共配置及字段定义页面：<a href="https://kayleylee1128-gif.github.io/seabost-prototype-hosting/prototypes/b2b/prototype-20260828-162111/" target="_blank">打开“批发单定义”原型</a>。</p>
+      </section>
+
+      <footer class="footer">批发订单自动申购 · 业务评审版 V2.0 · 2026-09-02</footer>
+    </article>
+  </main>
+</div>
+</body>
+</html>
