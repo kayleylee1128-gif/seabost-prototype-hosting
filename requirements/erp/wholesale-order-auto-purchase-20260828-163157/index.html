@@ -30,8 +30,8 @@
   <main>
     <article class="doc">
       <header class="hero">
-        <span class="badge">业务评审版 V2.0</span>
-        <span class="badge warn">范围已收敛</span>
+        <span class="badge">业务评审版 V2.1</span>
+        <span class="badge warn">补充定时任务逻辑</span>
         <h1>批发订单自动申购</h1>
         <p>核心目标：通过统一配置识别缺货批发订单，由定时任务自动按订单数量全量发起申购。</p>
       </header>
@@ -103,6 +103,14 @@
             <tbody><tr><td>Amazon</td><td>全部店铺</td><td>50</td><td>100</td><td>是</td><td>20%</td><td><span class="tag">启用</span></td></tr></tbody>
           </table>
           <h4>定时任务判断规则</h4>
+          <div class="flow" aria-label="缺货订单自动申购定时任务判断流程">
+            <div class="step gray"><b>扫描订单</b>状态＝缺货</div><span class="arrow">→</span>
+            <div class="step"><b>匹配范围</b>平台＋店铺</div><span class="arrow">→</span>
+            <div class="step orange"><b>匹配批发规则</b>SKU 数量或订单总数量达标</div><span class="arrow">→</span>
+            <div class="step orange"><b>匹配申购规则</b>缺货比例达标且自动申购＝是</div><span class="arrow">→</span>
+            <div class="step gray"><b>防重校验</b>不存在有效申购</div><span class="arrow">→</span>
+            <div class="step green"><b>自动发起申购</b>按订单 SKU 数量全量申购</div>
+          </div>
           <table>
             <thead><tr><th>判断顺序</th><th>规则</th><th>未通过时</th></tr></thead>
             <tbody>
@@ -115,6 +123,21 @@
               <tr><td>7. 生成数量</td><td>按订单各 SKU 下单数量全量生成申购</td><td>生成失败则记录原因，下次任务可重试</td></tr>
             </tbody>
           </table>
+          <h4>定时任务执行逻辑</h4>
+          <table>
+            <thead><tr><th>步骤</th><th>系统处理</th><th>处理结果</th></tr></thead>
+            <tbody>
+              <tr><td>1. 获取待处理订单</td><td>按任务周期分页读取“缺货”状态且未关闭、未取消的订单；其他状态订单不进入本任务。</td><td>形成当次缺货订单处理清单</td></tr>
+              <tr><td>2. 读取有效配置</td><td>读取启用中的“批发单定义”，按照订单平台和店铺筛选适用配置；“全部店铺”可匹配该平台下任意店铺。</td><td>无适用配置则跳过订单</td></tr>
+              <tr><td>3. 判断批发条件</td><td>同一条配置内，平台和店铺必须同时匹配；单 SKU 数量达到门槛或订单总数量达到门槛，任一成立即命中。</td><td>命中后给订单记录“批发”标识</td></tr>
+              <tr><td>4. 判断申购条件</td><td>计算订单或 SKU 的缺货比例；达到“申购条件-缺货百分比”，并且“是否自动申购＝是”时通过。</td><td>未通过则保持缺货，不生成申购</td></tr>
+              <tr><td>5. 防止重复申购</td><td>按“订单号＋SKU”查询是否已有待审核、已审核或采购中的有效申购。任一有效状态存在时不再创建。</td><td>同一订单 SKU 最多保留一份有效申购需求</td></tr>
+              <tr><td>6. 生成申购单</td><td>以订单各 SKU 的下单数量作为申购数量，全量生成，不扣减当前库存。多 SKU 订单按 SKU 分行写入同一申购需求。</td><td>例：SKU-A 下单 100，即申购 100</td></tr>
+              <tr><td>7. 回写处理结果</td><td>申购成功后回写申购单号、有效申购数量和处理时间；失败时记录失败原因，本次不增加申购数量。</td><td>订单列表展示最新有效申购数量</td></tr>
+              <tr><td>8. 下次任务重试</td><td>申购失败且订单仍为缺货时，下次任务重新匹配配置并尝试生成；已成功生成的订单 SKU 由防重校验拦截。</td><td>失败可重试，成功不重复</td></tr>
+            </tbody>
+          </table>
+          <div class="callout"><b>命中公式：</b><code>缺货状态</code> 且 <code>平台匹配</code> 且 <code>店铺匹配</code> 且 <code>（单 SKU 数量达标 或 订单总数量达标）</code> 且 <code>缺货比例达标</code> 且 <code>是否自动申购＝是</code>，才自动发起全量申购。</div>
         </section>
       </section>
 
@@ -159,7 +182,7 @@
         <p class="source">公共配置及字段定义页面：<a href="https://kayleylee1128-gif.github.io/seabost-prototype-hosting/prototypes/b2b/prototype-20260828-162111/" target="_blank">打开“批发单定义”原型</a>。</p>
       </section>
 
-      <footer class="footer">批发订单自动申购 · 业务评审版 V2.0 · 2026-09-02</footer>
+      <footer class="footer">批发订单自动申购 · 业务评审版 V2.1 · 2026-09-02</footer>
     </article>
   </main>
 </div>
