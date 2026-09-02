@@ -1,0 +1,13 @@
+.c-action-link--danger {
+  color: var(--color-error);
+}
+
+.c-actions {
+  align-items: center;
+  white-space: nowrap;
+}
+
+input:disabled,
+button:disabled {
+  cursor: not-allowed;
+}

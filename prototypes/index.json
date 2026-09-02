@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-28T16:21:13+08:00",
-  "count": 10,
+  "generatedAt": "2026-09-02T15:44:17+08:00",
+  "count": 11,
   "prototypes": [
     {
       "prototypeId": "prototype-20260828-114134",
@@ -34,6 +34,17 @@
       "updatedAt": "2026-08-28T16:21:11+08:00",
       "path": "prototypes/b2b/prototype-20260828-162111",
       "url": "https://kayleylee1128-gif.github.io/seabost-prototype-hosting/prototypes/b2b/prototype-20260828-162111/"
+    },
+    {
+      "prototypeId": "prototype-20260902-154410",
+      "title": "公共配置-启停与编辑交互",
+      "businessSystem": "b2b",
+      "owner": "kayleylee1128-gif",
+      "sourcePath": "prototype\\common-config",
+      "createdAt": "2026-09-02T15:44:10+08:00",
+      "updatedAt": "2026-09-02T15:44:10+08:00",
+      "path": "prototypes/b2b/prototype-20260902-154410",
+      "url": "https://kayleylee1128-gif.github.io/seabost-prototype-hosting/prototypes/b2b/prototype-20260902-154410/"
     },
     {
       "prototypeId": "v2-ant-design-erp-20260723-122615",
