@@ -30,7 +30,7 @@
   <main>
     <article class="doc">
       <header class="hero">
-        <span class="badge">业务评审版 V2.2</span>
+        <span class="badge">业务评审版 V2.3</span>
         <span class="badge warn">补充定时任务逻辑</span>
         <h1>批发订单自动申购</h1>
         <p>核心目标：通过统一配置识别缺货批发订单，由定时任务自动按订单数量全量发起申购。</p>
@@ -153,8 +153,8 @@
             <tr><td>字段列表</td><td>展示字段名称、编码、类型、必填、默认值、状态和操作。</td></tr>
             <tr><td>新增字段</td><td>支持新增字段名称、字段编码、字段类型、是否必填、默认值和说明；字段编码不可重复。</td></tr>
             <tr><td>编辑字段</td><td>已存在配置数据时不得修改字段编码和字段类型，可修改名称、说明和状态。</td></tr>
-            <tr><td>配置数据</td><td>列表首列为系统自增序号，不提供排序字段；支持新增、编辑、启用、停用及查看当前行日志。</td></tr>
-            <tr><td>批量导入</td><td>支持按 CSV 批量导入：序号已存在时更新对应行；序号为空或不存在时新增，并按当前最大序号加一生成新序号。</td></tr>
+            <tr><td>配置数据</td><td>列表首列为系统自增序号，不提供排序字段；支持新增、编辑、启用、停用及查看当前行日志。行日志分页展示类型、内容、修改人和修改时间。</td></tr>
+            <tr><td>批量导入</td><td>通过 Excel 模板导入 `.xlsx/.xls` 文件，上传后先校验并预览结果；序号已存在时更新，序号为空或不存在时新增并生成新序号。</td></tr>
           </tbody>
         </table>
         <h3>5.3 订单列表</h3>
@@ -180,10 +180,10 @@
 
       <section id="s7">
         <h2>7. 原型</h2>
-        <p class="source">公共配置及字段定义页面：<a href="https://kayleylee1128-gif.github.io/seabost-prototype-hosting/prototypes/b2b/prototype-20260911-152152/" target="_blank">打开“批发单定义”原型</a>。</p>
+        <p class="source">公共配置及字段定义页面：<a href="https://kayleylee1128-gif.github.io/seabost-prototype-hosting/prototypes/b2b/excel-20260911-153331/" target="_blank">打开“批发单定义”原型</a>。</p>
       </section>
 
-      <footer class="footer">批发订单自动申购 · 业务评审版 V2.2 · 2026-09-11</footer>
+      <footer class="footer">批发订单自动申购 · 业务评审版 V2.3 · 2026-09-11</footer>
     </article>
   </main>
 </div>
