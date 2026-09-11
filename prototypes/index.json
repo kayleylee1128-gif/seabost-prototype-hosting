@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-11T15:33:41+08:00",
-  "count": 13,
+  "generatedAt": "2026-09-11T15:57:32+08:00",
+  "count": 14,
   "prototypes": [
     {
       "prototypeId": "excel-20260911-153331",
@@ -67,6 +67,17 @@
       "updatedAt": "2026-09-11T15:21:52+08:00",
       "path": "prototypes/b2b/prototype-20260911-152152",
       "url": "https://kayleylee1128-gif.github.io/seabost-prototype-hosting/prototypes/b2b/prototype-20260911-152152/"
+    },
+    {
+      "prototypeId": "prototype-20260911-155729",
+      "title": "公共配置-批发单自动申购条件",
+      "businessSystem": "b2b",
+      "owner": "kayleylee1128-gif",
+      "sourcePath": "prototype\\common-config",
+      "createdAt": "2026-09-11T15:57:29+08:00",
+      "updatedAt": "2026-09-11T15:57:29+08:00",
+      "path": "prototypes/b2b/prototype-20260911-155729",
+      "url": "https://kayleylee1128-gif.github.io/seabost-prototype-hosting/prototypes/b2b/prototype-20260911-155729/"
     },
     {
       "prototypeId": "v2-ant-design-erp-20260723-122615",
