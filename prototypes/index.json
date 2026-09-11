@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-02T15:44:17+08:00",
-  "count": 11,
+  "generatedAt": "2026-09-11T15:22:46+08:00",
+  "count": 12,
   "prototypes": [
     {
       "prototypeId": "prototype-20260828-114134",
@@ -45,6 +45,17 @@
       "updatedAt": "2026-09-02T15:44:10+08:00",
       "path": "prototypes/b2b/prototype-20260902-154410",
       "url": "https://kayleylee1128-gif.github.io/seabost-prototype-hosting/prototypes/b2b/prototype-20260902-154410/"
+    },
+    {
+      "prototypeId": "prototype-20260911-152152",
+      "title": "公共配置-序号批量导入与行日志",
+      "businessSystem": "b2b",
+      "owner": "kayleylee1128-gif",
+      "sourcePath": "prototype\\common-config",
+      "createdAt": "2026-09-11T15:21:52+08:00",
+      "updatedAt": "2026-09-11T15:21:52+08:00",
+      "path": "prototypes/b2b/prototype-20260911-152152",
+      "url": "https://kayleylee1128-gif.github.io/seabost-prototype-hosting/prototypes/b2b/prototype-20260911-152152/"
     },
     {
       "prototypeId": "v2-ant-design-erp-20260723-122615",

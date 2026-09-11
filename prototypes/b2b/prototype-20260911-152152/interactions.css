@@ -1,0 +1,36 @@
+.c-action-link--danger {
+  color: var(--color-error);
+}
+
+.c-actions {
+  align-items: center;
+  white-space: nowrap;
+}
+
+input:disabled,
+button:disabled {
+  cursor: not-allowed;
+}
+
+.c-import-textarea {
+  min-height: 210px;
+  padding-top: 8px;
+  font-family: Consolas, "Courier New", monospace;
+  line-height: 1.7;
+}
+
+.c-import-preview {
+  color: var(--color-text-secondary);
+}
+
+.c-logs p span {
+  display: block;
+  margin-top: 4px;
+  color: var(--color-text-secondary);
+}
+
+.c-empty {
+  padding: 36px 0;
+  text-align: center;
+  color: var(--color-text-tertiary);
+}
