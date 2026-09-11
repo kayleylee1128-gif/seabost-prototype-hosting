@@ -1,0 +1,155 @@
+.c-action-link--danger {
+  color: var(--color-error);
+}
+
+.c-actions {
+  align-items: center;
+  white-space: nowrap;
+}
+
+input:disabled,
+button:disabled {
+  cursor: not-allowed;
+}
+
+.c-description {
+  grid-template-columns: 1.4fr 1fr 1fr;
+}
+
+.c-import-steps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--color-bg-layout);
+  border-radius: var(--radius);
+  color: var(--color-text-secondary);
+}
+
+.c-import-steps span.is-current {
+  color: var(--color-primary-7);
+  font-weight: 600;
+}
+
+.c-import-steps i {
+  color: var(--color-text-quaternary);
+  font-style: normal;
+}
+
+.c-import-section {
+  display: grid;
+  gap: 10px;
+}
+
+.c-import-section__head,
+.c-import-result__head,
+.c-file-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.c-import-section__head p {
+  margin: 3px 0 0;
+  color: var(--color-text-secondary);
+}
+
+.c-upload {
+  min-height: 142px;
+  border: 1px dashed var(--color-primary-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-primary-bg);
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px !important;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.c-upload strong {
+  font-size: 26px;
+  color: var(--color-primary-6);
+}
+
+.c-upload input {
+  display: none;
+}
+
+.c-upload.is-dragover {
+  border-color: var(--color-primary-6);
+  background: var(--color-primary-bg-hover);
+}
+
+.c-upload small,
+.c-file-card small {
+  display: block;
+  color: var(--color-text-secondary);
+}
+
+.c-file-card {
+  padding: 11px 12px;
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--radius);
+}
+
+.c-import-result {
+  min-height: 120px;
+}
+
+.c-import-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.c-import-summary span {
+  padding: 9px;
+  border-radius: var(--radius);
+  background: var(--color-bg-layout);
+  text-align: center;
+}
+
+.c-import-summary b {
+  display: block;
+  font-size: 18px;
+}
+
+.c-log-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.c-log-pagination button {
+  min-width: 30px;
+  height: 30px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg-container);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.c-log-pagination button.is-current {
+  border-color: var(--color-primary-6);
+  color: var(--color-primary-7);
+}
+
+.c-log-pagination button:disabled {
+  color: var(--color-text-disabled);
+}
+
+.c-log-pagination span {
+  margin-right: auto;
+  color: var(--color-text-secondary);
+}
+
+.c-empty {
+  padding: 36px 0;
+  text-align: center;
+  color: var(--color-text-tertiary);
+}

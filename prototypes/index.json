@@ -1,7 +1,18 @@
 {
-  "generatedAt": "2026-09-11T15:22:46+08:00",
-  "count": 12,
+  "generatedAt": "2026-09-11T15:33:41+08:00",
+  "count": 13,
   "prototypes": [
+    {
+      "prototypeId": "excel-20260911-153331",
+      "title": "公共配置-Excel导入与分页日志",
+      "businessSystem": "b2b",
+      "owner": "kayleylee1128-gif",
+      "sourcePath": "prototype\\common-config",
+      "createdAt": "2026-09-11T15:33:31+08:00",
+      "updatedAt": "2026-09-11T15:33:31+08:00",
+      "path": "prototypes/b2b/excel-20260911-153331",
+      "url": "https://kayleylee1128-gif.github.io/seabost-prototype-hosting/prototypes/b2b/excel-20260911-153331/"
+    },
     {
       "prototypeId": "prototype-20260828-114134",
       "title": "公共配置（字典管理）",
