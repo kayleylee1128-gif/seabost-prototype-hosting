@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>批发单分批来货需求文档 V1.2</title><style>
+:root{color-scheme:light;--ink:#17243b;--muted:#637087;--blue:#245bd6;--line:#dce3ed}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:30px}body{margin:0;background:#f3f5f9;color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;font-size:15px;line-height:1.8}.layout{max-width:1440px;margin:auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;padding:30px}aside{position:sticky;top:30px;align-self:start;max-height:calc(100vh - 60px);overflow:auto;background:white;border:1px solid var(--line);border-radius:12px;padding:22px}aside strong{display:block;font-size:17px;margin-bottom:12px}aside a{display:block;color:var(--muted);text-decoration:none;padding:6px 0;font-size:13px}aside a:hover{color:var(--blue)}main{background:white;padding:44px 48px;border:1px solid var(--line);border-radius:14px;min-width:0}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:25px;color:var(--muted);font-size:13px}.badge{background:#eaf0ff;color:var(--blue);padding:4px 12px;border-radius:20px}button{border:1px solid var(--line);background:white;border-radius:6px;padding:8px 16px;cursor:pointer;color:var(--ink)}h1{font-size:29px;line-height:1.5;margin:0 0 20px}h2{font-size:22px;margin:38px 0 16px;padding-bottom:10px;border-bottom:2px solid #eaf0ff}h3{font-size:17px;margin-top:26px}p{margin:12px 0}ul,ol{padding-left:24px}li{padding:3px 0}.table-wrap{overflow:auto;margin:18px 0}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;vertical-align:top;border:1px solid var(--line);padding:11px 13px}th{background:#edf2fb;font-weight:600}tbody tr:nth-child(even){background:#fafbfd}pre{padding:18px 20px;background:#f0f4fa;border:1px solid var(--line);border-radius:8px;overflow:auto;line-height:1.8}code{font-family:Consolas,"Microsoft YaHei",monospace}footer{margin-top:36px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:12px}@media(max-width:900px){.layout{display:block;padding:16px}aside{position:static;max-height:none;margin-bottom:16px}main{padding:24px}h1{font-size:24px}}@media print{@page{size:A4;margin:16mm}body{background:white;font-size:10pt}.layout{display:block;padding:0}aside,.toolbar{display:none}main{border:0;padding:0}h1{font-size:20pt}h2{font-size:15pt;break-after:avoid}h3{break-after:avoid}tr,pre{break-inside:avoid}.table-wrap{overflow:visible}table{font-size:9pt}th,td{padding:6px}a{color:inherit}}
+figure{margin:20px 0}figure img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:6px}figcaption{font-size:12px;color:var(--muted);margin-top:8px}@media print{figure{break-inside:avoid}}
+</style></head><body><div class="layout"><aside aria-label="文档目录"><strong>需求文档目录</strong><a href="#section-2">1. 需求目标</a><a href="#section-3">2. 质检分配规则</a><a href="#section-5">3. 上架与回传</a><a href="#section-6">4. 订单库存校验</a><a href="#section-7">5. 业务案例</a><a href="#section-8">6. 验收标准</a></aside><main><div class="toolbar"><span class="badge">V1.2 · 评审稿</span><button onclick="window.print()">打印 / 保存为 PDF</button></div><h1 id="section-1">批发单分批来货需求文档</h1>
+<p>版本：V1.2（评审稿） · 日期：2026-10-12  <br>涉及系统：仓库系统（WMS）、订单系统（OMS）</p>
+<h2 id="section-2">1. 需求目标</h2>
+<p>支持批发采购单分批到货：质检时按仓库规则分配批发、小包数量；上架后按实际数量回传订单系统并自动预占。采购单全部上架且完结后，订单未满足的需求使用普通小包可用库存补足。</p>
+<h2 id="section-3">2. 质检分配规则</h2>
+<p>仓库可独立配置以下规则。按采购单明细、SKU、仓库分别计算，分批到货使用各类型的剩余待收数量。</p>
+<ul>
+<li>批发剩余待收 = 批发采购需求 − 此前累计已确认的批发分配数量。</li>
+<li>小包剩余待收 = 小包采购需求 − 此前累计已确认的小包分配数量。</li>
+</ul>
+<div class="table-wrap"><table><thead><tr><th>规则</th><th>批发分配数量</th><th>小包分配数量</th></tr></thead><tbody>
+<tr><td>规则1：批发优先</td><td>min（本次实收，批发剩余待收）</td><td>本次实收 − 本次批发分配</td></tr>
+<tr><td>规则2：普通小包优先</td><td>本次实收 − 本次小包分配</td><td>min（本次实收，小包剩余待收）</td></tr>
+</tbody></table></div>
+<p>规则2先满足普通小包需求，再将剩余数量分配给批发。</p>
+<p>数量不得为负，两类分配之和必须等于本次实收，且不得超过各自剩余需求。超收需按确认后的超收流程处理，不自动归入某类库存。</p>
+<h3 id="section-4">质检页面</h3>
+<p>页面新增显示“本次分配（批发／小包）”。修改实收数量时，按仓库配置规则自动重算并更新两类分配数量。</p><figure><a href="批发单分批来货需求文档.assets/质检页面.png" target="_blank"><img src="批发单分批来货需求文档.assets/质检页面.png" alt="质检页面参考：新增本次分配（批发／小包）数量"></a><figcaption>质检页面参考：新增本次分配（批发／小包）数量（点击查看原图）</figcaption></figure>
+<h2 id="section-5">3. 上架与回传</h2>
+<p>质检分配是计划结果，最终库存归属以实际货位类型及上架数量为准，允许计划与实际上架不一致。</p>
+<ul>
+<li>按批次记录实际批发、小包上架数量，并展示与计划分配的差异。</li>
+<li>每次上架成功后，将本次实际增量回传订单系统，关联采购明细、SKU、仓库、批次及上架明细。</li>
+<li>订单系统按实际批发可用库存自动预占绑定批发订单，预占不超过订单未满足需求；小包上架数量计入普通库存。</li>
+<li>回传失败支持重试，重复回传不得重复增加库存或预占；状态先到时，等待上架数据同步完整后再执行最终校验。</li>
+</ul>
+<h3 id="stock-occupation">库存查询：占用单据标签</h3><p>仓库系统 → 库存查询 → 占用单据查询，在平台单号旁按占用订单类型显示标签：批发订单显示“批”，定制订单显示“制”，普通订单不显示标签。</p><figure><a href="批发单分批来货需求文档.assets/库存占用单据查询.png" target="_blank"><img src="批发单分批来货需求文档.assets/库存占用单据查询.png" alt="库存占用单据查询参考：平台单号旁显示订单类型标签"></a><figcaption>库存占用单据查询参考：平台单号旁显示订单类型标签（点击查看原图）</figcaption></figure><h2 id="section-6">4. 订单库存校验</h2>
+<p>绑定采购单同时满足“全部已上架、已完结”，且上架数据同步完整后，执行补足校验：</p>
+<ol>
+<li>根据实际批发上架数量及订单已有预占结果，先满足批发库存可保障的需求。</li>
+<li>剩余需求 = 订单有效需求 − 该订单已有效预占数量，校验普通小包可用库存并预占。</li>
+<li>库存满足后流转单据；不足时保持待库存状态，显示缺口。</li>
+</ol>
+<p>可用库存沿用现有口径，扣除冻结及其他订单占用。重复校验不得重复占用或流转，并发预占不得超占。采购单未满足上述条件时，本需求暂不触发普通库存补足。</p>
+<h2 id="section-7">5. 业务案例</h2>
+<p>采购需求200，其中批发120、小包80；使用规则2，绑定批发订单需求120。</p>
+<div class="table-wrap"><table><thead><tr><th>批次</th><th>本次实收</th><th>质检分配：批发／小包</th><th>实际上架：批发／小包</th></tr></thead><tbody>
+<tr><td>第一次</td><td>150</td><td>70／80</td><td>70／80</td></tr>
+<tr><td>第二次</td><td>50</td><td>50／0</td><td>0／50</td></tr>
+<tr><td>合计</td><td>200</td><td>120／80</td><td>70／130</td></tr>
+</tbody></table></div>
+<p>第一次先满足小包80，剩余70分配给批发并完成批发预占。第二次小包计划已满足，质检分配批发50，但实际全部上普通货位。</p>
+<p>采购单全部上架且完结后，订单已预占批发70，剩余50校验并预占普通库存。普通可用库存充足则流转；若无其他占用或冻结，普通库存130扣除补占50后剩余80。</p>
+<h2 id="section-8">6. 验收标准</h2>
+<div class="table-wrap"><table><thead><tr><th>验收项</th><th>预期结果</th></tr></thead><tbody>
+<tr><td>仓库规则</td><td>不同仓库可分别执行批发优先、小包优先</td></tr>
+<tr><td>规则1</td><td>批发剩余100、小包50、实收50：批发50、小包0</td></tr>
+<tr><td>规则2</td><td>批发剩余100、小包50、实收70：批发20、小包50</td></tr>
+<tr><td>分批计算</td><td>第二批扣除此前已确认分配；不重复分配，不超过剩余需求</td></tr>
+<tr><td>质检页面</td><td>新增本次分配（批发／小包），修改实收后自动重算</td></tr><tr><td>占用单据标签</td><td>批发订单显示“批”，定制订单显示“制”，普通订单不显示</td></tr>
+<tr><td>实际归属</td><td>计划与实际分别保存，回传按实际上架数量</td></tr>
+<tr><td>回传与预占</td><td>重试、重复事件及并发处理不重复入账、不超占</td></tr>
+<tr><td>最终校验</td><td>全部上架、已完结、同步完整后补足；不足不流转</td></tr>
+<tr><td>案例复现</td><td>实际批发70、小包130，订单以批发70＋普通50满足120</td></tr>
+</tbody></table></div>
+<footer>批发单分批来货 · 2026-10-12</footer></main></div></body></html>
