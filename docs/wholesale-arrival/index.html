@@ -1,8 +1,8 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>批发单分批来货需求文档 V1.7</title><style>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>批发单分批来货需求文档 V1.8</title><style>
 :root{color-scheme:light;--ink:#17243b;--muted:#637087;--blue:#245bd6;--line:#dce3ed}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:30px}body{margin:0;background:#f3f5f9;color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;font-size:15px;line-height:1.8}.layout{max-width:1440px;margin:auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;padding:30px}aside{position:sticky;top:30px;align-self:start;max-height:calc(100vh - 60px);overflow:auto;background:white;border:1px solid var(--line);border-radius:12px;padding:22px}aside strong{display:block;font-size:17px;margin-bottom:12px}aside a{display:block;color:var(--muted);text-decoration:none;padding:6px 0;font-size:13px}aside a:hover{color:var(--blue)}main{background:white;padding:44px 48px;border:1px solid var(--line);border-radius:14px;min-width:0}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:25px;color:var(--muted);font-size:13px}.badge{background:#eaf0ff;color:var(--blue);padding:4px 12px;border-radius:20px}button{border:1px solid var(--line);background:white;border-radius:6px;padding:8px 16px;cursor:pointer;color:var(--ink)}h1{font-size:29px;line-height:1.5;margin:0 0 20px}h2{font-size:22px;margin:38px 0 16px;padding-bottom:10px;border-bottom:2px solid #eaf0ff}h3{font-size:17px;margin-top:26px}p{margin:12px 0}ul,ol{padding-left:24px}li{padding:3px 0}.table-wrap{overflow:auto;margin:18px 0}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;vertical-align:top;border:1px solid var(--line);padding:11px 13px}th{background:#edf2fb;font-weight:600}tbody tr:nth-child(even){background:#fafbfd}pre{padding:18px 20px;background:#f0f4fa;border:1px solid var(--line);border-radius:8px;overflow:auto;line-height:1.8}code{font-family:Consolas,"Microsoft YaHei",monospace}footer{margin-top:36px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:12px}@media(max-width:900px){.layout{display:block;padding:16px}aside{position:static;max-height:none;margin-bottom:16px}main{padding:24px}h1{font-size:24px}}@media print{@page{size:A4;margin:16mm}body{background:white;font-size:10pt}.layout{display:block;padding:0}aside,.toolbar{display:none}main{border:0;padding:0}h1{font-size:20pt}h2{font-size:15pt;break-after:avoid}h3{break-after:avoid}tr,pre{break-inside:avoid}.table-wrap{overflow:visible}table{font-size:9pt}th,td{padding:6px}a{color:inherit}}
 figure{margin:20px 0}figure img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:6px}figcaption{font-size:12px;color:var(--muted);margin-top:8px}@media print{figure{break-inside:avoid}}
-</style></head><body><div class="layout"><aside aria-label="文档目录"><strong>需求文档目录</strong><a href="#section-2">1. 需求目标</a><a href="#section-4">2. 质检分配规则</a><a href="#section-6">3. 贴标数量录入</a><a href="#section-7">4. 上架与回传</a><a href="#section-10">5. 订单库存校验</a><a href="#section-11">6. 业务案例</a><a href="#section-12">7. 仓库移库与解绑通知</a><a href="#section-15">8. 验收标准</a></aside><main><div class="toolbar"><span class="badge">V1.7 · 评审稿</span><button onclick="window.print()">打印 / 保存为 PDF</button></div><h1 id="section-1">批发单分批来货需求文档</h1>
-<p>版本：V1.7（评审稿） · 日期：2026-10-14  <br>涉及系统：仓库系统（WMS）、订单系统（OMS）</p>
+</style></head><body><div class="layout"><aside aria-label="文档目录"><strong>需求文档目录</strong><a href="#section-2">1. 需求目标</a><a href="#section-4">2. 质检分配规则</a><a href="#section-6">3. 贴标数量录入</a><a href="#section-7">4. 上架与回传</a><a href="#section-10">5. 订单库存校验</a><a href="#section-11">6. 业务案例</a><a href="#section-12">7. 仓库移库与解绑通知</a><a href="#section-15">8. 验收标准</a></aside><main><div class="toolbar"><span class="badge">V1.8 · 评审稿</span><button onclick="window.print()">打印 / 保存为 PDF</button></div><h1 id="section-1">批发单分批来货需求文档</h1>
+<p>版本：V1.8（评审稿） · 日期：2026-10-14  <br>涉及系统：仓库系统（WMS）、订单系统（OMS）</p>
 <h2 id="section-2">1. 需求目标</h2>
 <p>支持批发采购单分批到货：质检时按仓库规则分配批发、小包数量；上架后按实际数量回传订单系统并自动预占。采购单全部上架且完结后，订单未满足的需求使用普通小包可用库存补足。</p>
 <h3 id="section-3">业务流程图</h3>
@@ -58,7 +58,7 @@ figure{margin:20px 0}figure img{display:block;width:100%;height:auto;border:1px 
 <p>第一次先满足小包80，剩余70分配给批发并完成批发预占。第二次小包计划已满足，质检分配批发50，但实际全部上普通货位。</p>
 <p>采购单全部上架且完结后，订单已预占批发70，剩余50校验并预占普通库存。普通可用库存充足则流转；若无其他占用或冻结，普通库存130扣除补占50后剩余80。</p>
 <h2 id="section-12">7. 仓库移库与解绑通知</h2>
-<h3 id="section-13">理货移库：批发转普通</h3>
+<h3 id="location-attribute">货位属性：统一批发</h3><p>仓库货位属性保留一个“批发”选项，移除“定制”选项。货位新增、编辑及属性筛选中的选项同步调整；现有“定制”属性货位统一归入“批发”，使用同一套批发货位逻辑。普通等其他货位属性沿用现有规则。该调整仅针对货位属性，订单类型及占用单据“制”标签仍按订单类型展示。</p><h3 id="section-13">理货移库：批发转普通</h3>
 <p>仓库系统 → 移库任务模块 → 理货移库，新增类型“批发转普通”。针对位于批发货位、且未绑定批发单的库存，生成该类型移库任务，移至正常货位属性的货位。</p>
 <p>新库位按以下顺序推荐：</p>
 <ol>
@@ -89,7 +89,7 @@ figure{margin:20px 0}figure img{display:block;width:100%;height:auto;border:1px 
 <tr><td>订单货位推荐</td><td>同一BO后续分配数量优先推荐已有上架批发货位，支持不同SKU和分批到货；不同BO独立推荐</td></tr><tr><td>推荐边界</td><td>已有货位不可用或容量不足时按现有规则推荐其他货位，不强制超容量上架</td></tr><tr><td>实际归属</td><td>计划与实际分别保存，回传按实际上架数量</td></tr>
 <tr><td>回传与预占</td><td>重试、重复事件及并发处理不重复入账、不超占</td></tr>
 <tr><td>最终校验</td><td>全部上架、已完结、同步完整后补足；不足不流转</td></tr>
-<tr><td>批发转普通</td><td>批发货位上未绑定批发单的库存生成对应类型移库任务</td></tr>
+<tr><td>货位属性</td><td>新增、编辑、筛选保留“批发”并移除“定制”；现有定制货位归入批发</td></tr><tr><td>批发转普通</td><td>批发货位上未绑定批发单的库存生成对应类型移库任务</td></tr>
 <tr><td>新库位推荐</td><td>优先正常属性、有库存且放得下的货位，否则推荐合规空货位；无货位提示</td></tr>
 <tr><td>解绑通知</td><td>上架后解绑成功，按仓库公共配置通知；默认东莞仓袁锋、东莞2仓赵新波</td></tr>
 <tr><td>解绑后移库</td><td>解绑后仍在批发货位且无批发单绑定的库存纳入移库任务范围</td></tr>
