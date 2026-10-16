@@ -1,12 +1,12 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>批发单分批来货需求文档 V1.8</title><style>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>批发单分批来货需求文档 V1.9</title><style>
 :root{color-scheme:light;--ink:#17243b;--muted:#637087;--blue:#245bd6;--line:#dce3ed}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:30px}body{margin:0;background:#f3f5f9;color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;font-size:15px;line-height:1.8}.layout{max-width:1440px;margin:auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;padding:30px}aside{position:sticky;top:30px;align-self:start;max-height:calc(100vh - 60px);overflow:auto;background:white;border:1px solid var(--line);border-radius:12px;padding:22px}aside strong{display:block;font-size:17px;margin-bottom:12px}aside a{display:block;color:var(--muted);text-decoration:none;padding:6px 0;font-size:13px}aside a:hover{color:var(--blue)}main{background:white;padding:44px 48px;border:1px solid var(--line);border-radius:14px;min-width:0}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:25px;color:var(--muted);font-size:13px}.badge{background:#eaf0ff;color:var(--blue);padding:4px 12px;border-radius:20px}button{border:1px solid var(--line);background:white;border-radius:6px;padding:8px 16px;cursor:pointer;color:var(--ink)}h1{font-size:29px;line-height:1.5;margin:0 0 20px}h2{font-size:22px;margin:38px 0 16px;padding-bottom:10px;border-bottom:2px solid #eaf0ff}h3{font-size:17px;margin-top:26px}p{margin:12px 0}ul,ol{padding-left:24px}li{padding:3px 0}.table-wrap{overflow:auto;margin:18px 0}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;vertical-align:top;border:1px solid var(--line);padding:11px 13px}th{background:#edf2fb;font-weight:600}tbody tr:nth-child(even){background:#fafbfd}pre{padding:18px 20px;background:#f0f4fa;border:1px solid var(--line);border-radius:8px;overflow:auto;line-height:1.8}code{font-family:Consolas,"Microsoft YaHei",monospace}footer{margin-top:36px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:12px}@media(max-width:900px){.layout{display:block;padding:16px}aside{position:static;max-height:none;margin-bottom:16px}main{padding:24px}h1{font-size:24px}}@media print{@page{size:A4;margin:16mm}body{background:white;font-size:10pt}.layout{display:block;padding:0}aside,.toolbar{display:none}main{border:0;padding:0}h1{font-size:20pt}h2{font-size:15pt;break-after:avoid}h3{break-after:avoid}tr,pre{break-inside:avoid}.table-wrap{overflow:visible}table{font-size:9pt}th,td{padding:6px}a{color:inherit}}
 figure{margin:20px 0}figure img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:6px}figcaption{font-size:12px;color:var(--muted);margin-top:8px}@media print{figure{break-inside:avoid}}
-</style></head><body><div class="layout"><aside aria-label="文档目录"><strong>需求文档目录</strong><a href="#section-2">1. 需求目标</a><a href="#section-4">2. 质检分配规则</a><a href="#section-6">3. 贴标数量录入</a><a href="#section-7">4. 上架与回传</a><a href="#section-10">5. 订单库存校验</a><a href="#section-11">6. 业务案例</a><a href="#section-12">7. 仓库移库与解绑通知</a><a href="#section-15">8. 验收标准</a></aside><main><div class="toolbar"><span class="badge">V1.8 · 评审稿</span><button onclick="window.print()">打印 / 保存为 PDF</button></div><h1 id="section-1">批发单分批来货需求文档</h1>
-<p>版本：V1.8（评审稿） · 日期：2026-10-14  <br>涉及系统：仓库系统（WMS）、订单系统（OMS）</p>
+</style></head><body><div class="layout"><aside><strong>需求文档目录</strong><a href="#section-2">1. 需求目标</a><a href="#section-4">2. 质检分配规则</a><a href="#section-6">3. 贴标数量录入</a><a href="#section-7">4. 上架与回传</a><a href="#section-11">5. 订单库存校验</a><a href="#section-13">6. 业务案例</a><a href="#section-14">7. 仓库移库与解绑通知</a><a href="#section-18">8. 验收标准</a></aside><main><div class="toolbar"><span class="badge">V1.9 · 评审稿</span><button onclick="window.print()">打印 / 保存为 PDF</button></div><h1 id="section-1">批发单分批来货需求文档</h1>
+<p>版本：V1.9（评审稿） · 日期：2026-10-16  <br>涉及系统：仓库系统（WMS）、订单系统（OMS）</p>
 <h2 id="section-2">1. 需求目标</h2>
 <p>支持批发采购单分批到货：质检时按仓库规则分配批发、小包数量；上架后按实际数量回传订单系统并自动预占。采购单全部上架且完结后，订单未满足的需求使用普通小包可用库存补足。</p>
 <h3 id="section-3">业务流程图</h3>
-<figure><a href="批发单分批来货需求文档.assets/业务流程图.svg" target="_blank"><img src="批发单分批来货需求文档.assets/业务流程图.svg" alt="批发单分批来货处理流程" style="max-width:850px;margin:auto"></a><figcaption>批发单分批来货处理流程（点击查看原图）</figcaption></figure>
+<figure><a href="批发单分批来货需求文档.assets/业务流程图V19.svg" target="_blank"><img src="批发单分批来货需求文档.assets/业务流程图V19.svg" alt="批发单分批来货处理流程"></a><figcaption>批发单分批来货处理流程（点击查看原图）</figcaption></figure>
 <h2 id="section-4">2. 质检分配规则</h2>
 <p>仓库可独立配置以下规则。按采购单明细、SKU、仓库分别计算，分批到货使用各类型的剩余待收数量。</p>
 <ul>
@@ -23,9 +23,14 @@ figure{margin:20px 0}figure img{display:block;width:100%;height:auto;border:1px 
 <p>页面新增显示“本次分配（批发／小包）”。修改实收数量时，按仓库配置规则自动重算并更新两类分配数量。</p>
 <figure><a href="批发单分批来货需求文档.assets/质检页面.png" target="_blank"><img src="批发单分批来货需求文档.assets/质检页面.png" alt="质检页面参考"></a><figcaption>质检页面参考（点击查看原图）</figcaption></figure>
 <h2 id="section-6">3. 贴标数量录入</h2>
-<p>同一SKU同时有普通备货数量和批发数量时，贴标数量区域分别显示“小包”输入框和“批发”输入框。存在多个批发单时，每个BO单独显示一个批发输入框，左侧显示对应BO单号。</p>
-<p>各输入数量按SKU、批次及库存类型保存；批发数量同时关联BO单号，供上架扫描查询。输入数量不得为负或超过对应待贴标数量，各批发单之间不得混用数量。</p>
-<figure><a href="批发单分批来货需求文档.assets/贴标页面.png" target="_blank"><img src="批发单分批来货需求文档.assets/贴标页面.png" alt="贴标页面参考"></a><figcaption>贴标页面参考（点击查看原图）</figcaption></figure>
+<p>页面顶部新增“贴标数量”输入框，列表新增采购单列、操作栏及“打印条码”操作，删除“批发数量”列。</p>
+<ul>
+<li>扫描SKU条码：快速定位到对应SKU行，输入贴标总数量，由前端按当前分配规则及各明细待贴标数量分摊，更新各行贴标数量，分摊合计等于输入总量。</li>
+<li>扫描批发标签：自动定位到对应采购单的SKU行，现场输入数量；输入数量不为0且与现场分配数量不一致时，弹出“需要重打批发标签”，支持手动关闭或3秒后自动关闭。输入0不触发此提示。</li>
+<li>批发SKU与普通SKU分行展示，各批发单明细独立显示并保留BO单号关联；普通备货单SKU按“包裹＋SKU”维度合并为一行。</li>
+<li>操作栏支持打印条码，并支持在数量不一致时重新打印批发标签。</li>
+</ul>
+<figure><a href="批发单分批来货需求文档.assets/贴标页面V19.png" target="_blank"><img src="批发单分批来货需求文档.assets/贴标页面V19.png" alt="贴标页面参考"></a><figcaption>贴标页面参考（点击查看原图）</figcaption></figure>
 <h2 id="section-7">4. 上架与回传</h2>
 <p>质检分配是计划结果，最终库存归属以实际货位类型及上架数量为准，允许计划与实际上架不一致。</p>
 <ul>
@@ -34,13 +39,14 @@ figure{margin:20px 0}figure img{display:block;width:100%;height:auto;border:1px 
 <li>订单系统按实际批发可用库存自动预占绑定批发订单，预占不超过订单未满足需求；小包上架数量计入普通库存。</li>
 <li>回传失败支持重试，重复回传不得重复增加库存或预占；状态先到时，等待上架数据同步完整后再执行最终校验。</li>
 </ul>
-<h3 id="order-location">批发货位推荐：按订单维度</h3><p>批发货位按订单（BO单号）维度推荐。若该订单已有产品实际上架到某个批发货位，则该订单后续绑定分配的数量优先推荐到同一货位，适用于同一订单下不同SKU及分批到货。多个批发单分别按各自BO单号推荐，不因SKU相同而合并货位。</p><p>推荐时沿用现有货位状态、混放及容量校验。订单尚无已上架货位时，沿用现有批发货位推荐规则；已有货位不可用或放不下时，提示原因并按现有规则推荐其他可用批发货位。订单已有多个批发货位时，优先从已有货位中按现有规则选择可用且放得下的货位。</p><h3 id="section-8">批发单扫描数量</h3>
-<p>上架扫描识别到批发单时，按BO单号、SKU及当前入库批次查询数量，不直接截取条码中的数量。经过贴标的取贴标节点保存的对应BO输入数量；未经过贴标的取质检节点保存的对应批发数量。扣除该记录已上架数量后，显示本次待上架数量。</p>
-<p>查不到对应记录或数量归属不明确时，提示无法获取上架数量并阻断提交，防止误取其他批次或其他BO的数量。</p>
-<h3 id="section-9">库存查询：占用单据标签</h3>
+<h3 id="section-8">批发标签打印：货位推荐</h3>
+<p>打印批发标签时，按货位最大货品数及剩余体积计算推荐批发货位，不单独查询空货位。按BO订单维度优先推荐该订单已有产品上架的货位；不满足推荐条件时，推荐其他满足条件的批发货位，同一批发货物允许分布在多个货位。</p>
+<h3 id="section-9">批发货位上架限制</h3>
+<p>上架到批发货位时，仅按货位配置的最大货品数限制，不增加剩余体积、混放或同一订单只能使用一个货位等限制。剩余体积用于打印标签时推荐，不作为实际上架的阻断条件；允许同一批发货物上架到多个货位。</p>
+<h3 id="section-10">库存查询：占用单据标签</h3>
 <p>订单系统 → 库存查询 → 占用单据查询，在平台单号旁按占用订单类型显示标签：批发订单显示“批”，定制订单显示“制”，普通订单不显示标签。</p>
 <figure><a href="批发单分批来货需求文档.assets/库存占用单据查询.png" target="_blank"><img src="批发单分批来货需求文档.assets/库存占用单据查询.png" alt="库存占用单据查询参考"></a><figcaption>库存占用单据查询参考（点击查看原图）</figcaption></figure>
-<h2 id="section-10">5. 订单库存校验</h2>
+<h2 id="section-11">5. 订单库存校验</h2>
 <p>绑定采购单同时满足“全部已上架、已完结”，且上架数据同步完整后，执行补足校验：</p>
 <ol>
 <li>根据实际批发上架数量及订单已有预占结果，先满足批发库存可保障的需求。</li>
@@ -48,7 +54,10 @@ figure{margin:20px 0}figure img{display:block;width:100%;height:auto;border:1px 
 <li>库存满足后流转单据；不足时保持待库存状态，显示缺口。</li>
 </ol>
 <p>可用库存沿用现有口径，扣除冻结及其他订单占用。重复校验不得重复占用或流转，并发预占不得超占。采购单未满足上述条件时，本需求暂不触发普通库存补足。</p>
-<h3 id="order-putaway">批发订单处理：已上架数量</h3><p>订单系统 → 订单列表 → 批发订单处理页面，在采购单号右侧新增只读列“已上架”。按当前订单、SKU及绑定采购单关联的上架记录，显示累计实际上架数量；分批上架累计展示，关联多个采购单时汇总对应记录，避免重复统计。未绑定采购单或尚未上架时显示0，上架数据回传后更新。</p><figure><a href="批发单分批来货需求文档.assets/批发订单处理已上架.png" target="_blank"><img src="批发单分批来货需求文档.assets/批发订单处理已上架.png" alt="批发订单处理页面参考"></a><figcaption>批发订单处理页面参考：新增“已上架”列（点击查看原图）</figcaption></figure><h2 id="section-11">6. 业务案例</h2>
+<h3 id="section-12">批发订单处理：已上架数量</h3>
+<p>订单系统 → 订单列表 → 批发订单处理页面，在采购单号右侧新增只读列“已上架”。按当前订单、SKU及绑定采购单关联的上架记录，显示累计实际上架数量；分批上架累计展示，关联多个采购单时汇总对应记录，避免重复统计。未绑定采购单或尚未上架时显示0，上架数据回传后更新。</p>
+<figure><a href="批发单分批来货需求文档.assets/批发订单处理已上架.png" target="_blank"><img src="批发单分批来货需求文档.assets/批发订单处理已上架.png" alt="批发订单处理页面参考"></a><figcaption>批发订单处理页面参考（点击查看原图）</figcaption></figure>
+<h2 id="section-13">6. 业务案例</h2>
 <p>采购需求200，其中批发120、小包80；使用规则2，绑定批发订单需求120。</p>
 <div class="table-wrap"><table><thead><tr><th>批次</th><th>本次实收</th><th>质检分配：批发／小包</th><th>实际上架：批发／小包</th></tr></thead><tbody>
 <tr><td>第一次</td><td>150</td><td>70／80</td><td>70／80</td></tr>
@@ -57,8 +66,10 @@ figure{margin:20px 0}figure img{display:block;width:100%;height:auto;border:1px 
 </tbody></table></div>
 <p>第一次先满足小包80，剩余70分配给批发并完成批发预占。第二次小包计划已满足，质检分配批发50，但实际全部上普通货位。</p>
 <p>采购单全部上架且完结后，订单已预占批发70，剩余50校验并预占普通库存。普通可用库存充足则流转；若无其他占用或冻结，普通库存130扣除补占50后剩余80。</p>
-<h2 id="section-12">7. 仓库移库与解绑通知</h2>
-<h3 id="location-attribute">货位属性：统一批发</h3><p>仓库货位属性保留一个“批发”选项，移除“定制”选项。货位新增、编辑及属性筛选中的选项同步调整；现有“定制”属性货位统一归入“批发”，使用同一套批发货位逻辑。普通等其他货位属性沿用现有规则。该调整仅针对货位属性，订单类型及占用单据“制”标签仍按订单类型展示。</p><h3 id="section-13">理货移库：批发转普通</h3>
+<h2 id="section-14">7. 仓库移库与解绑通知</h2>
+<h3 id="section-15">货位属性：统一批发</h3>
+<p>仓库货位属性保留一个“批发”选项，移除“定制”选项。货位新增、编辑及属性筛选中的选项同步调整；现有“定制”属性货位统一归入“批发”，使用同一套批发货位逻辑。普通等其他货位属性沿用现有规则。该调整仅针对货位属性，订单类型及占用单据“制”标签仍按订单类型展示。</p>
+<h3 id="section-16">理货移库：批发转普通</h3>
 <p>仓库系统 → 移库任务模块 → 理货移库，新增类型“批发转普通”。针对位于批发货位、且未绑定批发单的库存，生成该类型移库任务，移至正常货位属性的货位。</p>
 <p>新库位按以下顺序推荐：</p>
 <ol>
@@ -67,15 +78,15 @@ figure{margin:20px 0}figure img{display:block;width:100%;height:auto;border:1px 
 <li>无可用货位时，提示“暂无可推荐货位”，保留任务供后续处理。</li>
 </ol>
 <p>候选货位沿用现有SKU混放、库存属性及容量校验规则。任务记录源货位、推荐新货位、SKU、移库数量及类型；执行时复核库存未绑定批发单、源库存和目标容量，避免库存变化后错误移库。任务完成后按实际移库结果更新普通库存归属。</p>
-<h3 id="section-14">上架后解绑：仓库消息通知</h3>
+<h3 id="section-17">上架后解绑：仓库消息通知</h3>
 <p>库存已上架后，执行解绑批发单操作，解绑成功时向对应仓库配置的通知人发送消息；解绑失败不发送成功通知。</p>
 <div class="table-wrap"><table><thead><tr><th>仓库</th><th>默认通知人</th></tr></thead><tbody>
 <tr><td>东莞仓</td><td>袁锋</td></tr>
 <tr><td>东莞2仓</td><td>赵新波</td></tr>
 </tbody></table></div>
 <p>公共配置模块新增“上架后解绑仓库通知人”，按仓库维护通知人。通知包含仓库、BO单号、SKU、解绑数量、当前货位、操作人及操作时间，便于仓库识别需处理的库存。通知失败记录状态并支持重试，同一次解绑不得重复发送；通知失败不回滚已成功的解绑。</p>
-<p>解绑后的库存若仍在批发货位且已无批发单绑定，纳入“批发转普通”移库任务生成范围。</p>
-<h2 id="section-15">8. 验收标准</h2>
+<p>上架后解绑成功，针对仍在批发货位且已无批发单绑定的解绑库存，自动生成“批发转普通”移库任务，将库存从批发货位移至普通货位，并按本节规则推荐目标货位。同一次解绑不得重复生成任务；涉及多个源货位时记录各源货位及对应数量。</p>
+<h2 id="section-18">8. 验收标准</h2>
 <div class="table-wrap"><table><thead><tr><th>验收项</th><th>预期结果</th></tr></thead><tbody>
 <tr><td>仓库规则</td><td>不同仓库可分别执行批发优先、小包优先</td></tr>
 <tr><td>规则1</td><td>批发剩余100、小包50、实收50：批发50、小包0</td></tr>
@@ -83,15 +94,19 @@ figure{margin:20px 0}figure img{display:block;width:100%;height:auto;border:1px 
 <tr><td>分批计算</td><td>第二批扣除此前已确认分配；不重复分配，不超过剩余需求</td></tr>
 <tr><td>质检页面</td><td>新增本次分配（批发／小包），修改实收后自动重算</td></tr>
 <tr><td>占用单据标签</td><td>批发订单显示“批”，定制订单显示“制”，普通订单不显示</td></tr>
-<tr><td>贴标输入</td><td>小包与批发分开录入；多个BO逐单显示输入框及左侧BO单号</td></tr>
-<tr><td>扫描数量</td><td>取对应贴标记录或质检记录，扣除已上架数量；不取条码数量</td></tr>
-<tr><td>查询异常</td><td>无对应记录或归属不明时阻断提交并提示</td></tr>
-<tr><td>订单货位推荐</td><td>同一BO后续分配数量优先推荐已有上架批发货位，支持不同SKU和分批到货；不同BO独立推荐</td></tr><tr><td>推荐边界</td><td>已有货位不可用或容量不足时按现有规则推荐其他货位，不强制超容量上架</td></tr><tr><td>实际归属</td><td>计划与实际分别保存，回传按实际上架数量</td></tr>
+<tr><td>贴标扫描与分摊</td><td>SKU扫码定位后输入总量，由前端分摊到明细行，合计一致</td></tr>
+<tr><td>批发标签数量校验</td><td>非0且与现场分配量不一致时提示“需要重打批发标签”，手动或3秒关闭；0不提示</td></tr>
+<tr><td>贴标列表及打印</td><td>新增采购单列、操作栏打印；删除批发数量列；批发独立行，普通按包裹＋SKU合并</td></tr>
+<tr><td>打印货位推荐</td><td>按最大货品数和剩余体积推荐，订单已有货位优先，不单独查询空货位</td></tr>
+<tr><td>批发上架限制</td><td>仅限制最大货品数，允许同一批发货物上多个货位</td></tr>
+<tr><td>解绑自动移库</td><td>解绑成功自动生成批发转普通任务，同一解绑不重复生成</td></tr>
+<tr><td>实际归属</td><td>计划与实际分别保存，回传按实际上架数量</td></tr>
 <tr><td>回传与预占</td><td>重试、重复事件及并发处理不重复入账、不超占</td></tr>
 <tr><td>最终校验</td><td>全部上架、已完结、同步完整后补足；不足不流转</td></tr>
-<tr><td>货位属性</td><td>新增、编辑、筛选保留“批发”并移除“定制”；现有定制货位归入批发</td></tr><tr><td>批发转普通</td><td>批发货位上未绑定批发单的库存生成对应类型移库任务</td></tr>
+<tr><td>货位属性</td><td>新增、编辑、筛选保留“批发”并移除“定制”；现有定制货位归入批发</td></tr>
+<tr><td>批发转普通</td><td>批发货位上未绑定批发单的库存生成对应类型移库任务</td></tr>
 <tr><td>新库位推荐</td><td>优先正常属性、有库存且放得下的货位，否则推荐合规空货位；无货位提示</td></tr>
 <tr><td>解绑通知</td><td>上架后解绑成功，按仓库公共配置通知；默认东莞仓袁锋、东莞2仓赵新波</td></tr>
-<tr><td>解绑后移库</td><td>解绑后仍在批发货位且无批发单绑定的库存纳入移库任务范围</td></tr>
-<tr><td>已上架数量</td><td>按订单、SKU及绑定采购单显示累计实际上架数量，分批累计且不重复统计</td></tr><tr><td>案例复现</td><td>实际批发70、小包130，订单以批发70＋普通50满足120</td></tr>
-</tbody></table></div><footer>批发单分批来货 · 2026-10-14</footer></main></div></body></html>
+<tr><td>已上架数量</td><td>按订单、SKU及绑定采购单显示累计实际上架数量，分批累计且不重复统计</td></tr>
+<tr><td>案例复现</td><td>实际批发70、小包130，订单以批发70＋普通50满足120</td></tr>
+</tbody></table></div><footer>批发单分批来货 · 2026-10-16</footer></main></div></body></html>
