@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-23T09:38:51+08:00",
-  "count": 15,
+  "generatedAt": "2026-11-13T16:00:23+08:00",
+  "count": 16,
   "prototypes": [
     {
       "prototypeId": "excel-20260911-153331",
@@ -89,6 +89,17 @@
       "updatedAt": "2026-09-23T09:38:45+08:00",
       "path": "prototypes/business-system/prototype-20260923-093845",
       "url": "https://kayleylee1128-gif.github.io/seabost-prototype-hosting/prototypes/business-system/prototype-20260923-093845/"
+    },
+    {
+      "prototypeId": "supply-chain-inventory-20261113-155948",
+      "title": "全链路库存报表 Supply Chain Inventory",
+      "businessSystem": "ERP",
+      "owner": "kayleylee1128-gif",
+      "sourcePath": "prototype\\supply-chain-inventory-report-share",
+      "createdAt": "2026-11-13T15:59:48+08:00",
+      "updatedAt": "2026-11-13T15:59:48+08:00",
+      "path": "prototypes/erp/supply-chain-inventory-20261113-155948",
+      "url": "https://kayleylee1128-gif.github.io/seabost-prototype-hosting/prototypes/erp/supply-chain-inventory-20261113-155948/"
     },
     {
       "prototypeId": "v2-ant-design-erp-20260723-122615",

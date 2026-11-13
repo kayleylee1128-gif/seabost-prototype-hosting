@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>全链路库存报表原型</title>
+  <link rel="stylesheet" href="tokens.css" />
+  <style>
+    :root {
+      --primary: #1677ff;
+      --primary-weak: #e6f4ff;
+      --success: #52c41a;
+      --success-weak: #f6ffed;
+      --warning: #faad14;
+      --warning-weak: #fffbe6;
+      --error: #ff4d4f;
+      --error-weak: #fff2f0;
+      --text: rgba(0, 0, 0, 0.88);
+      --text-secondary: rgba(0, 0, 0, 0.65);
+      --text-tertiary: rgba(0, 0, 0, 0.45);
+      --border: #d9d9d9;
+      --border-light: #f0f0f0;
+      --bg: #f5f7fa;
+      --panel: #ffffff;
+      --hover: #f7fbff;
+      --radius: 6px;
+      --shadow: 0 6px 16px rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12);
+      --sidebar: #001529;
+      --header-height: 56px;
+      --sider-width: 208px;
+      --drawer-width: 92vw;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      font-size: 14px;
+      line-height: 1.5715;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); }
+    button, input { font: inherit; }
+
+    .app {
+      display: grid;
+      grid-template-columns: var(--sider-width) minmax(0, 1fr);
+      grid-template-rows: var(--header-height) 40px minmax(0, 1fr);
+      min-height: 100vh;
+      grid-template-areas:
+        "sider header"
+        "sider crumb"
+        "sider main";
+    }
+
+    .sider {
+      grid-area: sider;
+      background: var(--sidebar);
+      color: rgba(255, 255, 255, 0.82);
+      overflow: hidden;
+    }
+
+    .brand {
+      height: var(--header-height);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 18px;
+      color: #fff;
+      font-weight: 600;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .menu { list-style: none; margin: 0; padding: 8px 0; }
+    .menu-group {
+      padding: 12px 18px 6px;
+      color: rgba(255, 255, 255, 0.45);
+      font-size: 12px;
+    }
+    .menu-item {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 18px;
+      white-space: nowrap;
+      cursor: default;
+    }
+    .menu-item.active { background: var(--primary); color: #fff; }
+    .menu-icon {
+      width: 16px;
+      height: 16px;
+      border: 1px solid currentColor;
+      border-radius: 4px;
+      opacity: 0.9;
+    }
+
+    .header {
+      grid-area: header;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 24px;
+    }
+
+    .collapse {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .global-search {
+      width: 360px;
+      height: 32px;
+      border: 1px solid transparent;
+      background: #f5f5f5;
+      border-radius: var(--radius);
+      padding: 0 12px;
+      color: var(--text);
+      outline: none;
+    }
+
+    .header-spacer { flex: 1; }
+    .header-action {
+      color: var(--text-secondary);
+      height: 32px;
+      min-width: 32px;
+      border-radius: 4px;
+      border: none;
+      background: transparent;
+    }
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--primary-weak);
+      color: #0958d9;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .crumb {
+      grid-area: crumb;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    .main {
+      grid-area: main;
+      padding: 18px 24px 24px;
+      overflow: auto;
+    }
+
+    .page-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 32px;
+      font-weight: 600;
+    }
+    .subtitle { color: var(--text-secondary); margin-top: 4px; font-size: 13px; }
+
+    .sync-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      background: #fffbe6;
+      border: 1px solid #ffe58f;
+      border-radius: 8px;
+      color: #5f4300;
+    }
+    .sync-main {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 500;
+    }
+    .sync-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--warning);
+    }
+    .sync-sub {
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    .view-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 12px;
+      background: var(--panel);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 4px;
+      width: max-content;
+    }
+    .view-tab {
+      height: 32px;
+      padding: 0 16px;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+    .view-tab.active {
+      background: var(--primary);
+      color: #fff;
+    }
+    .page-view[hidden] { display: none; }
+
+    .btn {
+      height: 32px;
+      padding: 0 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    }
+
+    .filter-panel { padding: 16px; margin-bottom: 12px; }
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(140px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+    .field label {
+      display: block;
+      color: var(--text-secondary);
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+    .input, .fake-select {
+      width: 100%;
+      height: 32px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--panel);
+      padding: 0 10px;
+      color: var(--text);
+      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .fake-select::after {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-right: 1px solid var(--text-tertiary);
+      border-bottom: 1px solid var(--text-tertiary);
+      transform: rotate(45deg) translateY(-2px);
+      margin-left: 8px;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .metric {
+      padding: 12px 14px;
+      background: var(--panel);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      min-height: 78px;
+    }
+    .metric-name {
+      color: var(--text-secondary);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .metric-value {
+      margin-top: 8px;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .metric-note { color: var(--text-tertiary); font-size: 12px; margin-top: 2px; }
+
+    .table-panel { overflow: hidden; }
+    .table-toolbar {
+      height: 48px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .toolbar-title { font-weight: 600; }
+    .toolbar-meta { color: var(--text-tertiary); font-size: 12px; }
+    .table-wrap { overflow: auto; }
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 1780px;
+      table-layout: fixed;
+    }
+    th, td {
+      height: 44px;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border-light);
+      border-right: 1px solid var(--border-light);
+      text-align: left;
+      vertical-align: middle;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    th {
+      background: #f7f9fc;
+      color: var(--text-secondary);
+      font-weight: 500;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    tr:hover td { background: var(--hover); }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .clickable-num {
+      color: var(--primary);
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .clickable-num:hover { text-decoration: underline; }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      border: 1px solid transparent;
+    }
+    .tag.success { background: var(--success-weak); color: #389e0d; border-color: #b7eb8f; }
+    .tag.warning { background: var(--warning-weak); color: #d48806; border-color: #ffe58f; }
+    .tag.default { background: #fafafa; color: var(--text-secondary); border-color: var(--border-light); }
+    .tag.error { background: var(--error-weak); color: #cf1322; border-color: #ffccc7; }
+
+    .drawer-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease;
+      z-index: 900;
+    }
+    .drawer-mask.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: var(--drawer-width);
+      min-width: 1120px;
+      height: 100vh;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      transform: translateX(100%);
+      transition: transform 180ms ease;
+      z-index: 901;
+      display: flex;
+      flex-direction: column;
+    }
+    .drawer.open { transform: translateX(0); }
+    .drawer-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .drawer-title-wrap { min-width: 0; flex: 1; }
+    .drawer-title {
+      margin: 0;
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+    }
+    .drawer-subtitle {
+      margin-top: 4px;
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+    .close {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 22px;
+      line-height: 1;
+    }
+    .drawer-meta {
+      padding: 10px 20px;
+      background: #fafafa;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      gap: 18px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      flex-wrap: wrap;
+    }
+    .drawer-meta strong { color: var(--text); }
+    .tabs {
+      display: flex;
+      gap: 24px;
+      padding: 0 20px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .tab {
+      padding: 12px 0 10px;
+      border-bottom: 2px solid transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+    .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    .drawer-body {
+      flex: 1;
+      overflow: auto;
+      padding: 16px 20px 20px;
+    }
+    .drawer-section {
+      margin-bottom: 18px;
+    }
+    .section-title {
+      margin: 0 0 10px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .desc {
+      display: grid;
+      grid-template-columns: 108px 1fr 108px 1fr 108px 1fr;
+      gap: 10px 12px;
+      background: #fafafa;
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      padding: 12px;
+      font-size: 13px;
+    }
+    .desc dt { color: var(--text-secondary); }
+    .desc dd { margin: 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .small-table {
+      min-width: 1280px;
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .small-table.wide-table { min-width: 2200px; }
+    .small-table th, .small-table td {
+      height: 40px;
+      font-size: 13px;
+    }
+    .small-table th {
+      height: 48px;
+      white-space: normal;
+      line-height: 18px;
+      overflow: visible;
+      text-overflow: clip;
+      vertical-align: top;
+    }
+    .export-table {
+      min-width: 1640px;
+    }
+    .drawer-foot {
+      border-top: 1px solid var(--border-light);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    @media (max-width: 1200px) {
+      .app { grid-template-columns: 64px minmax(0, 1fr); }
+      .brand span:last-child, .menu-group, .menu-label { display: none; }
+      .filters, .summary { grid-template-columns: repeat(3, minmax(140px, 1fr)); }
+      .drawer { min-width: 920px; width: 94vw; }
+    }
+  </style>
+  <link rel="stylesheet" href="refinement.css" />
+</head>
+<body data-theme="default">
+  <div class="app c-shell" data-component="ErpShell">
+    <aside class="sider">
+      <div class="brand"><span class="brand-mark">E</span><span>ERP 后台</span></div>
+      <ul class="menu">
+        <li class="menu-group">供应链</li>
+        <li class="menu-item"><span class="menu-icon"></span><span class="menu-label">申购计划</span></li>
+        <li class="menu-item"><span class="menu-icon"></span><span class="menu-label">采购单</span></li>
+        <li class="menu-item"><span class="menu-icon"></span><span class="menu-label">海外仓发货计划</span></li>
+        <li class="menu-group">库存</li>
+        <li class="menu-item active"><span class="menu-icon"></span><span class="menu-label">全链路库存报表</span></li>
+        <li class="menu-item"><span class="menu-icon"></span><span class="menu-label">明细单据查询</span></li>
+        <li class="menu-item"><span class="menu-icon"></span><span class="menu-label">库存流水</span></li>
+        <li class="menu-group">报表</li>
+        <li class="menu-item"><span class="menu-icon"></span><span class="menu-label">销售分析</span></li>
+      </ul>
+    </aside>
+
+    <header class="header">
+      <button class="collapse c-icon" id="collapseMenu" title="折叠菜单" aria-label="折叠菜单"><i data-lucide="panel-left-close"></i></button>
+      <span class="workspace-name">供应链工作台 <span>/</span> 库存管理</span>
+      <span class="header-spacer"></span>
+      <a class="workspace-status" href="requirements.html" style="text-decoration:none;color:var(--primary)">需求文档</a>
+      <span class="avatar">J</span>
+    </header>
+
+    <nav class="crumb">库存 / 报表 / 全链路库存报表</nav>
+
+    <main class="main">
+      <div class="page-title c-page-header" data-component="PageHeaderBar">
+        <div>
+          <h1>全链路库存报表</h1>
+          <div class="subtitle">申购 · 采购 · 中转 · 海外仓 · 销量</div>
+
+      <section class="sync-banner">
+        <div class="sync-main">
+          <span class="sync-dot"></span>
+          <span>统计时间 <strong>2026-05-19 14:00</strong></span>
+        </div>
+      </section>
+        </div>
+        <div>
+          <button class="btn" id="exportReport"><i data-lucide="download"></i>导出报表</button>
+        </div>
+      </div>
+
+      <section class="filter-panel c-filter" data-component="QueryFilterBar">
+        <form id="filterForm">
+        <div class="filters">
+          <div class="field"><label for="skuQuery">商品关键词</label><input id="skuQuery" class="input" placeholder="SKU、SPU 或商品名称" /></div>
+          <div class="field"><label>仓库</label><div class="select-host" data-filter="wh" data-label="全部仓库"></div></div>
+          <div class="field"><label>一级类目</label><div class="select-host" data-filter="category" data-label="全部类目"></div></div>
+          <div class="field"><label>销售状态</label><div class="select-host" data-filter="status" data-label="全部状态"></div></div>
+        </div>
+        <div class="filter-footer"><div class="actions"><button type="reset" class="btn">重置</button><button type="submit" class="btn primary"><i data-lucide="search"></i>查询</button></div></div>
+        </form>
+      </section>
+
+      <section class="table-panel c-table page-view" id="overviewView" data-component="DataTablePanel">
+        <div class="table-toolbar">
+          <div>
+            <span class="toolbar-title">SKU 库存总览</span>
+            <span class="toolbar-meta" id="resultCount"></span>
+          </div>
+          <div class="actions">
+            <div class="column-host"><button class="btn" id="columnToggle" title="列设置" aria-label="列设置" aria-expanded="false"><i data-lucide="columns-3"></i>列设置</button><div class="column-menu" id="columnMenu" hidden><strong>显示字段组</strong><label><input type="checkbox" data-column-group="supply" checked /> 供应链库存</label><label><input type="checkbox" data-column-group="sales" checked /> 销量分析</label></div></div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="reportTable">
+            <thead>
+              <tr>
+                <th style="width: 96px;">仓库</th>
+                <th style="width: 110px;">SPU</th>
+                <th style="width: 120px;">SKU</th>
+                <th style="width: 104px;">一级类目</th>
+                <th style="width: 112px;">产品销售状态</th>
+                <th style="width: 180px;">产品名称</th>
+                <th class="num" style="width: 116px;">申购待确认</th>
+                <th class="num" style="width: 96px;">采购在途</th>
+                <th class="num" style="width: 108px;">中转仓在库</th>
+                <th class="num" style="width: 96px;">海外在途</th>
+                <th class="num" style="width: 96px;">仓库在库</th>
+                <th class="num" style="width: 96px;">缺货数量</th>
+                <th class="num" style="width: 92px;">3天销量</th>
+                <th class="num" style="width: 92px;">7天销量</th>
+                <th class="num" style="width: 100px;">15天销量</th>
+                <th class="num" style="width: 92px;">月销量</th>
+                <th class="num" style="width: 116px;">日均加权销量</th>
+                <th class="num" style="width: 96px;">可售天数</th>
+              </tr>
+            </thead>
+            <tbody id="reportBody"></tbody>
+          </table>
+        </div>
+        <footer class="table-footer"><span id="pageRange"></span><div class="actions"><span>20 条 / 页</span><button class="btn c-icon" disabled aria-label="上一页"><i data-lucide="chevron-left"></i></button><button class="btn page-current" aria-current="page">1</button><button class="btn c-icon" disabled aria-label="下一页"><i data-lucide="chevron-right"></i></button></div></footer>
+      </section>
+
+    </main>
+  </div>
+
+  <div class="drawer-mask" id="drawerMask"></div>
+  <aside class="drawer c-drawer" data-component="DetailDrawer" id="drawer" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="drawerTitle" inert>
+    <div class="drawer-head">
+      <div class="drawer-title-wrap">
+        <h2 class="drawer-title" id="drawerTitle">明细单据</h2>
+        <div class="drawer-subtitle" id="drawerSubtitle"></div>
+      </div>
+      <button class="close c-icon" id="closeDrawer" title="关闭" aria-label="关闭明细"><i data-lucide="x"></i></button>
+    </div>
+    <div class="drawer-meta" id="drawerMeta"></div>
+    <nav class="tabs">
+      <button class="tab c-tab active" data-tab="docs">来源单据</button>
+      <button class="tab c-tab" data-tab="rule">统计口径</button>
+    </nav>
+    <div class="drawer-body">
+      <div class="tab-pane" data-pane="docs">
+        <section class="drawer-section">
+          <h3 class="section-title" id="docsTitle">来源单据明细</h3>
+          <div class="table-wrap">
+            <table class="small-table" id="detailTable">
+              <thead id="detailHead"></thead>
+              <tbody id="detailBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+      <div class="tab-pane" data-pane="rule" style="display:none;">
+        <section class="drawer-section">
+          <h3 class="section-title">当前字段统计口径</h3>
+          <dl class="desc" id="ruleDesc"></dl>
+        </section>
+      </div>
+    </div>
+    <footer class="drawer-foot">
+      <button class="btn" id="copyDoc">复制单号</button>
+      <button class="btn primary" id="exportDetail"><i data-lucide="download"></i>导出明细</button>
+    </footer>
+  </aside>
+
+  <div id="toast" class="c-feedback" role="status" aria-live="polite"></div>
+  <script src="lucide.min.js"></script>
+  <script>
+    const rows = [
+      {
+        wh: "US-LA", spu: "SPU-88421", sku: "PG-US-1001", category: "家居收纳",
+        status: "在售", statusType: "success", name: "厨房收纳组合套装",
+        request: 24, purchase: 180, purchaseTransit: 42, transferStock: 36, overseasTransit: 58, overseasStock: 96,
+        d3: 18, d7: 39, d15: 78, d30: 151, avg: 5.16, days: 18.6, shortage: 0, risk: "正常", riskType: "success",
+        kit: [
+          ["SKU-A1001", 1, 180, 180, 38, 58, 98],
+          ["SKU-A1002", 2, 360, 360, 72, 116, 192],
+          ["SKU-A1003", 1, 180, 180, 36, 58, 96]
+        ]
+      },
+      {
+        wh: "DE-HH", spu: "SPU-77108", sku: "PG-DE-2048", category: "户外运动",
+        status: "在售", statusType: "success", name: "露营灯配件组合",
+        request: 60, purchase: 260, purchaseTransit: 120, transferStock: 18, overseasTransit: 42, overseasStock: 31,
+        d3: 12, d7: 35, d15: 81, d30: 173, avg: 5.12, days: 6.1, shortage: 28, risk: "补货风险", riskType: "warning",
+        kit: [
+          ["SKU-D2048-A", 1, 260, 260, 18, 42, 31],
+          ["SKU-D2048-B", 1, 260, 248, 24, 42, 36],
+          ["SKU-D2048-C", 2, 520, 500, 38, 84, 70]
+        ]
+      },
+      {
+        wh: "US-NJ", spu: "SPU-66319", sku: "SKU-WM-6609", category: "宠物用品",
+        status: "预售", statusType: "warning", name: "宠物喂食器",
+        request: 0, purchase: 96, purchaseTransit: 12, transferStock: 74, overseasTransit: 0, overseasStock: 44,
+        d3: 4, d7: 11, d15: 29, d30: 64, avg: 2.08, days: 21.2, shortage: 0, risk: "正常", riskType: "success",
+        kit: [
+          ["SKU-WM-6609", 1, 96, 96, 74, 0, 44]
+        ]
+      },
+      {
+        wh: "UK-BH", spu: "SPU-92550", sku: "PG-UK-3316", category: "手机配件",
+        status: "清仓", statusType: "default", name: "Type-C 转接组合",
+        request: 0, purchase: 80, purchaseTransit: 0, transferStock: 0, overseasTransit: 14, overseasStock: 186,
+        d3: 3, d7: 8, d15: 17, d30: 41, avg: 1.31, days: 142.0, shortage: 0, risk: "库存偏高", riskType: "warning",
+        kit: [
+          ["SKU-U3316-A", 1, 80, 80, 0, 14, 186],
+          ["SKU-U3316-B", 1, 80, 80, 0, 14, 186]
+        ]
+      }
+    ];
+
+    const metricConfig = { request: {}, purchaseTransit: {wideTable:true}, transferStock: {}, overseasTransit: {wideTable:true}, overseasStock: {} };
+
+    const metricKeys = ["request", "purchaseTransit", "transferStock", "overseasTransit", "overseasStock"];
+    const metricLabels = {
+      request: "申购待确认",
+      purchaseTransit: "采购在途",
+      transferStock: "中转仓在库",
+      overseasTransit: "海外在途",
+      overseasStock: "海外仓在库"
+    };
+
+    function fmt(value) {
+      return Number(value).toLocaleString("zh-CN", { maximumFractionDigits: 2 });
+    }
+
+    function openDrawer(rowIndex, metricKey) {
+      const row = rows[rowIndex];
+      const config = metricConfig[metricKey];
+      const docs = config.makeDocs(row);
+      const drawer = document.getElementById("drawer");
+      const mask = document.getElementById("drawerMask");
+      document.getElementById("drawerTitle").textContent = `${config.title}明细`;
+      document.getElementById("drawerSubtitle").textContent = `${row.wh} / ${row.sku} / ${row.name}`;
+      document.getElementById("drawerMeta").innerHTML = `
+        <span>当前数量 <strong>${fmt(row[metricKey])}</strong></span>
+        <span>产品销售状态 <strong>${row.status}</strong></span>
+        <span>日均加权销量 <strong>${fmt(row.avg)}</strong></span>
+        <span>可售天数 <strong>${fmt(row.days)}</strong></span>
+        <span>统计时间 <strong>2026-05-19 14:00</strong></span>
+      `;
+      document.getElementById("docsTitle").textContent = config.docsTitle;
+      document.getElementById("detailTable").classList.toggle("wide-table", Boolean(config.wideTable));
+      document.getElementById("detailHead").innerHTML = `<tr>${config.headers.map(h => `<th>${h}</th>`).join("")}</tr>`;
+      document.getElementById("detailBody").innerHTML = docs.length
+        ? docs.map(line => `<tr>${line.map((cell, index) => `<td class="${index >= 3 && !Number.isNaN(Number(cell)) ? "num" : ""}">${cell}</td>`).join("")}</tr>`).join("")
+        : `<tr><td colspan="${config.headers.length}" style="text-align:center;color:var(--text-tertiary);height:96px;">当前筛选条件下暂无明细单据</td></tr>`;
+
+      document.getElementById("ruleDesc").innerHTML = `
+        <dt>指标名称</dt><dd>${config.title}</dd>
+        <dt>统计粒度</dt><dd>仓库 + 产品组/SKU</dd>
+        <dt>数量口径</dt><dd>${config.rule}</dd>
+        <dt>下钻来源</dt><dd>${config.docsTitle}</dd>
+        <dt>仓库归属</dt><dd>${config.warehouseRule}</dd>
+        <dt>预计到货时间</dt><dd>${config.etaRule}</dd>
+        <dt>产品组规则</dt><dd>${config.unitRule}</dd>
+        <dt>更新频率</dt><dd>固定示例快照，实际调度、时区和延迟阈值待确认</dd>
+      `;
+      document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+      document.querySelector('[data-tab="docs"]').classList.add("active");
+      document.querySelectorAll(".tab-pane").forEach(pane => {
+        pane.style.display = pane.dataset.pane === "docs" ? "" : "none";
+      });
+      drawer.classList.add("open");
+      mask.classList.add("open");
+      drawer.inert = false;
+      drawer.setAttribute("aria-hidden", "false");
+      drawer.returnFocus = document.activeElement;
+      document.body.style.overflow = "hidden";
+      document.getElementById("closeDrawer").focus();
+    }
+
+    function closeDrawer() {
+      if (!document.getElementById("drawer").classList.contains("open")) return;
+      document.getElementById("drawer").classList.remove("open");
+      document.getElementById("drawerMask").classList.remove("open");
+      const drawer = document.getElementById("drawer");
+      drawer.inert = true;
+      drawer.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      drawer.returnFocus?.focus();
+    }
+
+    document.getElementById("reportBody").addEventListener("click", event => {
+      const target = event.target.closest("[data-row][data-metric]");
+      if (!target) return;
+      openDrawer(Number(target.dataset.row), target.dataset.metric);
+    });
+    document.getElementById("closeDrawer").addEventListener("click", closeDrawer);
+    document.getElementById("drawerMask").addEventListener("click", closeDrawer);
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") closeDrawer();
+    });
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        if (tab.style.display === "none") return;
+        document.querySelectorAll(".tab").forEach(item => item.classList.remove("active"));
+        document.querySelectorAll(".tab-pane").forEach(pane => {
+          pane.style.display = pane.dataset.pane === tab.dataset.tab ? "" : "none";
+        });
+        tab.classList.add("active");
+      });
+    });
+  </script>
+  <script src="source-model.js"></script>
+  <script src="refinement.js"></script>
+  <link rel="stylesheet" href="review.css" />
+  <script src="annotations.js"></script>
+</body>
+</html>
